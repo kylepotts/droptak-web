@@ -1,15 +1,16 @@
-package edu.purdue.mapit;
+package edu.purdue.maptak.admin;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
+
+import com.google.android.gms.maps.MapFragment;
 
 public class MainActivity extends Activity {
 
@@ -23,6 +24,11 @@ public class MainActivity extends Activity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.mapview, new MapFragment());
+        ft.commit();
+
     }
 
 
