@@ -15,7 +15,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_map);
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.activity_map_main, new MapFragment());
+        ft.replace(R.id.activity_map_main, new TakMapFragment());
         ft.commit();
     }
 
