@@ -4,6 +4,10 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -12,10 +16,16 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class TakMapFragment extends MapFragment {
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i(MainActivity.LOG_TAG, "TakMapFragment.onCreateView() called.");
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
 
     /** Called when the fragment has been fully inflated into the activity */
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.i(MainActivity.LOG_TAG, "TakMapFragment.onActivityCreated() called.");
 
         // Enable the user's location on the map
         getMap().setMyLocationEnabled(true);
