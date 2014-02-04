@@ -16,7 +16,10 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class TakMapFragment extends MapFragment {
 
-    @Override
+    /** I want the camera to do a cool animation ONLY on the first creation of this fragment. */
+    boolean isFirst = true;
+
+    /** Super class takes care of creating the view since we're just extending MapFragment. */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(MainActivity.LOG_TAG, "TakMapFragment.onCreateView() called.");
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -37,7 +40,13 @@ public class TakMapFragment extends MapFragment {
 
         // Center the map to that position
         CameraUpdate moveCam = CameraUpdateFactory.newLatLngZoom(userLatLng, 14.5f);
-        getMap().animateCamera(moveCam);
+        if (isFirst) {
+            getMap().animateCamera(moveCam);
+            isFirst = false;
+        } else {
+            getMap().moveCamera(moveCam);
+        }
+
 
     }
 

@@ -2,6 +2,8 @@
 <resources>
 
     <string name="app_name">MapTak</string>
-    <string name="action_settings">Settings</string>
+
+    <string name="menu_taklist_label">Map List</string>
+    <string name="menu_settings_label">Settings</string>
 
 </resources>
