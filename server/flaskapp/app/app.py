@@ -18,6 +18,9 @@ def index():
 @app.route('/maps')
 def maps():
     return render_template('map.html')
+@app.route('/login')
+def login():
+	return render_template('login.html')
 
 
 # register Blueprints
