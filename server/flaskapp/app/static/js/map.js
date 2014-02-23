@@ -1,1 +1,1 @@
-$(document).ready(function()  { $('.carousel').carousel({ interval: 3000, cycle: true }); });
+$(document).ready(function()  { $('.carousel').carousel({ interval: 4000, cycle: true }); });
