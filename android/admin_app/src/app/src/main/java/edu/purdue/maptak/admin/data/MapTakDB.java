@@ -1,4 +1,4 @@
-package edu.purdue.maptak.admin;
+package edu.purdue.maptak.admin.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -38,11 +38,11 @@ public class MapTakDB extends SQLiteOpenHelper {
         // Strings which create tables
 
         String create_table_maps = "CREATE TABLE " + TABLE_MAPS + " (" +
-                MAP_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                MAP_ID + " TEXT, " +
                 MAP_LABEL + " TEXT );";
 
         String create_table_taks = "CREATE TABLE " + TABLE_TAKS + " ( " +
-                TAK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                TAK_ID + " TEXT, " +
                 TAK_MAP_ID + " INTEGER, " +
                 TAK_LABEL + " TEXT, " +
                 TAK_LAT + " DOUBLE, " +
@@ -62,7 +62,7 @@ public class MapTakDB extends SQLiteOpenHelper {
 
     /** Refreshes the database with information from the server */
     public void refresh() {
-
+        // Implement in sprint 2
     }
 
     /** Pushes a new map for the user to the remote database then refreshes the local cache */
