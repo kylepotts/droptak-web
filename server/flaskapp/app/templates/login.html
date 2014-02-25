@@ -7,22 +7,27 @@
    <style type="text/css"></style></head>
  
       <body>
+         <div class="jumbotron">
        <div class="container signin">
-        <center><p><h2>Login with Google</h1></p></center>
-  <center>
+        <center><div id="signin">
+        <p><h2>Login with Google</h1></p>
   <span id="signinButton">
   <span
     class="g-signin"
     data-callback="loginFinishedCallBack"
     data-clientid="158485758125-bqrmkcp45496hdq96n6qika4l0tgafq6.apps.googleusercontent.com"
+    
     data-cookiepolicy="single_host_origin"
     data-requestvisibleactions="http://schemas.google.com/AddActivity"
     data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/plus.profile.emails.read">
   </span>
-</center>
+  
 </span>
+</div></center>
        </div> <!-- /container -->
+     </div>
         
+    <script src="/static/js/vendor/jquery.min.js"></script>
     <script src="/static/js/vendor/bootstrap.min.js"></script>
     <script src="/static/js/login.js"></script>
 
