@@ -36,9 +36,9 @@ function getProfileCallBack(obj){
   console.log("Name: "+ name);
   xmlhttp = new XMLHttpRequest();
   xmlhttp.open("POST","http://mapitapps.appspot.com/login?name="+name+"&email="+email,true);
-  xmlhttp.send()
-  document.getElementById("signin").innerHTML="<h2>Welcome " + name + "</h2><img height='100' width='100' src='https://plus.google.com/s2/photos/profile/" + profile.id + "?sz=100' />";
- }
+  xmlhttp.send();
+  $("#nav-login").html("<a href='#'> <img src='https://plus.google.com/s2/photos/profile/" + profile.id + "?sz=25' />" + name + "</a>");
+  }
 
 
 
