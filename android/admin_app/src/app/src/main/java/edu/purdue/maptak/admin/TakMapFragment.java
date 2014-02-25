@@ -36,17 +36,22 @@ public class TakMapFragment extends MapFragment {
         // Get their current location
         LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         Location userLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        LatLng userLatLng = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
 
-        // Center the map to that position
-        CameraUpdate moveCam = CameraUpdateFactory.newLatLngZoom(userLatLng, 14.5f);
-        if (isFirst) {
-            getMap().animateCamera(moveCam);
-            isFirst = false;
-        } else {
-            getMap().moveCamera(moveCam);
+        if (userLocation != null) {
+            double lat = userLocation.getLatitude();
+            double lng = userLocation.getLongitude();
+            LatLng userLatLng = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+
+            // Center the map to that position
+            CameraUpdate moveCam = CameraUpdateFactory.newLatLngZoom(userLatLng, 14.5f);
+            if (isFirst) {
+                getMap().animateCamera(moveCam);
+                isFirst = false;
+            } else {
+                getMap().moveCamera(moveCam);
+            }
+
         }
-
 
     }
 
