@@ -13,8 +13,12 @@ public class MainActivity extends Activity {
     /** Log tag for debugging logcat output */
     public static final String LOG_TAG = "maptak";
 
-    /** Save the mapfragment as a class variable so it can be inflated quicker and remember the last location the user was at */
-    TakMapFragment mapFragment;
+    /** Save the mapfragment as a class variable so it can be inflated more quickly */
+    private TakMapFragment mapFragment;
+
+    /** Store the current map the user has displayed as a static variable.
+     *  This way, fragments can access it as necessary when adding new taks to the current map. */
+    public static String currentMap = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

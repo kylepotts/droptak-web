@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 public class MapTakDB extends SQLiteOpenHelper {
@@ -63,6 +62,16 @@ public class MapTakDB extends SQLiteOpenHelper {
 
     }
 
+    /** Destroys the local database and creates a new one. */
+    public void destroy() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        if (db != null) {
+            db.execSQL("DROP TABLE " + TABLE_MAPS);
+            db.execSQL("DROP TABLE " + TABLE_TAKS);
+            onCreate(db);
+        }
+    }
+
     /** Refreshes the database with information from the server */
     public void refresh() {
         // Implement in sprint 2
@@ -80,7 +89,6 @@ public class MapTakDB extends SQLiteOpenHelper {
         String thisUUID = UUID.randomUUID().toString();
         ContentValues values = new ContentValues();
         values.put(MAP_ID, thisUUID);
-
         values.put(MAP_LABEL, map);
 
         SQLiteDatabase db = getWritableDatabase();
@@ -91,7 +99,7 @@ public class MapTakDB extends SQLiteOpenHelper {
     }
 
     /** Pushes a new tak for a given map to the remote database then refreshes the local cache */
-    public void addTak(String tak, String map) {
+    public void addTak(TakObject tak, String map) {
 
         // As with addMap(); this will eventually push to the server and refresh the local cache
         // For now, we are using all local information
@@ -102,7 +110,7 @@ public class MapTakDB extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(TAK_ID, tak_uuid);
         values.put(TAK_MAP_ID, map_uuid);
-        values.put(TAK_LABEL, tak);
+        values.put(TAK_LABEL, tak.toString());
         values.put(TAK_LAT, 40);
         values.put(TAK_LNG, -60);
 
@@ -118,11 +126,20 @@ public class MapTakDB extends SQLiteOpenHelper {
         return null;
     }
 
-    /** Returns a list of taks associated with a given map */
-    public List<String> getTaks(String map) {
+    /** Returns a specific map with a given UUID, or null if it doesn't exist in the cache */
+    public String getMap(UUID uuid) {
         return null;
     }
 
+    /** Returns a list of taks associated with a given map */
+    public List<TakObject> getTaks(String map) {
+        return null;
+    }
+
+    /** Returns a specific tak with a given UUID, or null if it doesn't exist in the cache */
+    public TakObject getTak(UUID uuid) {
+        return null;
+    }
 
 
 
