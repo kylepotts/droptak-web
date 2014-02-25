@@ -1,0 +1,13 @@
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+    background: url(http://mymaplist.com/img/parallax/back.png);
+    background: url(http://mymaplist.com/img/parallax/pinlayer2.png),url(http://mymaplist.com/img/parallax/pinlayer1.png),url(http://mymaplist.com/img/parallax/back.png);
+}
+ 
+.signin{
+  max-width: 200;
+  padding: 30;
+  min-height: 15%;
+  background: #FFFFFF;
+}
