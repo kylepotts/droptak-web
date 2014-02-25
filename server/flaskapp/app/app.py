@@ -3,6 +3,7 @@ import os
 from google.appengine.api.logservice import logservice
 import logging
 from User import Account 
+from Tak import Tak 
 
 # this fix allows us to import modues/packages found in 'lib'
 fix_path(os.path.abspath(os.path.dirname(__file__)))
@@ -26,6 +27,7 @@ def login():
 	if request.method == 'POST':
 			name = request.args.get("name", "")
 			email = request.args.get("email", "")
+			# check if arg blank
 			logging.info("Name %s" %name)
 			logging.info("Email %s" %email)
 			account  = Account(name=name,email=email)
@@ -35,7 +37,26 @@ def login():
 				account.put()
 			return '200'
 	if request.method == 'GET':
-		return render_template('login.html')
+		return page_not_found(404)
+
+
+@app.route('/taks',methods=['GET','POST'])
+def taks():
+	if request.method == 'POST':
+			lat = request.args.get("lat", "") 
+			lng = request.args.get("lng", "") # 2nd arg is default
+			user = request.args.get("user", "") # 2nd arg is default
+			# check if args blank
+			logging.info("Add lat %s, lng %s" %(lat, lng) )
+			tak  = Tak(lng=lng,lat=lat, creator=user)
+			tak.put()
+			return '200'
+	if request.method == 'GET':
+		return render_template('taks.html')
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return '404: Page Not Found'
 
 
 # register Blueprints

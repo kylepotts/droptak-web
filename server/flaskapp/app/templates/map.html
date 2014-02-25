@@ -6,40 +6,55 @@
 <link href="/static/css/map.css" rel="stylesheet">
     <div class="jumbotron">
       <div class="container">
-      	<div class="carousel slide article-slide" id="myCarousel">
-
-  <!-- Wrapper for slides -->
-  <div class="carousel-inner cont-slider">
-
-    <div class="item active">
-      <img alt="" title="" src="http://placehold.it/600x400">
-    </div>
-    <div class="item">
-      <img alt="" title="" src="http://placehold.it/600x400">
-    </div>
-    <div class="item">
-      <img alt="" title="" src="http://placehold.it/600x400">
-    </div>
-    <div class="item">
-      <img alt="" title="" src="http://placehold.it/600x400">
-    </div>
-  </div>
-  <!-- Indicators -->
-  <ol class="carousel-indicators">
-    <li class="active" data-slide-to="0" data-target="#myCarousel">
-      <img alt="" src="http://placehold.it/250x180">
-    </li>
-    <li class="" data-slide-to="1" data-target="#myCarousel">
-      <img alt="" src="http://placehold.it/250x180">
-    </li>
-    <li class="" data-slide-to="2" data-target="#myCarousel">
-      <img alt="" src="http://placehold.it/250x180">
-    </li>
-    <li class="" data-slide-to="3" data-target="#myCarousel">
-      <img alt="" src="http://placehold.it/250x180">
-    </li>
-  </ol>
-</div>
+      	<div class="container">
+    <div class="row">
+        <div class="row">
+            <div class="col-md-9">
+                <h3>
+                    Your Maps</h3>
+            </div>
+            <div class="col-md-3">
+                <!-- Controls -->
+                </div>
+            </div>
+        </div>
+        <div id="carousel-example" class="carousel slide hidden-xs" data-ride="carousel">
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+                <div class="item active">
+                    <div class="row" id="items">
+                        <div class="col-sm-3">
+                            <div class="col-item">
+                                <div class="photo">
+                                    <img src="http://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=350x260&maptype=roadmap
+									&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318
+									&markers=color:red%7Clabel:C%7C40.718217,-73.998284&sensor=false" class="img-responsive" alt="a" />
+                                </div>
+                                <div class="info">
+                                    <div class="row">
+                                        <div class="price col-md-6">
+                                            <h5>
+                                                Map Name</h5>
+                                            <h5 class="price-text-color">
+                                                Location</h5>
+                                        </div>
+                                    </div>
+                                    <div class="separator clear-left">
+                                        <p class="btn-add">
+                                            <i class="fa fa-map-marker"></i><a href="http://www.jquery2dotnet.com" class="hidden-sm">View Map</a></p>
+                                        <p class="btn-details">
+                                            <i class="fa fa-list"></i><a href="http://www.jquery2dotnet.com" class="hidden-sm">More details</a></p>
+                                    </div>
+                                    <div class="clearfix">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            	<button type="button" class="btn btn-default" id="addMap">Add Map</button>
       </div>
     </div>
 
