@@ -1,40 +1,59 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>MapTak</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/vendor/bootstrap.min.css" rel="stylesheet">
 
 
-{% block content %}
+    <!-- Custom styles for this template -->
+    <link href="/static/css/cover.css" rel="stylesheet">
 
-      <div class="jumbotron">
-        <h1>Super awesome marketing speak!</h1>
-        <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-        <a class="btn btn-large btn-success" href="#">Sign up today</a>
-      </div>
-
-      <hr>
-
-      <div class="row-fluid marketing">
-        <div class="span6">
-          <h4>Subheading</h4>
-          <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-          <h4>Subheading</h4>
-          <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-          <h4>Subheading</h4>
-          <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  <style type="text/css"></style><style id="holderjs-style" type="text/css"></style>
+</head>
+  <body>
+    <div class="navbar navbar-default navbar-fixed-top navbar-custom" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">MapTak</a>
         </div>
-
-        <div class="span6">
-          <h4>Subheading</h4>
-          <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-          <h4>Subheading</h4>
-          <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-          <h4>Subheading</h4>
-          <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
-        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="login">Login</a></li>
+            <li><a href="#about">About us</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
       </div>
+    </div>
+    <div class="jumbotron">
+      <div class="container">
+        <h2>MapTak</h2>
+        <p>Geotagging points of interest has never been easier. MapTak is mobile and web application for tagging gps locations with meta-data and viewing it on a map. Whether it's all of the vendors in an outdoor mall, or your favorite picnic places: Tag it, save it, share it.</p>
+        <p>Get started today by signing up with your Google account</p>
+        <p><a class="btn btn-primary btn-lg" href="login" role="button">Sign up</a></p>
+      </div>
+    </div>
 
-      <hr>
 
-{% endblock %}
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/static/js/vendor/jquery.min.js"></script>
+    <script src="/static/js/vendor/bootstrap.min.js"></script>
+
+</body></html>

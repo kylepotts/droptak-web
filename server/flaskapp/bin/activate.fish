@@ -32,7 +32,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/nick/mapit/server/flask-appengine-template"
+set -gx VIRTUAL_ENV "/Users/kyle/Documents/workspace/mapit/server/flaskapp"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
