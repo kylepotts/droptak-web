@@ -127,17 +127,17 @@ public class MapTakDB extends SQLiteOpenHelper {
     }
 
     /** Returns a specific map with a given UUID, or null if it doesn't exist in the cache */
-    public String getMap(UUID uuid) {
+    public String getMap(String uuid) {
         return null;
     }
 
     /** Returns a list of taks associated with a given map */
-    public List<TakObject> getTaks(String map) {
+    public List<TakObject> getTaks(MapID mapID) {
         return null;
     }
 
     /** Returns a specific tak with a given UUID, or null if it doesn't exist in the cache */
-    public TakObject getTak(UUID uuid) {
+    public TakObject getTak(TakID takID) {
         return null;
     }
 
