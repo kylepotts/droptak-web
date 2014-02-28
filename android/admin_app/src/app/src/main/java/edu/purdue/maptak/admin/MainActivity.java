@@ -2,6 +2,7 @@ package edu.purdue.maptak.admin;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,10 +27,17 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_map);
 
         // Create a new map fragment for the screen
-        mapFragment = new TakMapFragment();
+        //mapFragment = new TakMapFragment();
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.activity_map_mapview, mapFragment);
+        //ft.replace(R.id.activity_map_mapview, mapFragment);
+
+        /** You can test your fragments by creating them here */
+        //Fragment f = new AddTakFragment();
+        Fragment f = new CreateMapFragment();
+        /** End different part */
+
+        ft.replace(R.id.activity_map_mapview, f);
         ft.commit();
     }
 
