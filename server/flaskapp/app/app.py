@@ -8,7 +8,7 @@ from Tak import Tak
 # this fix allows us to import modues/packages found in 'lib'
 fix_path(os.path.abspath(os.path.dirname(__file__)))
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from blueprints.example.views import bp as example_blueprint
 
 
@@ -43,14 +43,16 @@ def login():
 @app.route('/taks',methods=['GET','POST'])
 def taks():
 	if request.method == 'POST':
-			lat = request.args.get("lat", "") 
-			lng = request.args.get("lng", "") # 2nd arg is default
-			user = request.args.get("user", "") # 2nd arg is default
+			lat = getValue(request, "lat", "")
+			lng = getValue(request, "lng", "")
+			user = getValue(request, "user", "")
 			# check if args blank
 			logging.info("Add lat %s, lng %s" %(lat, lng) )
 			tak  = Tak(lng=lng,lat=lat, creator=user)
 			tak.put()
-			return '200'
+			return jsonify(request=request.data, lat=lat,
+                   lng=lng,
+                   response=200)
 	if request.method == 'GET':
 		return render_template('taks.html')
 
@@ -58,6 +60,17 @@ def taks():
 def page_not_found(e):
     return '404: Page Not Found'
 
+def getValue(request, key, default):
+	value = default
+	if request is not None:
+		value = request.args.get(key, default)
+		if value is default:
+			try:
+				value = request.form[key]
+			except KeyError:
+				print "Key Error"
+				value = default
+	return value
 
 # register Blueprints
 app.register_blueprint(example_blueprint)
