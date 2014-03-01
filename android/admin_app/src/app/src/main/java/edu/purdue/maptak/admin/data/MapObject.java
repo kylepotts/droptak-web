@@ -1,96 +1,69 @@
 package edu.purdue.maptak.admin.data;
 
+import android.content.Context;
+
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by tylorgarrett on 2/20/14.
- */
-
+/** Encapsulates all of the information for a single Map */
 public class MapObject {
 
-    /**
-     * List of Managers
-     */
-    List<String> managerList;
+    /** Context which the mapobject exists in. */
+    private Context context;
 
-    /**
-     * List of Taks that are related to the map
-     */
-    List<TakObject> takList;
+    /** A label the user has supplied for the map */
+    private String label;
 
-    /**
-     *
-     */
-    boolean requireKey;
+    /** A unique ID that can identify each map */
+    private MapID mapID;
 
-    /**
-     * A unique ID that can identify each map
-     */
-    MapID mapID;
-    TakID takID;
-    /**
-     * Map created from the app/user. mapID is null. privateKey is null.
-     * requireKey is idk!
-     */
-    public MapObject(){
-        managerList = new LinkedList<String>();
-        takList = new LinkedList<TakObject>();
-        requireKey = true;
-        mapID = null;
+    /** List of Taks that are related to the map */
+    private List<TakObject> takList;
+
+    /** List of Managers */
+    private List<String> managerList;
+
+    /** Map created by the backend. MapID is known. */
+    public MapObject(Context c, String label, MapID id, List<TakObject> taks) {
+        this.context = c;
+        this.label = label;
+        this.mapID = id;
+        this.takList = taks;
+        this.managerList = new LinkedList<String>();
     }
 
-    /**
-     * Receives input from the Tak class and adds that Tak to the Map
-     */
-    public void addTak( TakID tak ){
-        //takList.add();
+    /** Map created from the app/user. mapID is null. privateKey is null. requireKey is idk! */
+    public MapObject(Context c, String label, List<TakObject> taks) {
+        this(c, label, null, taks);
     }
 
-    /**
-     * Gives the input from Tak class and removes the given Tak
-     */
-    public void removeTak( TakID tak ){
-        if ( takList.contains(tak) ){
-            takList.remove(tak);
-        } else {
-            // display error? Tak Not Found
-        }
+    /** Returns the label for the map */
+    public String getLabel() {
+        return this.label;
     }
 
-    /**
-     * key needs to be the index of the Tak in the list, getTak returns the corresponding Tak
-     */
-    public TakObject getTakByKey( int key ){
-        // return the page that will display details about the Tak
-        return takList.get(key);
+    /** Returns the ID for the map */
+    public MapID getID() {
+        return this.mapID;
     }
 
-    /**
-     * Receives input from the Manager
-     */
-    public void addManagers( String manager ){
-        managerList.add(manager);
+    /** Returns the TakList backing this map */
+    public List<TakObject> getTakList() {
+        return this.takList;
     }
 
-    /**
-     * Returns a list of the Managers of the current Map
-     */
-    public List<String> getManagers(){
-        // go to a new view that will show the list of managers
-        return managerList;
+    /** Receives input from the Tak class and adds that Tak to the Map */
+    public void addTak(TakObject tak) {
+        MapTakDB db = new MapTakDB(context);
+        db.addTak(tak, this.mapID);
+        this.takList = db.getTaks(this.mapID);
     }
 
-    /**
-    Return a list of Taks for to the ______ View
-     */
-    public List<TakObject> getTakList() { return takList; }
-
-    /**
-     * idk
-     */
-    public String downloadData(){
-        return "The";
+    /** Gives the input from Tak class and removes the given Tak */
+    public void removeTak(TakID tak) {
+        MapTakDB db = new MapTakDB(context);
+        db.removeTak(tak, this.mapID);
+        this.takList = db.getTaks(this.mapID);
     }
 
 }
