@@ -2,6 +2,7 @@ package edu.purdue.maptak.admin.data;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -11,6 +12,7 @@ import java.util.UUID;
 public class MapTakDB extends SQLiteOpenHelper {
 
     /** Database name and version */
+    private Context context;
     public static final String DB_NAME = "database_cached_taks";
     public static final int DB_VERSION = 1;
 
@@ -32,6 +34,7 @@ public class MapTakDB extends SQLiteOpenHelper {
     /** Default constructor */
     public MapTakDB(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+        this.context = context;
     }
 
     /** Called when the database is first created. */
@@ -99,12 +102,12 @@ public class MapTakDB extends SQLiteOpenHelper {
     }
 
     /** Pushes a new tak for a given map to the remote database then refreshes the local cache */
-    public void addTak(TakObject tak, String map) {
+    public void addTak(TakObject tak, MapID map) {
 
         // As with addMap(); this will eventually push to the server and refresh the local cache
         // For now, we are using all local information
 
-        String map_uuid = map;
+        String map_uuid = "adsfasdf";
         String tak_uuid = UUID.randomUUID().toString();
 
         ContentValues values = new ContentValues();
@@ -121,13 +124,26 @@ public class MapTakDB extends SQLiteOpenHelper {
 
     }
 
+    /** Removes a tak from both the server and the local data cache */
+    public void removeTak(TakID tak, MapID map) {
+
+    }
+
     /** Returns a list of the maps the user is authorized to access. */
-    public List<String> getUsersMaps() {
+    public List<MapObject> getUsersMaps() {
+        Cursor c = getReadableDatabase().query(TABLE_MAPS, null, null, null, null, null, null);
+        c.moveToFirst();
+        do {
+            String id = c.getString(c.getColumnIndex(MAP_ID));
+            String label = c.getString(c.getColumnIndex(MAP_LABEL));
+            MapObject map = new MapObject(context, label, new MapID(), null);
+        } while (c.moveToNext());
+
         return null;
     }
 
     /** Returns a specific map with a given UUID, or null if it doesn't exist in the cache */
-    public String getMap(String uuid) {
+    public MapObject getMap(String uuid) {
         return null;
     }
 
@@ -136,7 +152,7 @@ public class MapTakDB extends SQLiteOpenHelper {
         return null;
     }
 
-    /** Returns a specific tak with a given UUID, or null if it doesn't exist in the cache */
+    /** Returns a specific tak with a given ID, or null if it doesn't exist in the cache */
     public TakObject getTak(TakID takID) {
         return null;
     }
