@@ -62,7 +62,7 @@ public class MapObject {
     /** Gives the input from Tak class and removes the given Tak */
     public void removeTak(TakID tak) {
         MapTakDB db = new MapTakDB(context);
-        db.removeTak(tak, this.mapID);
+        db.removeTak(tak);
         this.takList = db.getTaks(this.mapID);
     }
 

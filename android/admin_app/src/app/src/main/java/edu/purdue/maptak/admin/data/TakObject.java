@@ -22,24 +22,27 @@ public class TakObject {
     private long createdOn;
 
     /** Constructor if everything is currently known */
-    public TakObject(String label, double lat, double lng, TakID takID, int owner, long date) {
+    public TakObject(TakID takID, String label, double lat, double lng) {
         this.label = label;
         this.latitude = lat;
         this.longitude = lng;
         this.takID = takID;
-        this.createdBy = owner;
-        this.createdOn = date;
         this.metadata = new HashMap<String, String>();
     }
 
     /** Minimum constructor if the ID is known */
     public TakObject(double lat, double lng, TakID takID) {
-        this(null, lat, lng, takID, -1, -1);
+        this(takID, null, lat, lng);
     }
 
     /** Minimum constructor if the ID is not known */
     public TakObject(double lat, double lng) {
-        this(null, lat, lng, null, -1, -1);
+        this(null, null, lat, lng);
+    }
+
+    /** Returns the label of the tak */
+    public String getLabel() {
+        return this.label;
     }
 
     /** Returns the latitude of the given tak */
