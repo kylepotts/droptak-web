@@ -17,7 +17,7 @@ public class MapObject {
     /**
      * List of Taks that are related to the map
      */
-    List<Object> takList;
+    List<TakObject> takList;
 
     /**
      *
@@ -35,7 +35,7 @@ public class MapObject {
      */
     public MapObject(){
         managerList = new LinkedList<String>();
-        takList = new LinkedList<Object>();
+        takList = new LinkedList<TakObject>();
         requireKey = true;
         mapID = null;
     }
@@ -44,7 +44,7 @@ public class MapObject {
      * Receives input from the Tak class and adds that Tak to the Map
      */
     public void addTak( TakID tak ){
-        takList.add(tak);
+        //takList.add();
     }
 
     /**
@@ -61,7 +61,8 @@ public class MapObject {
     /**
      * key needs to be the index of the Tak in the list, getTak returns the corresponding Tak
      */
-    public Object getTak( int key ){
+    public TakObject getTakByKey( int key ){
+        // return the page that will display details about the Tak
         return takList.get(key);
     }
 
@@ -79,6 +80,11 @@ public class MapObject {
         // go to a new view that will show the list of managers
         return managerList;
     }
+
+    /**
+    Return a list of Taks for to the ______ View
+     */
+    public List<TakObject> getTakList() { return takList; }
 
     /**
      * idk
