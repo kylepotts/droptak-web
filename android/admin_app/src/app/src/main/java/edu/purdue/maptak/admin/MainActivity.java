@@ -17,6 +17,9 @@ public class MainActivity extends Activity {
     /** Save the mapfragment as a class variable so it can be inflated more quickly */
     private TakMapFragment mapFragment;
 
+    /** Save the menu object so it can be changed dynamically later */
+    private Menu menu;
+
     /** Store the current map the user has displayed as a static variable.
      *  This way, fragments can access it as necessary when adding new taks to the current map. */
     public static String currentMap = null;
@@ -35,6 +38,7 @@ public class MainActivity extends Activity {
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         getMenuInflater().inflate(R.menu.main, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -45,7 +49,14 @@ public class MainActivity extends Activity {
             case android.R.id.home:
 
                 // Re-inflate the map
-                getFragmentManager().beginTransaction().replace(R.id.activity_map_mapview, mapFragment).commit();
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.activity_map_mapview, mapFragment)
+                        .commit();
+
+                // Change the menu bar back to normal
+                menu.clear();
+                getMenuInflater().inflate(R.menu.main, menu);
 
                 // Disable the back button
                 setUpEnabled(false);
@@ -54,12 +65,33 @@ public class MainActivity extends Activity {
             case R.id.menu_taklist:
 
                 // Set the main view to a map list fragment
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.activity_map_mapview, new MapListFragment());
-                ft.commit();
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.activity_map_mapview, new MapListFragment())
+                        .commit();
+
+                // Change the menu bar
+                menu.clear();
+                getMenuInflater().inflate(R.menu.menu_maplist, menu);
 
                 // Enable the back button on the action bar
                 setUpEnabled(true);
+                break;
+
+            case R.id.menu_createmap:
+
+                // Set the main view to the create map fragment
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.activity_map_mapview, new CreateMapFragment())
+                        .commit();
+
+                // Change the menu bar
+                menu.clear();
+
+                // Enable the back button on the action bar
+                setUpEnabled(true);
+
                 break;
 
             case R.id.menu_settings:
