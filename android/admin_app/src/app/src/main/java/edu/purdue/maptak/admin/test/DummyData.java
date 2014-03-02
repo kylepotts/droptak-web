@@ -13,24 +13,8 @@ import edu.purdue.maptak.admin.data.TakObject;
 /** Statically generates dummy data which can be used for testing elsewhere in the app */
 public class DummyData {
 
-    /** Creates a random map object without an ID */
-    public static MapObject createDummyMapObjectNoID() {
-        Random r = new Random();
-
-        String name = UUID.randomUUID().toString().substring(0,12);
-        List<TakObject> taks = new ArrayList<TakObject>();
-        for (int i = 0; i < 25; i++) {
-            float lat = r.nextFloat() * 100;
-            float lng = r.nextFloat() * 100;
-            taks.add(new TakObject(lat, lng));
-        }
-
-        MapObject obj = new MapObject(name, taks);
-        return obj;
-    }
-
     /** Creates a random map object with an ID */
-    public static MapObject createDummyMapObjectWithID() {
+    public static MapObject createDummyMapObject() {
         Random r = new Random();
 
         String name = UUID.randomUUID().toString().substring(0,12);
@@ -38,12 +22,20 @@ public class DummyData {
 
         List<TakObject> taks = new ArrayList<TakObject>();
         for (int i = 0; i < 25; i++) {
-            float lat = r.nextFloat()*100;
-            float lng = r.nextFloat()*100;
-            taks.add(new TakObject(lat, lng));
+            taks.add(createDummyTakObject());
         }
 
         return new MapObject(name, new MapID(id), taks);
+    }
+
+    /** Creates a random tak with an ID */
+    public static TakObject createDummyTakObject() {
+        Random r = new Random();
+
+        String name = "Random tak name" + r.nextInt(100);
+        float lat = r.nextFloat()*100;
+        float lng = r.nextFloat()*100;
+        return new TakObject(name, lat, lng);
     }
 
 }

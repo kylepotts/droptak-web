@@ -49,9 +49,14 @@ public class TakObject {
         this(takID, null, lat, lng);
     }
 
+    /** Constructor if it has no ID but has a label */
+    public TakObject(String label, double lat, double lng) {
+        this(new TakID(UUID.randomUUID().toString().substring(0,12)), label, lat, lng);
+    }
+
     /** Minimum constructor if the ID is not known */
     public TakObject(double lat, double lng) {
-        this(null, null, lat, lng);
+        this(new TakID(UUID.randomUUID().toString().substring(0,12)), null, lat, lng);
     }
 
     /** Returns the label of the tak */
