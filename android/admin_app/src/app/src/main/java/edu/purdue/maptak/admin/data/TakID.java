@@ -11,6 +11,14 @@ public class TakID {
         this.takID = takID;
     }
 
+    /** Equals method */
+    public boolean equals(TakID t1) {
+        if (takID.equals(t1.getIDStr())) {
+            return true;
+        }
+        return false;
+    }
+
     /** Returns the takid in a string format */
     public String getIDStr() {
         return this.takID;

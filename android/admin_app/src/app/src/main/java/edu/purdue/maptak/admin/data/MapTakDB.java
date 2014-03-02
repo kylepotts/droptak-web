@@ -85,22 +85,38 @@ public class MapTakDB extends SQLiteOpenHelper {
     public void addMap(MapObject map) {
 
         // Add the map to the local database
+        // The Map is given a temporary random UUID as an ID
+        // This will be changed later when a server sync is completed.
+        String tmpMapID = UUID.randomUUID().toString();
         ContentValues values = new ContentValues();
-        values.put(MAP_ID, -1);
+        values.put(MAP_ID, tmpMapID);
         values.put(MAP_LABEL, map.getLabel());
         getWritableDatabase().insert(TABLE_MAPS, null, values);
 
-        // Push the change to the server
-        // Implement in sprint 2
+        // The map also contains taks, so add those as well
+        for (TakObject t : map.getTakList()) {
+            // We create a new MapID here instead of using the one given because, chances are,
+            // the one given is NULL. Its only important that it matches what we added for
+            // the map above.
+            addTak(t, new MapID(tmpMapID));
+
+            // Push each tak to the server
+
+        }
+
+        // Push the map to the server
 
     }
 
     /** Pushes a new tak for a given map to the remote database then refreshes the local cache */
     public void addTak(TakObject tak, MapID map) {
 
-        // Add the tak to the local cache
+        // Like the maps, the tak is given a temporary ID until a server sync is completed.
+        String tmpTakID = UUID.randomUUID().toString();
+
+        // Add the tak to the database
         ContentValues values = new ContentValues();
-        values.put(TAK_ID, -1);
+        values.put(TAK_ID, tmpTakID);
         values.put(TAK_MAP_ID, map.getIDStr());
         values.put(TAK_LABEL, tak.getLabel());
         values.put(TAK_LAT, tak.getLatitude());
@@ -140,7 +156,7 @@ public class MapTakDB extends SQLiteOpenHelper {
                 List<TakObject> taks = getTaks(mapID);
 
                 // Create the map object
-                MapObject map = new MapObject(context, label, mapID, taks);
+                MapObject map = new MapObject(label, mapID, taks);
 
                 // Add to the list
                 results.add(map);

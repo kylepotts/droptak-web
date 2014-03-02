@@ -1,6 +1,20 @@
 package edu.purdue.maptak.admin.data;
 import java.util.*;
 
+/** Encapsulates all of the data for a single Tak
+ *  Note that TakObjects are immutable, which means they cannot be edited once they are created
+ *
+ *      TO CREATE A BRAND NEW TAK
+ *      1) Create an appropriate tak object WITHOUT an ID
+ *      2) Get a MapTakDB object and call db.addTak(). Pass in the tak object and the appropriate MapID
+ *
+ *      TO DELETE A TAK
+ *      1) Get a MapTakDB object and call db.removeTak(). Pass in the tak you want to delete.
+ *
+ *      TO MODIFY DATA ABOUT A TAK
+ *      Currently this operation is not supported. It will be in the future.
+ */
+
 public class TakObject {
 
     /** Main label of the tak. Optional. */
@@ -31,7 +45,7 @@ public class TakObject {
     }
 
     /** Minimum constructor if the ID is known */
-    public TakObject(double lat, double lng, TakID takID) {
+    public TakObject(TakID takID, double lat, double lng) {
         this(takID, null, lat, lng);
     }
 
@@ -85,31 +99,6 @@ public class TakObject {
     /** Returns the UNIX timestamp of when the tak was first registered to the server */
     public long getCreationTime() {
         return this.createdOn;
-    }
-
-    /** Sets the latitude of the given tak */
-    public void setLatitude(double lat) {
-        this.latitude = lat;
-    }
-
-    /** Sets the latitude of the given tak */
-    public void setLongitude(double lng){
-        this.longitude = lng;
-    }
-
-    /** Creates a new key-value pair in the tak's metadata */
-    public void addMetadata(String key, String value) {
-        this.metadata.put(key, value);
-    }
-
-    /** Sets the userid of the tak */
-    public void setUserID(int userId) {
-        this.createdBy = userId;
-    }
-
-    /** Sets the creation time of the tak */
-    public void setCreationTime(long creationTime) {
-        this.createdOn = creationTime;
     }
 
 }

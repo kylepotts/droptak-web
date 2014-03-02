@@ -8,6 +8,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.purdue.maptak.admin.data.MapID;
+import edu.purdue.maptak.admin.data.MapObject;
+import edu.purdue.maptak.admin.data.MapTakDB;
+import edu.purdue.maptak.admin.data.TakObject;
+import edu.purdue.maptak.admin.test.DummyData;
+
 public class MainActivity extends Activity {
 
     /** Log tag for debugging logcat output */
@@ -30,10 +39,18 @@ public class MainActivity extends Activity {
 
         // Create a new map fragment for the screen
         mapFragment = new TakMapFragment();
-
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.activity_map_mapview, mapFragment);
         ft.commit();
+
+        /* TODO: Adding some sample Maps to the database for testing purposes */
+
+        MapTakDB db = new MapTakDB(this);
+        db.addMap(DummyData.createDummyMapObjectWithID());
+        db.addMap(DummyData.createDummyMapObjectWithID());
+        db.addMap(DummyData.createDummyMapObjectWithID());
+
+        /* TODO: End testing code */
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

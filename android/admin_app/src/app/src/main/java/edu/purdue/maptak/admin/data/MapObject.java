@@ -4,12 +4,24 @@ import android.content.Context;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
-/** Encapsulates all of the information for a single Map */
+/** Encapsulates all of the information for a single Map
+ *  MapObjects are immutable, which means they cannot be edited once they are created.
+ *
+ *      CREATING A BRAND NEW MAP
+ *      1) Create your MapObject m = new MapObject(...).
+ *         you don't have to pass in a MapID, as it isn't known at this point.
+ *      2) Get a MapTakDB object and call db.addMap(). Pass in the map you just created.
+ *
+ *      ADDING TAKS TO A MAP
+ *      1) Create an appropriate Tak object
+ *      2) Get a MapTakDB object and call db.addTak(). Pass in the tak and the mapID in this class.
+ *      3) Call db.getMap(). Pass in the mapID you want. It will give you a new MapObject with the
+ *          Tak you just added.
+ */
+
 public class MapObject {
-
-    /** Context which the mapobject exists in. */
-    private Context context;
 
     /** A label the user has supplied for the map */
     private String label;
@@ -24,17 +36,16 @@ public class MapObject {
     private List<String> managerList;
 
     /** Map created by the backend. MapID is known. */
-    public MapObject(Context c, String label, MapID id, List<TakObject> taks) {
-        this.context = c;
+    public MapObject(String label, MapID id, List<TakObject> taks) {
         this.label = label;
         this.mapID = id;
         this.takList = taks;
         this.managerList = new LinkedList<String>();
     }
 
-    /** Map created from the app/user. mapID is null. privateKey is null. requireKey is idk! */
-    public MapObject(Context c, String label, List<TakObject> taks) {
-        this(c, label, null, taks);
+    /** Map created from the app/user. mapID is generated randomly until a sync with the server. */
+    public MapObject(String label, List<TakObject> taks) {
+        this(label, new MapID(UUID.randomUUID().toString().substring(0,12)), taks);
     }
 
     /** Returns the label for the map */
@@ -50,20 +61,6 @@ public class MapObject {
     /** Returns the TakList backing this map */
     public List<TakObject> getTakList() {
         return this.takList;
-    }
-
-    /** Receives input from the Tak class and adds that Tak to the Map */
-    public void addTak(TakObject tak) {
-        MapTakDB db = new MapTakDB(context);
-        db.addTak(tak, this.mapID);
-        this.takList = db.getTaks(this.mapID);
-    }
-
-    /** Gives the input from Tak class and removes the given Tak */
-    public void removeTak(TakID tak) {
-        MapTakDB db = new MapTakDB(context);
-        db.removeTak(tak);
-        this.takList = db.getTaks(this.mapID);
     }
 
 }
