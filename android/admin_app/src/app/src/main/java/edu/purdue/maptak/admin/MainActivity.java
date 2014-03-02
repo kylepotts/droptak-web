@@ -2,7 +2,6 @@ package edu.purdue.maptak.admin;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
@@ -72,7 +71,7 @@ public class MainActivity extends Activity {
 
                 // Change the menu bar
                 menu.clear();
-                getMenuInflater().inflate(R.menu.menu_maplist, menu);
+                getMenuInflater().inflate(R.menu.maplist, menu);
 
                 // Enable the back button on the action bar
                 setUpEnabled(true);
@@ -102,10 +101,18 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    /** Enabled the "up" button on the action bar app icon, which will take the user back to
+     *  the map screen. */
     private void setUpEnabled(boolean enabled) {
         ActionBar ab = getActionBar();
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(enabled);
         }
     }
+
+    /** Overrides the back button. Currently does nothing, but will be used later. */
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
 }
