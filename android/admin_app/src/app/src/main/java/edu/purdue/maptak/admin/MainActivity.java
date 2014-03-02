@@ -2,11 +2,14 @@ package edu.purdue.maptak.admin;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.google.android.gms.maps.MapFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,20 +20,17 @@ import edu.purdue.maptak.admin.data.MapTakDB;
 import edu.purdue.maptak.admin.data.TakObject;
 import edu.purdue.maptak.admin.test.DummyData;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnMapSelectedListener {
 
     /** Log tag for debugging logcat output */
     public static final String LOG_TAG = "maptak";
-
-    /** Save the mapfragment as a class variable so it can be inflated more quickly */
-    private TakMapFragment mapFragment;
 
     /** Save the menu object so it can be changed dynamically later */
     private Menu menu;
 
     /** Store the current map the user has displayed as a static variable.
      *  This way, fragments can access it as necessary when adding new taks to the current map. */
-    public static String currentMap = null;
+    private MapID currentSelectedMap = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,17 +38,14 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_map);
 
         // Create a new map fragment for the screen
-        mapFragment = new TakMapFragment();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.activity_map_mapview, mapFragment);
+        ft.replace(R.id.activity_map_mapview, new TakMapFragment());
         ft.commit();
 
         /* TODO: Adding some sample Maps to the database for testing purposes */
 
         MapTakDB db = new MapTakDB(this);
-        db.addMap(DummyData.createDummyMapObjectWithID());
-        db.addMap(DummyData.createDummyMapObjectWithID());
-        db.addMap(DummyData.createDummyMapObjectWithID());
+        db.addMap(DummyData.createDummyMapObject());
 
         /* TODO: End testing code */
     }
@@ -67,7 +64,7 @@ public class MainActivity extends Activity {
                 // Re-inflate the map
                 getFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.activity_map_mapview, mapFragment)
+                        .replace(R.id.activity_map_mapview, new TakMapFragment())
                         .commit();
 
                 // Change the menu bar back to normal
@@ -78,7 +75,7 @@ public class MainActivity extends Activity {
                 setUpEnabled(false);
                 break;
 
-            case R.id.menu_taklist:
+            case R.id.menu_maplist:
 
                 // Set the main view to a map list fragment
                 getFragmentManager()
@@ -92,6 +89,7 @@ public class MainActivity extends Activity {
 
                 // Enable the back button on the action bar
                 setUpEnabled(true);
+
                 break;
 
             case R.id.menu_createmap:
@@ -132,4 +130,15 @@ public class MainActivity extends Activity {
         super.onBackPressed();
     }
 
+    /** Called when a map is selected in MapListFragment */
+    public void onMapSelected(MapID map) {
+        // Re-inflate the map
+        setContentView(R.layout.activity_map_addtak);
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.activity_map_mapview, new TakMapFragment())
+                .commit();
+
+        // Display the pins and zoom the map to encompass those pins
+    }
 }

@@ -1,0 +1,23 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <Button
+        android:id="@+id/activity_map_addtakbutton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Add Tak" />
+
+    <RelativeLayout
+        android:id="@+id/activity_map_mapview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/activity_map_addtakbutton"
+        android:layout_alignParentTop="true"
+        />
+
+
+
+</RelativeLayout>

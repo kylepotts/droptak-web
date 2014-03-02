@@ -3,7 +3,7 @@
     tools:context="edu.purdue.mapit.MainActivity" >
 
     <item
-        android:id="@+id/menu_taklist"
+        android:id="@+id/menu_maplist"
         android:title="@string/menu_taklist_label"
         android:icon="@drawable/ic_map_list"
         android:showAsAction="always" />
