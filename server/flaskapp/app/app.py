@@ -8,7 +8,7 @@ from Tak import Tak
 # this fix allows us to import modues/packages found in 'lib'
 fix_path(os.path.abspath(os.path.dirname(__file__)))
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from blueprints.example.views import bp as example_blueprint
 
 
@@ -40,21 +40,31 @@ def login():
 		return page_not_found(404)
 
 
-@app.route('/taks',methods=['GET','POST'])
+@app.route('/taks/',methods=['GET','POST'])
 def taks():
 	if request.method == 'POST':
+			title = getValue(request, "title", "")
 			lat = getValue(request, "lat", "")
 			lng = getValue(request, "lng", "")
 			user = getValue(request, "user", "")
+			if not ( user and lat and lng ):
+				return jsonify(message="Bad Request", response=400)
 			# check if args blank
 			logging.info("Add lat %s, lng %s" %(lat, lng) )
-			tak  = Tak(lng=lng,lat=lat, creator=user)
-			tak.put()
-			return jsonify(request=request.data, lat=lat,
-                   lng=lng,
-                   response=200)
+			tak  = Tak(lng=lng,lat=lat, creator=user, title=title)
+			key = tak.put()
+			return redirect(url_for('show_taks', id=key.id()))
 	if request.method == 'GET':
 		return render_template('taks.html')
+
+@app.route('/taks/<int:id>', methods = ['GET', 'POST'])
+def show_taks(id=-1):
+	if request.method == 'GET':
+		if id >= 0:
+			tak = Tak.get_by_id(id)
+			if tak is not None:
+				return jsonify(tak.to_dict())
+	return redirect('/taks')
 
 @app.errorhandler(404)
 def page_not_found(e):
