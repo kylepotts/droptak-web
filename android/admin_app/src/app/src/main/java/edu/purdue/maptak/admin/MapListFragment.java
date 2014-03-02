@@ -24,17 +24,24 @@ public class MapListFragment extends Fragment {
     ListView mapList;
 
     /** Used to access the MapTakDB class */
-    MapTakDB mapTakDB = new MapTakDB(getActivity());
+    MapTakDB mapTakDB;
 
     /** List Adapter that will hold the data that populates the list view */
     ListAdapter listAdapter;
 
     /** Inflates the view for this fragment. */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mapList = (ListView) getActivity().findViewById(R.id.fragment_maplist_listview);
+
+        // Create instance of database
+        mapTakDB = new MapTakDB(getActivity());
+
+        // Prepare the list adapter
+        View v = inflater.inflate(R.layout.fragment_maplist, container, false);
+        mapList = (ListView) v.findViewById(R.id.fragment_maplist_listview);
         listAdapter = new MapObjectAdapter<MapObject>(getActivity(), android.R.layout.simple_list_item_1, mapTakDB.getUsersMaps());
         mapList.setAdapter(listAdapter);
-        return inflater.inflate(R.layout.fragment_maplist, container, false);
+
+        return v;
     }
 
     /** Custom ListView Adapter */

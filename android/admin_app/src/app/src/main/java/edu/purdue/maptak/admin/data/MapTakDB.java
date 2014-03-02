@@ -126,25 +126,27 @@ public class MapTakDB extends SQLiteOpenHelper {
     public List<MapObject> getUsersMaps() {
         List<MapObject> results = new LinkedList<MapObject>();
         Cursor c = getReadableDatabase().query(TABLE_MAPS, null, null, null, null, null, null);
-        c.moveToFirst();
-        do {
-            // Create the ID
-            String id = c.getString(c.getColumnIndex(MAP_ID));
-            MapID mapID = new MapID(id);
 
-            // Create the label
-            String label = c.getString(c.getColumnIndex(MAP_LABEL));
+        if (c.moveToFirst()) {
+            do {
+                // Create the ID
+                String id = c.getString(c.getColumnIndex(MAP_ID));
+                MapID mapID = new MapID(id);
 
-            // Get the taks for the map
-            List<TakObject> taks = getTaks(mapID);
+                // Create the label
+                String label = c.getString(c.getColumnIndex(MAP_LABEL));
 
-            // Create the map object
-            MapObject map = new MapObject(context, label, mapID, taks);
+                // Get the taks for the map
+                List<TakObject> taks = getTaks(mapID);
 
-            // Add to the list
-            results.add(map);
+                // Create the map object
+                MapObject map = new MapObject(context, label, mapID, taks);
 
-        } while (c.moveToNext());
+                // Add to the list
+                results.add(map);
+
+            } while (c.moveToNext());
+        }
 
         return results;
     }
@@ -166,19 +168,19 @@ public class MapTakDB extends SQLiteOpenHelper {
 
         // TODO: Optimize this
         Cursor c = getReadableDatabase().query(TABLE_TAKS, null, null, null, null, null, null);
-        c.moveToFirst();
-        do {
-            String iterMapID = c.getString(c.getColumnIndex(TAK_MAP_ID));
-            if (mapID.equals(iterMapID.equals(mapID.getIDStr()))) {
-                String takID = c.getString(c.getColumnIndex(TAK_ID));
-                String takLabel = c.getString(c.getColumnIndex(TAK_LABEL));
-                double takLat = c.getDouble(c.getColumnIndex(TAK_LAT));
-                double takLng = c.getDouble(c.getColumnIndex(TAK_LNG));
-                TakObject t = new TakObject(new TakID(takID), takLabel, takLat, takLng);
-                results.add(t);
-            }
-        } while (c.moveToNext());
-
+        if (c.moveToFirst()) {
+            do {
+                String iterMapID = c.getString(c.getColumnIndex(TAK_MAP_ID));
+                if (mapID.equals(iterMapID.equals(mapID.getIDStr()))) {
+                    String takID = c.getString(c.getColumnIndex(TAK_ID));
+                    String takLabel = c.getString(c.getColumnIndex(TAK_LABEL));
+                    double takLat = c.getDouble(c.getColumnIndex(TAK_LAT));
+                    double takLng = c.getDouble(c.getColumnIndex(TAK_LNG));
+                    TakObject t = new TakObject(new TakID(takID), takLabel, takLat, takLng);
+                    results.add(t);
+                }
+            } while (c.moveToNext());
+        }
         return results;
     }
 
