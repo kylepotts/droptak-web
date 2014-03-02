@@ -45,7 +45,7 @@ public class MapListFragment extends Fragment {
     }
 
     /** Custom ListView Adapter */
-    public class MapObjectAdapter<MapObject> extends ArrayAdapter {
+    private class MapObjectAdapter<MapObject> extends ArrayAdapter {
         private Context mContext;
         private int id;
         private List<MapObject> mMaps;
@@ -65,24 +65,24 @@ public class MapListFragment extends Fragment {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 row = inflater.inflate(R.layout.listview_mapobject, parent, false);
                 temp = new MapObjectData();
-                temp.title = (TextView) row.findViewById(R.id.mapData);
+                temp.title = (TextView) row.findViewById(R.id.mapTitle);
+                temp.admin = (TextView) row.findViewById(R.id.mapAdmin);
                 row.setTag(temp);
             } else {
                 temp = (MapObjectData)row.getTag();
             }
             MapObject mapToBeDisplayed = mMaps.get(position); // there is a bug of some sort here
-            temp.title.setText("This");
+            temp.admin.setText("Admin Name Here");
+            temp.title.setText("Map Name Here");
             return row;
         }
 
         class MapObjectData
         {
             TextView title;
+            TextView admin;
         }
 
     }
-
-
-
 
 }
