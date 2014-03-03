@@ -22,25 +22,12 @@ import edu.purdue.maptak.admin.data.MapID;
 import edu.purdue.maptak.admin.data.MapObject;
 import edu.purdue.maptak.admin.data.MapTakDB;
 import edu.purdue.maptak.admin.data.TakObject;
+import edu.purdue.maptak.admin.interfaces.OnGMapLoadedListener;
 
 public class TakMapFragment extends MapFragment {
 
-    /** Bundle strings for accessing keys in the args bundle */
-    private static String BUNDLE_MAP_TO_DISPLAY = "map_to_display";
-
-    /** Static fragment generator. Use this if you don't want to display anything on this map */
-    public static TakMapFragment newInstanceOf() {
-        return new TakMapFragment();
-    }
-
-    /** Static fragment generator. Use this instead of `new` to create an instance of this fragment */
-    public static TakMapFragment newInstanceOf(MapID toDisplay) {
-        TakMapFragment frag = new TakMapFragment();
-        Bundle args = new Bundle();
-        args.putString(BUNDLE_MAP_TO_DISPLAY, toDisplay.getIDStr());
-        frag.setArguments(args);
-        return frag;
-    }
+    /** Listener for when the gmap has been fully loaded to the screen */
+    OnGMapLoadedListener loadedListener;
 
     /** Super class takes care of creating the view since we're just extending Google's MapFragment. */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,25 +41,10 @@ public class TakMapFragment extends MapFragment {
         // Center the camera on the user
         centerCameraOnUser();
 
-        // If a map should be loaded, load it
-        Bundle args = getArguments();
-        if (args != null) {
-
-            String mapIDStr = args.getString(BUNDLE_MAP_TO_DISPLAY);
-            Log.d(MainActivity.LOG_TAG, "TakMapFragment.onActivityCreated() -> Creating map with mapID " + mapIDStr);
-
-            // Get the map object which should be loaded
-            MapTakDB db = new MapTakDB(getActivity());
-            MapID mapID = new MapID(mapIDStr);
-            MapObject mapToLoad = db.getMap(mapID);
-
-            // Put the pins on the map
-            addTaksToGMap(mapToLoad);
-
-        } else {
-            Log.d(MainActivity.LOG_TAG, "TakMapFragment.onActivityCreated() -> No arguments set. Creating blank map.");
+        // Alert listeners that the gmap is loaded
+        if (loadedListener != null) {
+            loadedListener.onGMapLoaded();
         }
-
     }
 
     /** Centers the map's camera on the user */
@@ -117,6 +89,10 @@ public class TakMapFragment extends MapFragment {
         Point p = new Point();
         getActivity().getWindowManager().getDefaultDisplay().getSize(p);
         gmap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), p.x, p.y, 200));
+    }
+
+    public void setOnGMapLoadedListener(OnGMapLoadedListener listener) {
+        this.loadedListener = listener;
     }
 
 }

@@ -32,9 +32,9 @@ public class DummyData {
     public static TakObject createDummyTakObject() {
         Random r = new Random();
 
-        String name = "Random tak name" + r.nextInt(100);
-        float lat = r.nextFloat()*100;
-        float lng = r.nextFloat()*100;
+        String name = "Random tak name " + r.nextInt(100);
+        float lat = (r.nextFloat()*20)+10;
+        float lng = (r.nextFloat()*20)+10;
         return new TakObject(name, lat, lng);
     }
 

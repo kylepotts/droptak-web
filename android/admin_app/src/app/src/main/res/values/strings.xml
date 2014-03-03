@@ -6,6 +6,7 @@
     <string name="menu_taklist_label">Map List</string>
     <string name="menu_settings_label">Settings</string>
     <string name="menu_createmap_label">Create Map</string>
+    <string name="menu_addtak_label">Add A Tak</string>
     <string name="delete">Delete</string>
 
 </resources>
