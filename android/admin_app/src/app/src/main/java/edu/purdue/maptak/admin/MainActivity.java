@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import java.util.Random;
 
 import edu.purdue.maptak.admin.data.MapID;
 import edu.purdue.maptak.admin.data.MapTakDB;
@@ -42,6 +45,14 @@ public class MainActivity extends Activity implements OnMapSelectedListener {
         /* TODO: Adding some sample Maps to the database for testing purposes */
 
         MapTakDB db = new MapTakDB(this);
+
+        // 50% of the time, clear out the database completely
+        Random r = new Random();
+        if (r.nextInt(100) <= 50) {
+            db.destroy();
+            Toast.makeText(this, "DEBUG: Clearing database.", Toast.LENGTH_LONG).show();
+        }
+
         db.addMap(DummyData.createDummyMapObject());
 
         /* TODO: End testing code */

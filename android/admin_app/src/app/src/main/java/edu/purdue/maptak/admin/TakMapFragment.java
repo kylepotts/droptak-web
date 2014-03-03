@@ -51,6 +51,32 @@ public class TakMapFragment extends MapFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // Center the camera on the user
+        centerCameraOnUser();
+
+        // If a map should be loaded, load it
+        Bundle args = getArguments();
+        if (args != null) {
+
+            String mapIDStr = args.getString(BUNDLE_MAP_TO_DISPLAY);
+            Log.d(MainActivity.LOG_TAG, "TakMapFragment.onActivityCreated() -> Creating map with mapID " + mapIDStr);
+
+            // Get the map object which should be loaded
+            MapTakDB db = new MapTakDB(getActivity());
+            MapID mapID = new MapID(mapIDStr);
+            MapObject mapToLoad = db.getMap(mapID);
+
+            // Put the pins on the map
+            addTaksToGMap(mapToLoad);
+
+        } else {
+            Log.d(MainActivity.LOG_TAG, "TakMapFragment.onActivityCreated() -> No arguments set. Creating blank map.");
+        }
+
+    }
+
+    /** Centers the map's camera on the user */
+    public void centerCameraOnUser() {
         // Enable the user's location on the map
         getMap().setMyLocationEnabled(true);
 
@@ -67,42 +93,30 @@ public class TakMapFragment extends MapFragment {
             CameraUpdate moveCam = CameraUpdateFactory.newLatLngZoom(userLatLng, 14.5f);
             getMap().moveCamera(moveCam);
         }
+    }
 
-        // If a map should be loaded, load it
-        Bundle args = getArguments();
-        if (args != null) {
+    /** Clears all of the current pins off this fragments google map, adds all the pins for a
+     *  given MapObject, then zooms the camera to encompass all of these points. This is done
+     *  without any database transactions. */
+    public void addTaksToGMap(MapObject map) {
+        // Get the gmap on which we will draw the points
+        GoogleMap gmap = getMap();
+        gmap.clear();
 
-            String mapIDStr = args.getString(BUNDLE_MAP_TO_DISPLAY);
-            Log.d(MainActivity.LOG_TAG, "TakMapFragment.onActivityCreated() -> Creating map with mapID " + mapIDStr);
-
-            // Get the map object which should be loaded
-            MapTakDB db = new MapTakDB(getActivity());
-            MapID mapID = new MapID(mapIDStr);
-            MapObject mapToLoad = db.getMap(mapID);
-
-            // Get the gmap on which we will draw the points
-            GoogleMap gmap = getMap();
-            gmap.clear();
-
-            // Get all the latlng points for the map and add them
-            LatLngBounds.Builder builder = LatLngBounds.builder();
-            for (TakObject t : mapToLoad.getTakList()) {
-                LatLng l = new LatLng(t.getLatitude(), t.getLongitude());
-                builder.include(l);
-                gmap.addMarker(new MarkerOptions()
-                        .title(t.getLabel())
-                        .position(l));
-            }
-
-            // Animate the camera to include the points we added
-            Point p = new Point();
-            getActivity().getWindowManager().getDefaultDisplay().getSize(p);
-            gmap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), p.x, p.y, 200));
-
-        } else {
-            Log.d(MainActivity.LOG_TAG, "TakMapFragment.onActivityCreated() -> No arguments set. Creating blank map.");
+        // Get all the latlng points for the map and add them
+        LatLngBounds.Builder builder = LatLngBounds.builder();
+        for (TakObject t : map.getTakList()) {
+            LatLng l = new LatLng(t.getLatitude(), t.getLongitude());
+            builder.include(l);
+            gmap.addMarker(new MarkerOptions()
+                    .title(t.getLabel())
+                    .position(l));
         }
 
+        // Animate the camera to include the points we added
+        Point p = new Point();
+        getActivity().getWindowManager().getDefaultDisplay().getSize(p);
+        gmap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), p.x, p.y, 200));
     }
 
 }

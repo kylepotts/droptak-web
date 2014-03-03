@@ -27,6 +27,7 @@ public class MapListFragment extends Fragment implements AdapterView.OnItemClick
     MapTakDB mapTakDB;
 
     /** List Adapter that will hold the data that populates the list view */
+    List<MapObject> backingMapList;
     ListAdapter listAdapter;
 
     /** Holds the listener which will be called when a map is selected */
@@ -38,13 +39,17 @@ public class MapListFragment extends Fragment implements AdapterView.OnItemClick
         // Create instance of database
         mapTakDB = new MapTakDB(getActivity());
 
-        // Prepare the list adapter
+        // Inflate the view and create the listview
         View v = inflater.inflate(R.layout.fragment_maplist, container, false);
         mapList = (ListView) v.findViewById(R.id.fragment_maplist_listview);
         mapList.setOnItemClickListener(this);
-        listAdapter = new MapObjectAdapter<MapObject>(getActivity(), android.R.layout.simple_list_item_1, mapTakDB.getUsersMaps());
-        mapList.setAdapter(listAdapter);
 
+        // Commit a database transaction to get the user's maps
+        backingMapList = mapTakDB.getUsersMaps();
+
+        // Set those maps as the list adapter for the list view and return the view
+        listAdapter = new MapObjectAdapter<MapObject>(getActivity(), android.R.layout.simple_list_item_1, backingMapList);
+        mapList.setAdapter(listAdapter);
         return v;
     }
 
@@ -97,11 +102,7 @@ public class MapListFragment extends Fragment implements AdapterView.OnItemClick
 
     /** Called when the user selects an item on the listview backing this MapListFragment */
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        MapTakDB db = new MapTakDB(getActivity());
-
-        /** TODO: Make sure that the db will always return this list in the same order every time
-         *  otherwise this needs to be changed */
-        mapSelectedListener.onMapSelected(db.getUsersMaps().get(i).getID());
+        mapSelectedListener.onMapSelected(backingMapList.get(i).getID());
     }
 
 }
