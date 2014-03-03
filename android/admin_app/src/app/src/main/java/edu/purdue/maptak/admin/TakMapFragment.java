@@ -14,6 +14,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
+import edu.purdue.maptak.admin.interfaces.OnGMapLoadedListener;
+
 public class TakMapFragment extends MapFragment {
 
     /** I want the camera to do a cool animation ONLY on the first creation of this fragment. */

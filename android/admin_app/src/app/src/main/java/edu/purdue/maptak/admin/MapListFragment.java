@@ -3,7 +3,6 @@ package edu.purdue.maptak.admin;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +12,11 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import edu.purdue.maptak.admin.data.MapObject;
 import edu.purdue.maptak.admin.data.MapTakDB;
+import edu.purdue.maptak.admin.interfaces.OnMapSelectedListener;
 
 public class MapListFragment extends Fragment implements AdapterView.OnItemClickListener {
 

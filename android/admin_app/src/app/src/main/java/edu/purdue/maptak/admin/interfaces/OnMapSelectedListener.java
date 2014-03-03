@@ -1,4 +1,4 @@
-package edu.purdue.maptak.admin;
+package edu.purdue.maptak.admin.interfaces;
 
 import edu.purdue.maptak.admin.data.MapID;
 
