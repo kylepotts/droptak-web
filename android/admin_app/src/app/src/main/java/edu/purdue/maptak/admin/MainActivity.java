@@ -3,26 +3,17 @@ package edu.purdue.maptak.admin;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
-
 import edu.purdue.maptak.admin.data.MapID;
 import edu.purdue.maptak.admin.data.MapTakDB;
-import edu.purdue.maptak.admin.data.TakObject;
-import edu.purdue.maptak.admin.interfaces.OnGMapLoadedListener;
 import edu.purdue.maptak.admin.interfaces.OnMapSelectedListener;
 import edu.purdue.maptak.admin.test.DummyData;
 
-public class MainActivity extends Activity implements OnMapSelectedListener, OnGMapLoadedListener {
+public class MainActivity extends Activity implements OnMapSelectedListener {
 
     /** Log tag for debugging logcat output */
     public static final String LOG_TAG = "maptak";
@@ -43,8 +34,7 @@ public class MainActivity extends Activity implements OnMapSelectedListener, OnG
         setContentView(R.layout.activity_map);
 
         // Create a new map fragment for the screen
-        mapFragment = new TakMapFragment();
-        mapFragment.setOnGMapLoadedListener(this);
+        mapFragment = TakMapFragment.newInstanceOf();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.activity_map_mapview, mapFragment);
         ft.commit();
@@ -148,43 +138,15 @@ public class MainActivity extends Activity implements OnMapSelectedListener, OnG
 
         // Get the map the user selected
         MapTakDB db = new MapTakDB(this);
-        currentSelectedMap = db.getMap(selectedMapID).getID();
+        currentSelectedMap = selectedMapID;
 
         // Re-inflate the google map
         setContentView(R.layout.activity_map_addtak);
-        mapFragment = new TakMapFragment();
-        mapFragment.setOnGMapLoadedListener(this);
+        mapFragment = TakMapFragment.newInstanceOf(selectedMapID);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.activity_map_mapview, mapFragment)
                 .commit();
-    }
-
-    /** Called when a googlemap is fully loaded into the activity */
-    public void onGMapLoaded() {
-        MapTakDB db = new MapTakDB(this);
-        GoogleMap gmap = mapFragment.getMap();
-        gmap.clear();
-
-        // If no map is currently selected then we can just exit
-        if (currentSelectedMap == null) {
-            return;
-        }
-
-        // Get all the latlng points for the map and add them
-        LatLngBounds.Builder builder = LatLngBounds.builder();
-        for (TakObject t : db.getMap(currentSelectedMap).getTakList()) {
-            LatLng l = new LatLng(t.getLatitude(), t.getLongitude());
-            builder.include(l);
-            gmap.addMarker(new MarkerOptions()
-                    .title(t.getLabel())
-                    .position(l));
-        }
-
-        // Animate the camera to include the points we added
-        Point p = new Point();
-        this.getWindowManager().getDefaultDisplay().getSize(p);
-        gmap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), p.x, p.y, 200));
     }
 
 }
