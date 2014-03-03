@@ -187,7 +187,7 @@ public class MapTakDB extends SQLiteOpenHelper {
         if (c.moveToFirst()) {
             do {
                 String iterMapID = c.getString(c.getColumnIndex(TAK_MAP_ID));
-                if (mapID.equals(iterMapID.equals(mapID.getIDStr()))) {
+                if (mapID.getIDStr().equals(iterMapID)) {
                     String takID = c.getString(c.getColumnIndex(TAK_ID));
                     String takLabel = c.getString(c.getColumnIndex(TAK_LABEL));
                     double takLat = c.getDouble(c.getColumnIndex(TAK_LAT));
@@ -204,17 +204,21 @@ public class MapTakDB extends SQLiteOpenHelper {
      *  Returns null if the object does not exist in the database. */
     public TakObject getTak(TakID takID) {
 
-        Cursor c = getReadableDatabase().query(TABLE_TAKS, null, TAK_ID + "=\'" + takID.getIDStr() + "\'", null, null, null, null);
+        /** TODO: Optimize this */
+        Cursor c = getReadableDatabase().query(TABLE_TAKS, null, null, null, null, null, null);
 
         if (c.moveToFirst()) {
-            String takIDStr = c.getString(c.getColumnIndex(TAK_ID));
-            String takLabel = c.getString(c.getColumnIndex(TAK_LABEL));
-            double takLat = c.getDouble(c.getColumnIndex(TAK_LAT));
-            double takLng = c.getDouble(c.getColumnIndex(TAK_LNG));
-            TakObject obj = new TakObject(new TakID(takIDStr), takLabel, takLat, takLng);
-            return obj;
+            do {
+                if (c.getString(c.getColumnIndex(TAK_ID)).equals(takID.getIDStr())) {
+                    String takIDStr = c.getString(c.getColumnIndex(TAK_ID));
+                    String takLabel = c.getString(c.getColumnIndex(TAK_LABEL));
+                    double takLat = c.getDouble(c.getColumnIndex(TAK_LAT));
+                    double takLng = c.getDouble(c.getColumnIndex(TAK_LNG));
+                    TakObject obj = new TakObject(new TakID(takIDStr), takLabel, takLat, takLng);
+                    return obj;
+                }
+            } while (c.moveToNext());
         }
-
         return null;
     }
 

@@ -7,6 +7,7 @@ import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -18,7 +19,7 @@ import java.util.List;
 import edu.purdue.maptak.admin.data.MapObject;
 import edu.purdue.maptak.admin.data.MapTakDB;
 
-public class MapListFragment extends Fragment {
+public class MapListFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     /** List View that will display the maps currently accessible by the manager/user */
     ListView mapList;
@@ -29,6 +30,9 @@ public class MapListFragment extends Fragment {
     /** List Adapter that will hold the data that populates the list view */
     ListAdapter listAdapter;
 
+    /** Holds the listener which will be called when a map is selected */
+    OnMapSelectedListener mapSelectedListener;
+
     /** Inflates the view for this fragment. */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -38,6 +42,7 @@ public class MapListFragment extends Fragment {
         // Prepare the list adapter
         View v = inflater.inflate(R.layout.fragment_maplist, container, false);
         mapList = (ListView) v.findViewById(R.id.fragment_maplist_listview);
+        mapList.setOnItemClickListener(this);
         listAdapter = new MapObjectAdapter<MapObject>(getActivity(), android.R.layout.simple_list_item_1, mapTakDB.getUsersMaps());
         mapList.setAdapter(listAdapter);
 
@@ -83,6 +88,21 @@ public class MapListFragment extends Fragment {
             TextView admin;
         }
 
+    }
+
+    /** Sets the onMapSelectedListener for this fragment, which will initiate a callback once
+     *  the user has selected a map. */
+    public void setOnMapSelectedListener(OnMapSelectedListener listener) {
+        this.mapSelectedListener = listener;
+    }
+
+    /** Called when the user selects an item on the listview backing this MapListFragment */
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        MapTakDB db = new MapTakDB(getActivity());
+
+        /** TODO: Make sure that the db will always return this list in the same order every time
+         *  otherwise this needs to be changed */
+        mapSelectedListener.onMapSelected(db.getUsersMaps().get(i).getID());
     }
 
 }

@@ -19,6 +19,9 @@ public class TakMapFragment extends MapFragment {
     /** I want the camera to do a cool animation ONLY on the first creation of this fragment. */
     boolean isFirst = true;
 
+    /** Listener for when the gmap loads */
+    OnGMapLoadedListener gMapLoadedListener;
+
     /** Super class takes care of creating the view since we're just extending MapFragment. */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(MainActivity.LOG_TAG, "TakMapFragment.onCreateView() called.");
@@ -53,6 +56,16 @@ public class TakMapFragment extends MapFragment {
 
         }
 
+        // Alert listeners that the gmap is loaded
+        if (gMapLoadedListener != null) {
+            gMapLoadedListener.onGMapLoaded();
+        }
+
+    }
+
+    /** Sets the onGmapLoadedListener for this fragment */
+    public void setOnGMapLoadedListener(OnGMapLoadedListener listener) {
+        this.gMapLoadedListener = listener;
     }
 
 }
