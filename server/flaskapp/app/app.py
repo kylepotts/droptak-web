@@ -1,5 +1,5 @@
 from utils.path import fix_path
-import os
+import os, json
 from google.appengine.api.logservice import logservice
 import logging
 from User import Account 
@@ -40,8 +40,8 @@ def login():
 		return page_not_found(404)
 
 
-@app.route('/taks/',methods=['GET','POST'])
-def taks():
+@app.route('/taks/new/',methods=['GET','POST'])
+def create_tak():
 	if request.method == 'POST':
 			title = getValue(request, "title", "")
 			lat = getValue(request, "lat", "")
@@ -56,6 +56,10 @@ def taks():
 			return redirect(url_for('show_taks', id=key.id()))
 	if request.method == 'GET':
 		return render_template('taks.html')
+@app.route('/taks/',methods=['GET','POST'])
+def taks():
+	taks = Tak.query()
+	return render_template('all_taks.html',taks = taks)
 
 @app.route('/taks/<int:id>', methods = ['GET', 'POST'])
 def show_taks(id=-1):
@@ -84,3 +88,6 @@ def getValue(request, key, default):
 
 # register Blueprints
 app.register_blueprint(example_blueprint)
+
+
+app.debug = True
