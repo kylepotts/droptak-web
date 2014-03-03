@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +22,8 @@ public class AddTakFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_addtak, container, false);
 
-        EditText labelText = (EditText) view.findViewById(R.id.labelText);
-        EditText descriptionText = (EditText) view.findViewById(R.id.descriptionText);
+        final EditText labelText = (EditText) view.findViewById(R.id.labelText);
+        final EditText descriptionText = (EditText) view.findViewById(R.id.descriptionText);
 
         /** Button1 creates a tak at the user's current location */
         Button button = (Button) view.findViewById(R.id.button1);
@@ -37,10 +38,17 @@ public class AddTakFragment extends Fragment {
                 //AccountManager am = (AccountManager) getActivity().getSystemService(Context.ACCOUNT_SERVICE);
                 //Account[] accountList = am.getAccounts();
 
-                double lat = userLocation.getLatitude();
-                double lng = userLocation.getLongitude();
+                if(userLocation != null) {
+                    double lat = userLocation.getLatitude();
+                    double lng = userLocation.getLongitude();
 
-                TakObject newTak = new TakObject(lat, lng);
+                    TakObject newTak = new TakObject(lat, lng);
+                }
+                Log.i("AddTakFragment", labelText.getText().toString());
+                Log.i("AddTakFragment", descriptionText.getText().toString());
+
+                //newTak.setLabel(labelText.getText().toString());
+                //newTak.setDescription(descriptionText.getText().toString());
 
 
                 //Add UUID to tak(?)
