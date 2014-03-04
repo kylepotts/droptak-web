@@ -38,13 +38,10 @@ public class MainActivity extends Activity implements OnMapSelectedListener {
         setContentView(R.layout.activity_main);
 
         // Create a new map fragment for the screen
-        if (mapFragment == null) {
-            mapFragment = new TakMapFragment();
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.activity_map_mapview, mapFragment);
-            ft.commit();
-        }
-
+        mapFragment = new TakMapFragment();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.activity_map_mapview, mapFragment);
+        ft.commit();
 
         /* TODO: Adding some sample Maps to the database for testing purposes */
 
@@ -144,6 +141,17 @@ public class MainActivity extends Activity implements OnMapSelectedListener {
 
             case R.id.menu_taklist:
 
+                // Set the main view to create the map fragment.
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.activity_map_mapview, new TakListFragment())
+                        .commit();
+
+                // Clear the menu
+                menu.clear();
+
+                // Set up enabled
+                setUpEnabled(true);
 
                 break;
 
