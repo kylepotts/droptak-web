@@ -54,7 +54,7 @@ public class MapListFragment extends Fragment implements AdapterView.OnItemClick
     }
 
     /** Custom ListView Adapter */
-    private class MapObjectAdapter<MapObject> extends ArrayAdapter {
+    private class MapObjectAdapter extends ArrayAdapter {
         private Context mContext;
         private int id;
         private List<MapObject> mMaps;
@@ -81,7 +81,7 @@ public class MapListFragment extends Fragment implements AdapterView.OnItemClick
                 temp = (MapObjectData)row.getTag();
             }
             MapObject mapToBeDisplayed = mMaps.get(position); // there is a bug of some sort here
-            temp.admin.setText("Admin Name Here");
+            temp.admin.setText(mapToBeDisplayed.getLabel());
             temp.title.setText("Map Name Here");
             return row;
         }
