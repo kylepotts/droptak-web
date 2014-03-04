@@ -67,7 +67,7 @@ def show_taks(id=-1):
 		if id >= 0:
 			tak = Tak.get_by_id(id)
 			if tak is not None:
-				return jsonify(tak.to_dict())
+				return render_template('edit_tak.html',tak=tak)
 	return redirect('/taks')
 
 @app.errorhandler(404)
