@@ -9,10 +9,14 @@
         android:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_maplist"
+        android:id="@+id/menu_taklist"
         android:title="@string/menu_taklist_label"
-        android:icon="@drawable/ic_map_list"
-        android:showAsAction="always" />
+        android:icon="@drawable/ic_pin" />
+
+    <item
+        android:id="@+id/menu_maplist"
+        android:title="@string/menu_maplist_label"
+        android:icon="@drawable/ic_map_list" />
 
     <item
         android:id="@+id/menu_settings"

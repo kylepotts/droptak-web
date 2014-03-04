@@ -48,7 +48,7 @@ public class MapListFragment extends Fragment implements AdapterView.OnItemClick
         backingMapList = mapTakDB.getUsersMaps();
 
         // Set those maps as the list adapter for the list view and return the view
-        listAdapter = new MapObjectAdapter<MapObject>(getActivity(), android.R.layout.simple_list_item_1, backingMapList);
+        listAdapter = new MapObjectAdapter(getActivity(), android.R.layout.simple_list_item_1, backingMapList);
         mapList.setAdapter(listAdapter);
         return v;
     }

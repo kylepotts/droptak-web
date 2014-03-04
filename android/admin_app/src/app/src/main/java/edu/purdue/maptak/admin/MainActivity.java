@@ -38,10 +38,13 @@ public class MainActivity extends Activity implements OnMapSelectedListener {
         setContentView(R.layout.activity_main);
 
         // Create a new map fragment for the screen
-        mapFragment = new TakMapFragment();
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.activity_map_mapview, mapFragment);
-        ft.commit();
+        if (mapFragment == null) {
+            mapFragment = new TakMapFragment();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.activity_map_mapview, mapFragment);
+            ft.commit();
+        }
+
 
         /* TODO: Adding some sample Maps to the database for testing purposes */
 
@@ -61,7 +64,7 @@ public class MainActivity extends Activity implements OnMapSelectedListener {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
-        getMenuInflater().inflate(R.menu.main_noaddtak, menu);
+        getMenuInflater().inflate(R.menu.main_normal, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -79,9 +82,9 @@ public class MainActivity extends Activity implements OnMapSelectedListener {
                 // Change the menu bar back to normal
                 menu.clear();
                 if (currentSelectedMap == null) {
-                    getMenuInflater().inflate(R.menu.main_noaddtak, menu);
+                    getMenuInflater().inflate(R.menu.main_normal, menu);
                 } else {
-                    getMenuInflater().inflate(R.menu.main_addtak, menu);
+                    getMenuInflater().inflate(R.menu.main_mapselected, menu);
                 }
 
                 // Disable the back button
@@ -90,7 +93,7 @@ public class MainActivity extends Activity implements OnMapSelectedListener {
 
             case R.id.menu_maplist:
 
-                // Set the main_noaddtak view to a map list fragment
+                // Set the main_normal view to a map list fragment
                 MapListFragment mlFrag = new MapListFragment();
                 mlFrag.setOnMapSelectedListener(this);
                 getFragmentManager()
@@ -139,6 +142,11 @@ public class MainActivity extends Activity implements OnMapSelectedListener {
 
                 break;
 
+            case R.id.menu_taklist:
+
+
+                break;
+
             case R.id.menu_settings:
 
                 break;
@@ -165,7 +173,7 @@ public class MainActivity extends Activity implements OnMapSelectedListener {
     public void onMapSelected(MapID selectedMapID) {
         // Reset the state of the action bar
         menu.clear();
-        getMenuInflater().inflate(R.menu.main_addtak, menu);
+        getMenuInflater().inflate(R.menu.main_mapselected, menu);
         setUpEnabled(false);
 
         // Set the global currently selected map
