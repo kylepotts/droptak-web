@@ -30,7 +30,7 @@ public class MainActivity extends Activity implements OnMapSelectedListener {
 
     /** Store the current map the user has displayed as a static variable.
      *  This way, fragments can access it as necessary when adding new taks to the current map. */
-    private MapID currentSelectedMap = null;
+    public static MapID currentSelectedMap = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
