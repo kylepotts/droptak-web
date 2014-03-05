@@ -85,6 +85,11 @@ public class TakMapFragment extends MapFragment {
         GoogleMap gmap = getMap();
         gmap.clear();
 
+        // If the map has no points (brand new) then just return
+        if (map.getTakList().size() == 0) {
+            return;
+        }
+
         // Get all the latlng points for the map and add them
         LatLngBounds.Builder builder = LatLngBounds.builder();
         for (TakObject t : map.getTakList()) {
