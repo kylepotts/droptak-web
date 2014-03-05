@@ -25,7 +25,7 @@ public class TakListFragment extends ListFragment {
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         MapTakDB db = new MapTakDB(getActivity());
-        List<TakObject> takObjects = db.getTaks(MainActivity.currentlySelectedMap);
+        List<TakObject> takObjects = db.getTaks(MainActivity.currentSelectedMap);
 
         //Placeholder dummy data
         List<String> taks = new LinkedList<String>();
