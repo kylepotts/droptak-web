@@ -14,13 +14,19 @@ import android.widget.EditText;
 //import android.accounts.AccountManager;
 //import android.accounts.Account;
 
+import edu.purdue.maptak.admin.data.MapTakDB;
+import edu.purdue.maptak.admin.data.TakID;
 import edu.purdue.maptak.admin.data.TakObject;
 
 public class AddTakFragment extends Fragment {
 
+
     /** Inflates the view for this fragment. */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_addtak, container, false);
+
+        /** Create the DB in order to add a tak */
+        final MapTakDB newDB = new MapTakDB(getActivity());
 
         final EditText labelText = (EditText) view.findViewById(R.id.labelText);
         final EditText descriptionText = (EditText) view.findViewById(R.id.descriptionText);
@@ -34,27 +40,16 @@ public class AddTakFragment extends Fragment {
                 LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
                 Location userLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-                /** I think this is how you are able to get the UUID of the user(gmail) */
-                //AccountManager am = (AccountManager) getActivity().getSystemService(Context.ACCOUNT_SERVICE);
-                //Account[] accountList = am.getAccounts();
+                /** Create the tak to add to DB */
+                TakObject newTak;
 
                 if(userLocation != null) {
                     double lat = userLocation.getLatitude();
                     double lng = userLocation.getLongitude();
 
-                    TakObject newTak = new TakObject(lat, lng);
+                    newTak = new TakObject(labelText.getText().toString(), lat, lng);
+                    newDB.addTak(newTak, MainActivity.currentSelectedMap);
                 }
-                Log.i("AddTakFragment", labelText.getText().toString());
-                Log.i("AddTakFragment", descriptionText.getText().toString());
-
-                //newTak.setLabel(labelText.getText().toString());
-                //newTak.setDescription(descriptionText.getText().toString());
-
-
-                //Add UUID to tak(?)
-
-                //Send the tak to the server
-
             }
         });
         return view;
