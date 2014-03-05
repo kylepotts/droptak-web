@@ -48,7 +48,7 @@ public class MapListFragment extends Fragment implements AdapterView.OnItemClick
         backingMapList = mapTakDB.getUsersMaps();
 
         // Set those maps as the list adapter for the list view and return the view
-        listAdapter = new MapObjectAdapter<MapObject>(getActivity(), android.R.layout.simple_list_item_1, backingMapList);
+        listAdapter = new MapObjectAdapter(getActivity(), android.R.layout.simple_list_item_1, backingMapList);
         mapList.setAdapter(listAdapter);
         return v;
     }
@@ -75,21 +75,18 @@ public class MapListFragment extends Fragment implements AdapterView.OnItemClick
                 row = inflater.inflate(R.layout.listview_mapobject, parent, false);
                 temp = new MapObjectData();
                 temp.title = (TextView) row.findViewById(R.id.mapTitle);
-                temp.admin = (TextView) row.findViewById(R.id.mapAdmin);
                 row.setTag(temp);
             } else {
                 temp = (MapObjectData)row.getTag();
             }
-            MapObject mapToBeDisplayed = mMaps.get(position); // there is a bug of some sort here
-            temp.admin.setText(mapToBeDisplayed.getLabel());
-            temp.title.setText("Map Name Here");
+            MapObject mapToBeDisplayed = mMaps.get(position);
+            temp.title.setText(mapToBeDisplayed.getLabel());
             return row;
         }
 
         class MapObjectData
         {
             TextView title;
-            TextView admin;
         }
 
     }

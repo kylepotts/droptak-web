@@ -16,14 +16,4 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <TextView
-        android:id="@+id/mapAdmin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_below="@id/mapTitle"
-        android:text="Admin Name Here"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
 </RelativeLayout>
