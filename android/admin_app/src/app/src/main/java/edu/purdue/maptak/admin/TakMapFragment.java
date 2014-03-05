@@ -27,7 +27,16 @@ import edu.purdue.maptak.admin.interfaces.OnGMapLoadedListener;
 public class TakMapFragment extends MapFragment {
 
     /** Listener for when the gmap has been fully loaded to the screen */
-    OnGMapLoadedListener loadedListener;
+    private OnGMapLoadedListener loadedListener;
+
+    /** Bundle key for boolean which says whether the gmap has a map on it currently */
+    private MapObject loadedMap = null;
+
+    /** First method that is called, before View or Activity is created */
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
     /** Super class takes care of creating the view since we're just extending Google's MapFragment. */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -72,6 +81,7 @@ public class TakMapFragment extends MapFragment {
      *  without any database transactions. */
     public void addTaksToGMap(MapObject map) {
         // Get the gmap on which we will draw the points
+        loadedMap = map;
         GoogleMap gmap = getMap();
         gmap.clear();
 
@@ -91,6 +101,7 @@ public class TakMapFragment extends MapFragment {
         gmap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), p.x, p.y, 200));
     }
 
+    /** Sets the fragments onGmapLoadedListener for when the googlemap is fully loaded */
     public void setOnGMapLoadedListener(OnGMapLoadedListener listener) {
         this.loadedListener = listener;
     }
