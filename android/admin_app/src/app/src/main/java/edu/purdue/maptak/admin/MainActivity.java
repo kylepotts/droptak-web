@@ -3,10 +3,12 @@ package edu.purdue.maptak.admin;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import java.util.Random;
@@ -86,6 +88,12 @@ public class MainActivity extends Activity implements OnMapSelectedListener {
 
                 // Disable the back button
                 setUpEnabled(false);
+
+                // Set the keyboard collapsed
+                InputMethodManager imm = (InputMethodManager)getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
                 break;
 
             case R.id.menu_maplist:
