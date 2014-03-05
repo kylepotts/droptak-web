@@ -2,6 +2,7 @@ package edu.purdue.maptak.admin;
 
 import android.app.ListFragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,16 +25,22 @@ public class TakListFragment extends ListFragment {
 
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        MapTakDB db = new MapTakDB(getActivity());
-        List<TakObject> takObjects = db.getTaks(MainActivity.currentSelectedMap);
 
-        //Placeholder dummy data
+        MapTakDB db = new MapTakDB(getActivity());
+        List<TakObject> takObjects;
+
+        if(MainActivity.currentSelectedMap == null){
+            takObjects = new LinkedList<TakObject>();
+        } else{
+            takObjects = db.getTaks(MainActivity.currentSelectedMap);
+        }
+
         List<String> taks = new LinkedList<String>();
 
         while(!takObjects.isEmpty()){
             taks.add(takObjects.remove(0).getLabel());
         }
-
+        Log.i("TakListFragment", "1");
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, taks);
         setListAdapter(adapter);
     }
