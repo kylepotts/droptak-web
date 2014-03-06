@@ -23,18 +23,20 @@
             <div class="carousel-inner">
                 <div class="item active">
                     <div class="row" id="items">
-                        <div class="col-sm-3">
+                        {% for map in maps %}
+
+                                                <div class="col-sm-3">
                             <div class="col-item">
                                 <div class="photo">
                                     <img src="http://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=350x260&maptype=roadmap
-									&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318
-									&markers=color:red%7Clabel:C%7C40.718217,-73.998284&sensor=false" class="img-responsive" alt="a" />
+                                    &markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318
+                                    &markers=color:red%7Clabel:C%7C40.718217,-73.998284&sensor=false" class="img-responsive" alt="a" />
                                 </div>
                                 <div class="info">
                                     <div class="row">
                                         <div class="price col-md-6">
                                             <h5>
-                                                Map Name</h5>
+                                                {{map.name}}</h5>
                                             <h5 class="price-text-color">
                                                 Location</h5>
                                         </div>
@@ -50,11 +52,38 @@
                                 </div>
                             </div>
                         </div>
+
+
+
+
+
+                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
-            	<button type="button" class="btn btn-default" id="addMap">Add Map</button>
+            	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#addMapModal">Add Map</button>
+
+                <div class="modal fade" id="addMapModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Add Map</h4>
+      </div>
+      <div class="modal-body">
+        <form role="form">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Map Name</label>
+    <input type="email" name="mapName" id="mapName" class="form-control" id="exampleInputEmail1" placeholder="Enter a map Name">
+  </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal"id="addMap">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
       </div>
     </div>
 

@@ -1,11 +1,14 @@
 var start = 4
+var mapName
 $(document).ready(function()  { $('.carousel').carousel({ interval: 4000, cycle: true }); });
 $(document).ready(function() {
 $('#addMap').on('click',onAddMapClick);
+$('#view_map_link').on('click', onViewMapClick)
 });
 
 function onAddMapClick(e){
     console.log("click");
+    mapName = getMapName()
     $('#items').append("\
                                 <div class='col-sm-3'> \
                             <div class='col-item'> \
@@ -17,8 +20,8 @@ function onAddMapClick(e){
                                 <div class='info'>\
                                     <div class='row'>\
                                         <div class='price col-md-6'>\
-                                            <h5>\
-                                                Map Name</h5>\
+                                            <h5>"+mapName+"\
+                                                </h5>\
                                             <h5 class='price-text-color'>\
                                                 Location</h5>\
                                         </div>\
@@ -36,4 +39,21 @@ function onAddMapClick(e){
                                 </div>\
                             </div>\
                         </div>");
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.open("POST","http://mapitapps.appspot.com/maps/new?name="+mapName)
+  xmlhttp.send();
 }
+
+
+function onViewMapClick(e){
+    console.log("onViewMapClicked")
+}
+
+function getMapName(){
+    name = $('#mapName').val()
+    console.log(name)
+    return name
+}
+
+
+
