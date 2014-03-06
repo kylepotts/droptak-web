@@ -9,7 +9,7 @@
         android:layout_width="310dp"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Map Name"
+        android:hint="Map Name"
         android:ems="10"
         android:id="@+id/mapNameText"
         android:layout_weight="0.21" />
