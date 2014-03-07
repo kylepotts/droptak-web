@@ -31,6 +31,7 @@ function addMarker(location) {
   markers.push(marker);
 }
      addMarker(new google.maps.LatLng({{tak.lat}},{{tak.lng}}));
+     map.setCenter(new google.maps.LatLng({{tak.lat}},{{tak.lng}}));
   google.maps.event.addDomListener(window, "resize", function() {
    var center = map.getCenter();
    google.maps.event.trigger(map, "resize");
