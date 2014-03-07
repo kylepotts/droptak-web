@@ -54,6 +54,7 @@ function addMarker(location) {
         <table class="table table-striped table-bordered">
           <thead>
             <tr>
+              <th id="view" style="text-align: center; "></th>
               <th id="title" style="text-align: center; ">Title</th>
               <th id="lat" style="text-align: center; ">Latitude</th>
               <th id="lng" style="text-align: center; ">Longitude</th>
@@ -64,6 +65,11 @@ function addMarker(location) {
             
             {% for tak in taks %}
             <tr>
+              <td headers="view">
+                <a role="button" class="btn btn-primary" href="/taks/{{tak.key.id()}}">
+                  View
+                </a>
+              </td>
               <td headers="title">{{tak.title}}</td>
               <td headers="lat">{{tak.lat}}</td>
               <td headers="lng">{{tak.lng}}</td>
