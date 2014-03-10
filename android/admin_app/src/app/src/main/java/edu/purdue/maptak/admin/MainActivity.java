@@ -15,6 +15,11 @@ import java.util.Random;
 
 import edu.purdue.maptak.admin.data.MapID;
 import edu.purdue.maptak.admin.data.MapTakDB;
+import edu.purdue.maptak.admin.fragments.AddTakFragment;
+import edu.purdue.maptak.admin.fragments.CreateMapFragment;
+import edu.purdue.maptak.admin.fragments.MapListFragment;
+import edu.purdue.maptak.admin.fragments.TakListFragment;
+import edu.purdue.maptak.admin.fragments.TakMapFragment;
 import edu.purdue.maptak.admin.interfaces.OnGMapLoadedListener;
 import edu.purdue.maptak.admin.interfaces.OnMapSelectedListener;
 import edu.purdue.maptak.admin.test.DummyData;

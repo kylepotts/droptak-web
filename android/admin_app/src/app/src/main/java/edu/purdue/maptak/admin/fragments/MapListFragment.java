@@ -1,4 +1,4 @@
-package edu.purdue.maptak.admin;
+package edu.purdue.maptak.admin.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import edu.purdue.maptak.admin.R;
 import edu.purdue.maptak.admin.data.MapObject;
 import edu.purdue.maptak.admin.data.MapTakDB;
 import edu.purdue.maptak.admin.interfaces.OnMapSelectedListener;

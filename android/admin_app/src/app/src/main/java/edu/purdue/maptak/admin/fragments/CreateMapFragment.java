@@ -1,4 +1,4 @@
-package edu.purdue.maptak.admin;
+package edu.purdue.maptak.admin.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.widget.EditText;
 import java.util.LinkedList;
 import java.util.List;
 
+import edu.purdue.maptak.admin.R;
 import edu.purdue.maptak.admin.data.MapObject;
 import edu.purdue.maptak.admin.data.MapTakDB;
 import edu.purdue.maptak.admin.data.TakObject;

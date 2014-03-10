@@ -1,4 +1,4 @@
-package edu.purdue.maptak.admin;
+package edu.purdue.maptak.admin.fragments;
 
 import android.app.ListFragment;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import android.widget.ListView;
 import java.util.LinkedList;
 import java.util.List;
 
+import edu.purdue.maptak.admin.MainActivity;
+import edu.purdue.maptak.admin.R;
 import edu.purdue.maptak.admin.data.MapTakDB;
 import edu.purdue.maptak.admin.data.TakObject;
 import edu.purdue.maptak.admin.test.DummyData;

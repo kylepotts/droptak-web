@@ -1,4 +1,4 @@
-package edu.purdue.maptak.admin;
+package edu.purdue.maptak.admin.fragments;
 
 import android.content.Context;
 import android.graphics.Point;
