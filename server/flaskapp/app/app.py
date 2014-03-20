@@ -20,7 +20,7 @@ currentAccount = 1
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+	return render_template('index.html')
 
 @app.route('/maps',methods=['GET','POST'])
 def maps():
@@ -92,7 +92,7 @@ def create_map():
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return '404: Page Not Found'
+	return '404: Page Not Found'
 
 def getValue(request, key, default):
 	value = default
@@ -110,6 +110,15 @@ def getUserMaps(id):
 	query = Map.query(Map.creatorId == id)
 	return query
 
+
+
+@app.route('/api/taks/')
+def api_taks():
+	user = getValue(request, "user", "")
+	if user:
+		query = Tak.query(Tak.creator == user)
+	else: query = Tak.query()
+	return json.dumps([t.to_dict() for t in query.fetch()])
 
 # register Blueprints
 app.register_blueprint(example_blueprint)
