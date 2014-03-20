@@ -35,7 +35,7 @@ function getProfileCallBack(obj){
   console.log("Email: " + email);
   console.log("Name: "+ name);
   xmlhttp = new XMLHttpRequest();
-  xmlhttp.open("POST","http://mapitapps.appspot.com/login?name="+name+"&email="+email,true);
+  xmlhttp.open("POST","http://localhost:8080/login?name="+name+"&email="+email,true);
   xmlhttp.send();
   $("#nav-login").html("<a href='#'> <img src='https://plus.google.com/s2/photos/profile/" + profile.id + "?sz=25' />" + name + "</a>");
   }
