@@ -1,5 +1,7 @@
 <!DOCTYPE html>
   <head>
+    {% block head %}
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -7,9 +9,8 @@
     <title>MapTak</title>
     <link href="/static/css/vendor/bootstrap.min.css" rel="stylesheet">
     <link href="/static/css/cover.css" rel="stylesheet">
-    
     <script src="/static/js/vendor/jquery.min.js"></script>
-    <script src="static/js/login.js"></script>
+    <script src="/static/js/login.js"></script>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -17,6 +18,7 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
   <style type="text/css"></style><style id="holderjs-style" type="text/css"></style>
+  {% endblock %}
 </head>
   <body>
      <div class="jumbotron">
@@ -29,12 +31,13 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">MapTak</a>
+          <a class="navbar-brand" href="/">MapTak</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li  id="nav-login"> <a onclick="hideMenu()" data-toggle="modal" data-target="#myModal" href="javascript:void(0);">Login | Signup</a></li>
-            <li><a href="#about">About us</a></li>
+            <li><a href="/taks/">Taks</a></li>
+            <li><a href="/taks/new">Create</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -62,6 +65,7 @@
     </div>
   </div>
 </div>
+
       {% block content %}
 
       {% endblock %}
