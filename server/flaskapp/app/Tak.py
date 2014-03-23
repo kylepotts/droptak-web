@@ -9,6 +9,7 @@ class Tak(ndb.Model):
 	lng = ndb.StringProperty() # longitude
 	creator = ndb.StringProperty()
 	creatorId = ndb.IntegerProperty()
+	mapId = ndb.StringProperty()
 
 	def to_dict(self):
 		return {
