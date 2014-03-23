@@ -1,7 +1,13 @@
-import json
+from utils.path import fix_path
+import os, json
 from google.appengine.ext import ndb
 from google.appengine.api.logservice import logservice
 import logging
+
+# this fix allows us to import modues/packages found in 'lib'
+fix_path(os.path.abspath(os.path.dirname(__file__)))
+
+from flask import Flask, render_template, request, jsonify, redirect, url_for, g, session
 
 class Tak(ndb.Model):
 	title = ndb.StringProperty() # latitude
@@ -20,4 +26,10 @@ class Tak(ndb.Model):
 			'creatorId': self.creatorId,
 			}
 
+	def update(self):
+		
+		return
+
+	def view(self):
+		return render_template('edit_tak.html',tak=self)
 

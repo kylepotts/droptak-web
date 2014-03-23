@@ -43,7 +43,7 @@
                                     </div>
                                     <div class="separator clear-left">
                                         <p class="btn-add">
-                                            <i class="fa fa-map-marker"></i><a href="http://localhost:8080/taks?mapId={{map.key.integer_id()}}" class="hidden-sm">View Map</a></p>
+                                            <i class="fa fa-map-marker"></i><a href="/maps/{{map.key.integer_id()}}" class="hidden-sm">View Map</a></p>
                                         <p class="btn-details">
                                             <i class="fa fa-list"></i><a href="http://localhost:8080/taks" class="hidden-sm">More details</a></p>
                                     </div>
@@ -72,14 +72,14 @@
         <h4 class="modal-title" id="myModalLabel">Add Map</h4>
       </div>
       <div class="modal-body">
-        <form role="form">
+        <form role="form" id="createMapForm">
   <div class="form-group">
     <label for="exampleInputEmail1">Map Name</label>
     <input type="text" name="mapName" id="mapName" class="form-control" id="exampleInputEmail1" placeholder="Enter a map Name">
   </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal"id="addMap">Add</button>
+        <button type="submit" class="btn btn-primary" data-dismiss="modal" id="addMap">Add</button>
       </div>
     </div>
   </div>

@@ -79,7 +79,16 @@ function addMarker(location) {
 		      <input type="number" class="form-control" id="lng" name="lng" step="any" placeholder="Enter Longitude"  required aria-required=”true”>
 		    </div>
 		  </div>
-      <input name="user" id="form-token" type="hidden" value="web4" />
+      <div class="form-group">
+        <label for="mapId" class="col-sm-2 control-label">Map</label>
+        <div class="col-sm-10">
+          <select class="form-control" name="mapId" id="mapId">
+          {% for map in maps %}
+            <option value="{{map.key.id()}}">{{map.name}}</option>
+          {% endfor %}
+          </select>
+          </div>
+      </div>
 		  <div class="form-group">
 		  	<div class="col-sm-offset-2 col-sm-10">
      			<button type="submit" class="btn btn-primary">Submit</button>

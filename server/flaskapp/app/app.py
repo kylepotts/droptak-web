@@ -16,13 +16,14 @@ from blueprints.example.views import bp as example_blueprint
 app = Flask(__name__)
 app.secret_key = 'key'
 currentAccount = 1
+app.debug = True
 
 
 @app.route('/')
 def index():
 	return render_template('index.html')
 
-@app.route('/maps',methods=['GET','POST'])
+@app.route('/maps/',methods=['GET','POST'])
 def maps():
 	return render_template('map.html', maps=getUserMaps(session['userId']))
 
@@ -59,6 +60,7 @@ def create_tak():
 	if request.method == 'POST':
 			# login required
 			mapId = getValue(request, "mapId", "")
+			logging.info("mapid %s" %mapId)
 			title = getValue(request, "title", "")
 			lat = getValue(request, "lat", "")
 			lng = getValue(request, "lng", "")
@@ -75,7 +77,7 @@ def create_tak():
 			return redirect(url_for('show_taks', id=key.id()))
 	if request.method == 'GET': 
 		# return list of maps too for selecting
-		return render_template('taks.html')
+		return render_template('taks.html', maps=getUserMaps(session['userId']))
 @app.route('/maps/<mapName>/',methods=['GET','POST'])
 @app.route('/maps/<int:mapId>/',methods=['GET','POST'])
 def taks(mapId=-1, mapName=''):
@@ -96,8 +98,8 @@ def show_taks(id=-1):
 		if id >= 0:
 			tak = Tak.get_by_id(id)
 			if tak is not None:
-				return render_template('edit_tak.html',tak=tak)
-	return redirect('/taks')
+				return tak.view()
+	return redirect('/maps')
 
 @app.route('/maps/new', methods=['GET','POST'])
 def create_map():
@@ -113,7 +115,7 @@ def create_map():
 
 @app.errorhandler(404)
 def page_not_found(e):
-	return '404: Page Not Found'
+	return '404: Page Not Found' 
 
 def getValue(request, key, default):
 	value = default
@@ -123,7 +125,7 @@ def getValue(request, key, default):
 			try:
 				value = request.form[key]
 			except KeyError:
-				print "Key Error"
+				print "Item requested not accessible"
 				value = default
 	return value
 
@@ -147,5 +149,3 @@ def api_taks():
 # register Blueprints
 app.register_blueprint(example_blueprint)
 
-
-app.debug = True
