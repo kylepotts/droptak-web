@@ -21,7 +21,10 @@ app.debug = True
 
 @app.route('/')
 def index():
-	return render_template('index.html')
+	if session:
+		return render_template('dashboard.html')
+	else:
+		return render_template('index.html')
 
 @app.route('/maps/',methods=['GET','POST'])
 def maps():
