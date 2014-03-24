@@ -80,7 +80,7 @@ def create_tak():
 			return redirect(url_for('show_taks', id=key.id()))
 	if request.method == 'GET': 
 		# return list of maps too for selecting
-		return render_template('taks.html', maps=getUserMaps(session['userId']))
+		return render_template('create_tak.html', maps=getUserMaps(session['userId']))
 @app.route('/maps/<mapName>/',methods=['GET','POST'])
 @app.route('/maps/<int:mapId>/',methods=['GET','POST'])
 def taks(mapId=-1, mapName=''):
@@ -93,7 +93,7 @@ def taks(mapId=-1, mapName=''):
 	if mapId == "":
 		return
 	taks = getMapTaks(str(mapId))
-	return render_template('all_taks.html',taks = taks)
+	return render_template('view_taks.html',taks = taks)
 
 @app.route('/taks/<int:id>', methods = ['GET', 'POST'])
 def show_taks(id=-1):

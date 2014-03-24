@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block head %}
+    {{ super() }}
+    <link href="/static/css/taks.css" rel="stylesheet">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHXLk2GBOiUDeMZp5VMtUY9Pu8aiPZrao&sensor=false&libraries=drawing"></script>
+    <script>
+    var marker;
+function initialize() {
+  var myLatlng = new google.maps.LatLng(40.43,-86.92);
+  var mapOptions = {
+    zoom: 14,
+    center: myLatlng
+  }
+  var styleArray = [
+  {
+    "featureType": "poi",
+    "stylers": [
+      { "visibility": "off" }
+    ]
+  }
+]
+
+  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+  map.setOptions({styles: styleArray});
+
+
+// Add a marker to the map and push to the array.
+function addMarker(location) {
+  if(marker !== undefined){
+    marker.setMap(null);}
+    marker = new google.maps.Marker({
+      position: location,
+      map: map
+    });
+    
+    $('#lat').val(location.lat());
+    $('#lng').val(location.lng());
+  }
+
+  google.maps.event.addDomListener(window, "resize", function() {
+   var center = map.getCenter();
+   google.maps.event.trigger(map, "resize");
+   map.setCenter(center); 
+  });
+
+
+  google.maps.event.addListener(map, 'click', function(event) {
+  addMarker(event.latLng); 
+  });
+}
+ google.maps.event.addDomListener(window, 'load', initialize);
+
+
+ </script>
+{% endblock %}
+	
+{% block content %}
+
+<div class="jumbotron">
+      <div class="container">
+        <div id="map-canvas" style="height:500px; width:100%"></div>
+
+      <form class="form-horizontal" id='create_tak' role="form" action="" target="_self" method="post">
+		    <div class="form-group">
+        <label for="title" class="col-sm-2 control-label">Title</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="title" name="title" placeholder="Enter Title">
+        </div>
+      </div>
+        <div class="form-group">
+		   	<label for="lat" class="col-sm-2 control-label">Latitude</label>
+		    <div class="col-sm-10">
+		      <input type="number" class="form-control" id="lat" name="lat" step="any" placeholder="Enter Latitude" required aria-required=”true”>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		   	<label for="lng" class="col-sm-2 control-label">Longitude</label>
+		    <div class="col-sm-10">
+		      <input type="number" class="form-control" id="lng" name="lng" step="any" placeholder="Enter Longitude"  required aria-required=”true”>
+		    </div>
+		  </div>
+      <div class="form-group">
+        <label for="mapId" class="col-sm-2 control-label">Map</label>
+        <div class="col-sm-10">
+          <select class="form-control" name="mapId" id="mapId">
+            <option>New Map</option>
+          {% for map in maps %}
+            <option value="{{map.key.id()}}">{{map.name}}</option>
+          {% endfor %}
+          </select>
+          </div>
+      </div>
+		  <div class="form-group">
+		  	<div class="col-sm-offset-2 col-sm-10">
+     			<button type="submit" class="btn btn-primary">Submit</button>
+  			</div>
+    	</div>
+		</form>
+      </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+{{ super() }}
+
+{% endblock javascript %}
