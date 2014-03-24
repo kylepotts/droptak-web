@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="380dp"
+        android:layout_height="match_parent"
+        android:weightSum="1">
+
+        <EditText
+            android:layout_width="305dp"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="Label"
+            android:ems="10"
+            android:id="@+id/labelText"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:layout_weight="0.25" />
+
+        <EditText
+            android:layout_width="305dp"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="Description"
+            android:ems="10"
+            android:id="@+id/descriptionText"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_weight="0.25" />
+
+        <Button
+            android:layout_width="305dp"
+            android:layout_height="155dp"
+            android:text="Add Tak From Current Location"
+            android:id="@+id/button1"/>
+
+        <Button
+            android:layout_width="305dp"
+            android:layout_height="155dp"
+            android:text="Add Tak From Specified Location"
+            android:id="@+id/button2" />
+
+    </LinearLayout>
+
+</LinearLayout>
