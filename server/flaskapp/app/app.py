@@ -127,11 +127,6 @@ def taks(mapId=-1, mapName=''):
 
 	if mapId == "":
 		return
-<<<<<<< HEAD
-=======
-
-	session['currentMapId'] = mapId
->>>>>>> b673790bb20d284ce22a66316fc13b67392337b5
 	taks = getMapTaks(str(mapId))
 	return render_template('view_taks.html',taks = taks)
 

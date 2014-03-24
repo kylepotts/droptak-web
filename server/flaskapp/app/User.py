@@ -6,4 +6,3 @@ import logging
 class Account(ndb.Model):
 	email = ndb.StringProperty()
 	name = ndb.StringProperty()
-	gplusId = ndb.StringProperty()
