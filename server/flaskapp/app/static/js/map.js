@@ -40,7 +40,7 @@ function onAddMapClick(e){
                             </div>\
                         </div>");
   xmlhttp = new XMLHttpRequest();
-  xmlhttp.open("POST","http://localhost:8080/maps/new?name="+mapName)
+  xmlhttp.open("POST","http://mapitapps.appspot.com/maps/new?name="+mapName)
   xmlhttp.send();
 }
 
