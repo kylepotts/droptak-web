@@ -96,20 +96,34 @@ def login():
 @app.route('/create/',methods=['GET','POST'])
 def create_tak():
 	if request.method == 'POST':
-			if not ( user and lat and lng ):
-				return jsonify(message="Bad Request", response=400)
+		# login required
+		mapId = getValue(request, "mapId", "")
+		logging.info("mapid %s" %mapId)
+		title = getValue(request, "title", "")
+		lat = getValue(request, "lat", "")
+		lng = getValue(request, "lng", "")
+		#user = getValue(request, "user", "")
+		#change form to not supply user
+		user = session['username']
+			
+		if not ( user and lat and lng ):
+			return jsonify(message="Bad Request", response=400)
 			# check if args blank
-			logging.info("Add lat %s, lng %s" %(lat, lng) )
-			tak  = Tak(lng=lng,lat=lat, creator=user, title=title)
-			key = tak.put()
-			return redirect(url_for('show_taks', id=key.id()))
+
+		logging.info("Add lat %s, lng %s" %(lat, lng) )
+		tak  = Tak(lng=lng,lat=lat, creator=user, title=title,mapId=mapId)
+		key = tak.put()
+		return redirect(url_for('show_taks', id=key.id()))
+
 	if request.method == 'GET': 
 		# return list of maps too for selecting
 		return render_template('create_tak.html', maps=getUserMaps(session['userId']))
 @app.route('/maps/<mapName>/',methods=['GET','POST'])
 @app.route('/maps/<int:mapId>/',methods=['GET','POST'])
 def taks(mapId=-1, mapName=''):
+	logging.info("in taks")
 	if mapName != '':
+		logging.info("empty map name")
 		qry = getUserMaps(session['userId'])
 		qry = qry.filter(Map.name == mapName)
 		mapId = qry.get().key.integer_id()
@@ -160,6 +174,10 @@ def getValue(request, key, default):
 def getUserMaps(id):
 	logging.info("getUserMaps id is " + str(id))
 	query = Map.query(Map.creatorId == id)
+	return query
+
+def getMapTaks(id):
+	query = Tak.query(Tak.mapId == id)
 	return query
 
 
