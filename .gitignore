@@ -1,1 +1,3 @@
 /server/flaskapp/google_appengine
+*.pyc
+.DS_Store

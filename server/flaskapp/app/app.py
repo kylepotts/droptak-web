@@ -37,8 +37,7 @@ def maps():
 
 @app.route('/login',methods=['GET','POST'])
 def login():
-
-	if request.method == 'POST':
+		if request.method == 'POST':
 			name = request.args.get("name","")
 			email =  request.args.get("email","")
 			logging.info("name " + name +" email " + email)
@@ -46,80 +45,85 @@ def login():
 			state = ''
 			for x in xrange(32):
 				state+= random.choice(string.ascii_uppercase + string.digits)
-    	session['state'] = state
-    	storeToken = request.args.get("storeToken","")
+    		session['state'] = state
+    		storeToken = request.args.get("storeToken","")
 
     	#verify store token with google servers
 
-    	try:
-    		oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
-    		oauth_flow.redirect_uri = 'postmessage'
-    		credentials = oauth_flow.step2_exchange(storeToken)
-    	except FlowExchangeError:
-    		logging.info("error with Oauth")
+    		try:
+    			oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+    			oauth_flow.redirect_uri = 'postmessage'
+    			credentials = oauth_flow.step2_exchange(storeToken)
+    		except FlowExchangeError:
+    			logging.info("error with Oauth")
 
-    	# once store token verified send a request for credential for gplus
-    	access_token = credentials.access_token
-    	logging.info(access_token)
-    	url = ("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s"% access_token)
-    	h = httplib2.Http()
-    	result = json.loads(h.request(url,'GET')[1])
-    	gplus_id = credentials.id_token['sub']
-    	stored_credentials = session.get('credentials')
-    	stored_gplus_id = session.get('gplus_id')
+	    	# once store token verified send a request for credential for gplus
+	    	access_token = credentials.access_token
+	    	logging.info(access_token)
+	    	url = ("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s"% access_token)
+	    	h = httplib2.Http()
+	    	result = json.loads(h.request(url,'GET')[1])
+	    	gplus_id = credentials.id_token['sub']
+	    	stored_credentials = session.get('credentials')
+	    	stored_gplus_id = session.get('gplus_id')
 
-    	if stored_credentials is not None and gplus_id == stored_gplus_id:
-    		logging.info("User already logged in")
-    		account = Account.query(Account.email == email).get()
-    		session['credentials'] = credentials
-    		session['gplus_id'] = gplus_id
-    		session['username'] = account.name
-    		session['userId'] = account.key.integer_id()
+	    	if stored_credentials is not None and gplus_id == stored_gplus_id:
+	    		logging.info("User already logged in")
+	    		account = Account.query(Account.email == email).get()
+	    		session['credentials'] = credentials
+	    		session['gplus_id'] = gplus_id
+	    		session['username'] = account.name
+	    		session['userId'] = account.key.integer_id()
 
 
-    	else:
-    		logging.info("first time logging in")
-    		session['credentials'] = credentials
-    		session['gplus_id'] = gplus_id
-    		session['username'] = name 
-    		account = Account(name=name,email=email,gplusId=gplus_id)
-    		key = account.put()
-    		session['userId'] = key.integer_id()
+	    	else:
+	    		logging.info("first time logging in")
+	    		session['credentials'] = credentials
+	    		session['gplus_id'] = gplus_id
+	    		session['username'] = name 
+	    		account = Account(name=name,email=email,gplusId=gplus_id)
+	    		key = account.put()
+	    		session['userId'] = key.integer_id()
 
-    	return '200'
+	    	return '200'
 
-	if request.method == 'GET':
-		return page_not_found(404)
+		if request.method == 'GET':
+			return page_not_found(404)
+
 
 
 
 @app.route('/create/',methods=['GET','POST'])
 def create_tak():
 	if request.method == 'POST':
-			# login required
-			mapId = getValue(request, "mapId", "")
-			logging.info("mapid %s" %mapId)
-			title = getValue(request, "title", "")
-			lat = getValue(request, "lat", "")
-			lng = getValue(request, "lng", "")
-			#user = getValue(request, "user", "")
-			#change form to not supply user
-			user = session['username']
+		# login required
+		mapId = getValue(request, "mapId", "")
+		logging.info("mapid %s" %mapId)
+		title = getValue(request, "title", "")
+		lat = getValue(request, "lat", "")
+		lng = getValue(request, "lng", "")
+		#user = getValue(request, "user", "")
+		#change form to not supply user
+		user = session['username']
 			
-			if not ( user and lat and lng ):
-				return jsonify(message="Bad Request", response=400)
+		if not ( user and lat and lng ):
+			return jsonify(message="Bad Request", response=400)
 			# check if args blank
-			logging.info("Add lat %s, lng %s" %(lat, lng) )
-			tak  = Tak(lng=lng,lat=lat, creator=user, title=title,mapId=mapId)
-			key = tak.put()
-			return redirect(url_for('show_taks', id=key.id()))
+
+		logging.info("Add lat %s, lng %s" %(lat, lng) )
+		tak  = Tak(lng=lng,lat=lat, creator=user, title=title,mapId=mapId)
+		key = tak.put()
+		return redirect(url_for('show_taks', id=key.id()))
+
 	if request.method == 'GET': 
 		# return list of maps too for selecting
 		return render_template('create_tak.html', maps=getUserMaps(session['userId']))
 @app.route('/maps/<mapName>/',methods=['GET','POST'])
 @app.route('/maps/<int:mapId>/',methods=['GET','POST'])
 def taks(mapId=-1, mapName=''):
+	logging.info("in taks")
 	if mapName != '':
+		logging.info("empty map name")
 		qry = getUserMaps(session['userId'])
 		qry = qry.filter(Map.name == mapName)
 		mapId = qry.get().key.integer_id()
@@ -168,8 +172,10 @@ def getValue(request, key, default):
 	return value
 
 def getUserMaps(id):
+	logging.info("getUserMaps id is " + str(id))
 	query = Map.query(Map.creatorId == id)
 	return query
+
 def getMapTaks(id):
 	query = Tak.query(Tak.mapId == id)
 	return query
