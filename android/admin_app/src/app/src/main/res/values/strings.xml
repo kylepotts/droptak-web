@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="app_name">MapTak</string>
-
-    <string name="menu_taklist_label">Map List</string>
-    <string name="menu_settings_label">Settings</string>
-
-</resources>
