@@ -48,7 +48,7 @@ function getProfileCallBack(obj){
   console.log("Name: "+ name);
   storeToken = authRes['code']
   xmlhttp = new XMLHttpRequest();
-  xmlhttp.open("POST","http://localhost:8080/login?storeToken="+storeToken+"&name="+name+"&email="+email,true);
+  xmlhttp.open("POST","http://mapitapps.appspot.com/login?storeToken="+storeToken+"&name="+name+"&email="+email,true);
   xmlhttp.send();
   $("#nav-login").html("<a href='#'> <img src='https://plus.google.com/s2/photos/profile/" + profile.id + "?sz=25' />" + name + "</a>");
   }

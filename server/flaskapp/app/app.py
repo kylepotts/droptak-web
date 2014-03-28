@@ -5,6 +5,7 @@ import logging
 import random
 import string
 import httplib2
+import uuid
 from oauth2client.client import AccessTokenRefreshError
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
@@ -189,6 +190,40 @@ def api_taks():
 		query = Tak.query(Tak.creator == user)
 	else: query = Tak.query()
 	return json.dumps([t.to_dict() for t in query.fetch()])
+
+@app.route('/api/login',methods=['GET','POST'])
+def api_login():
+		logging.info("api_login Type "+ request.method)
+		if request.method == 'POST':
+			name = request.args.get("name","")
+			email =  request.args.get("email","")
+			logging.info("name " + name +" email " + email)
+
+
+    		# once store token verified send a request for credential for gplus
+	    	access_token = request.args.get("storeToken","")
+	    	gplus_id = request.args.get("id","")
+	    	logging.info(access_token)
+	    	url = ("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s"% access_token)
+	    	h = httplib2.Http()
+	    	result = json.loads(h.request(url,'GET')[1])
+	    	query = Account.query(Account.email == email)
+	    	if query.count() != 0:
+	    		logging.info("Account Already Exists")
+	    		return '200'
+
+	    	logging.info("first time logging in")
+	    	session['gplus_id'] = gplus_id
+	    	session['username'] = name 
+	    	account = Account(name=name,email=email,gplusId=gplus_id)
+	    	key = account.put()
+	    	session['userId'] = key.integer_id()
+	    	uid = uuid.uuid4()
+    		return json.dumps({"uuid":uid.hex})
+
+		if request.method == 'GET':
+			return page_not_found(404)
+
 
 # register Blueprints
 app.register_blueprint(example_blueprint)
