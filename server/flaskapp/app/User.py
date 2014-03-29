@@ -7,3 +7,5 @@ class Account(ndb.Model):
 	email = ndb.StringProperty()
 	name = ndb.StringProperty()
 	gplusId = ndb.StringProperty()
+	accessToken = ndb.StringProperty()
+	loggedIn = ndb.BooleanProperty()

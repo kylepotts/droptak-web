@@ -57,6 +57,7 @@ def login():
     			credentials = oauth_flow.step2_exchange(storeToken)
     		except FlowExchangeError:
     			logging.info("error with Oauth")
+    			return page_not_found(404)
 
 	    	# once store token verified send a request for credential for gplus
 	    	access_token = credentials.access_token
@@ -71,6 +72,8 @@ def login():
 	    	if stored_credentials is not None and gplus_id == stored_gplus_id:
 	    		logging.info("User already logged in")
 	    		account = Account.query(Account.email == email).get()
+	    		account.loggedIn = True
+	    		account.put()
 	    		session['credentials'] = credentials
 	    		session['gplus_id'] = gplus_id
 	    		session['username'] = account.name
@@ -82,7 +85,7 @@ def login():
 	    		session['credentials'] = credentials
 	    		session['gplus_id'] = gplus_id
 	    		session['username'] = name 
-	    		account = Account(name=name,email=email,gplusId=gplus_id)
+	    		account = Account(name=name,email=email,gplusId=gplus_id,accessToken = access_token,loggedIn=True)
 	    		key = account.put()
 	    		session['userId'] = key.integer_id()
 
@@ -215,11 +218,12 @@ def api_login():
 	    	logging.info("first time logging in")
 	    	session['gplus_id'] = gplus_id
 	    	session['username'] = name 
-	    	account = Account(name=name,email=email,gplusId=gplus_id)
+	    	account = Account(name=name,email=email,gplusId=gplus_id,accessToken=access_token,loggedIn=True)
 	    	key = account.put()
 	    	session['userId'] = key.integer_id()
 	    	uid = uuid.uuid4()
-    		return json.dumps({"uuid":uid.hex})
+    		return json.dumps({"uuid":uid.hex
+    			})
 
 		if request.method == 'GET':
 			return page_not_found(404)
