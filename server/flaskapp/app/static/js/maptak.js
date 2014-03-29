@@ -1,9 +1,14 @@
 /**
  * Maptak JS Library
- * 
+ * requires: Google maps v3 , JQuery
  **/
-var markers = [];
 
+var markers = [];
+var map;
+
+/**
+* initialize the map
+*/
 function initialize() {
 
 	var myLatlng = new google.maps.LatLng(40.43, -86.92);
@@ -21,17 +26,7 @@ function initialize() {
 		styles: styleArray
 	}
 
-	var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-
-
-	var addMarker = function(location) {
-		var marker = new google.maps.Marker({
-			position: location,
-			map: map
-		});
-		markers.push(marker);
-	}
-	location = new google.maps.LatLng(0, 0);
+	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
 	google.maps.event.addDomListener(window, "resize", function () {
 		var center = map.getCenter();
@@ -40,4 +35,23 @@ function initialize() {
 	});
 }
 
-google.maps.event.addDomListener(window, 'load', initialize);
+function addMarker(lat, lng) {
+	marker = new google.maps.Marker({
+		position: new google.maps.LatLng(lat, lng),
+		map: map
+	});
+	markers.push(marker);
+}
+
+/**
+* Asynchronously load google maps into body
+* after completion, it calls the callback which is initialize
+*/
+function loadGoogleMaps() {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBHXLk2GBOiUDeMZp5VMtUY9Pu8aiPZrao&sensor=false&libraries=drawing&callback=initialize';
+  document.body.appendChild(script);
+}
+
+window.onload = loadGoogleMaps;
