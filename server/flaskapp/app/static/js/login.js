@@ -37,6 +37,7 @@ function loginFinishedCallBack(authResult){
     gapi.client.load('plus','v1', getInfo);  // Trigger request to get the email address.
   }
 
+
   if(loggedInCookie == "true"){
     var name = getCookie("name")
      $("#nav-login").html("<a href='#'>" + name + "</a>")

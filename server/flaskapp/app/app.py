@@ -16,7 +16,7 @@ from Map import Map
 # this fix allows us to import modues/packages found in 'lib'
 fix_path(os.path.abspath(os.path.dirname(__file__)))
 
-from flask import Flask, render_template, request, jsonify, redirect, url_for, g, session
+from flask import Flask, render_template, request, jsonify, redirect, url_for, g, session,flash
 from blueprints.example.views import bp as example_blueprint
 
 
@@ -58,6 +58,7 @@ def logout():
 		session['loggedIn'] = False
 		logging.info("session set to loggedin = false")
 		#return redirect(url_for('index'),code=302)
+		flash("You were logged out")
 		return '200'
 @app.route('/login',methods=['GET','POST'])
 def login():
