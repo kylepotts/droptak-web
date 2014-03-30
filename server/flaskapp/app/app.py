@@ -27,6 +27,16 @@ currentAccount = 1
 
 @app.route('/')
 def index():
+	if "userId" in session:
+		logging.info("loggedIn=" + str(session['loggedIn']))
+		account = Account.get_by_id(session['userId'])
+		lin = account.loggedIn
+		logging.info("lin="+str(lin))
+		if lin == False:
+			return render_template('index.html')
+		if lin == True:
+			return render_template('dashboard.html')
+
 	if session:
 		return render_template('dashboard.html')
 	else:
@@ -36,12 +46,26 @@ def index():
 def maps():
 	return render_template('map.html', maps=getUserMaps(session['userId']))
 
+@app.route('/logout',methods=['GET','POST'])
+def logout():
+	if request.method == 'POST':
+		name = session['username']
+		account = Account.query(Account.name == name).get()
+		account.loggedIn = False
+		account.put()
+		logging.info("session before " + str(len(session)))
+		logging.info("session after " + str(len(session)))
+		session['loggedIn'] = False
+		logging.info("session set to loggedin = false")
+		#return redirect(url_for('index'),code=302)
+		return '200'
 @app.route('/login',methods=['GET','POST'])
 def login():
 		if request.method == 'POST':
 			name = request.args.get("name","")
 			email =  request.args.get("email","")
 			logging.info("name " + name +" email " + email)
+			account = Account.query(Account.email == email).get()
 			#create a state string
 			state = ''
 			for x in xrange(32):
@@ -69,7 +93,7 @@ def login():
 	    	stored_credentials = session.get('credentials')
 	    	stored_gplus_id = session.get('gplus_id')
 
-	    	if stored_credentials is not None and gplus_id == stored_gplus_id:
+	    	if account is not None:
 	    		logging.info("User already logged in")
 	    		account = Account.query(Account.email == email).get()
 	    		account.loggedIn = True
@@ -78,6 +102,7 @@ def login():
 	    		session['gplus_id'] = gplus_id
 	    		session['username'] = account.name
 	    		session['userId'] = account.key.integer_id()
+	    		session['loggedIn'] = True
 
 
 	    	else:
@@ -88,6 +113,7 @@ def login():
 	    		account = Account(name=name,email=email,gplusId=gplus_id,accessToken = access_token,loggedIn=True)
 	    		key = account.put()
 	    		session['userId'] = key.integer_id()
+	    		session['loggedIn'] = True
 
 	    	return '200'
 

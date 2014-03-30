@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="google-signin-clientid" content="158485758125-bqrmkcp45496hdq96n6qika4l0tgafq6.apps.googleusercontent.com" />
+    <meta name="google-signin-scope" content="https://www.googleapis.com/auth/plus.login" />
+    <meta name="google-signin-requestvisibleactions" content="http://schemas.google.com/AddActivity" />
+    <meta name="google-signin-cookiepolicy" content="single_host_origin" />
+    <meta name="google-signin-callback" content="loginHelper" />
     <title>MapTak</title>
     <link href="/static/css/vendor/bootstrap.min.css" rel="stylesheet">
     <link href="/static/css/cover.css" rel="stylesheet">
@@ -38,7 +43,7 @@
             <li  id="nav-login"> <a onclick="hideMenu()" data-toggle="modal" data-target="#myModal" href="javascript:void(0);">Login | Signup</a></li>
             <li><a href="/maps/">Maps</a></li>
             <li><a href="/create/">Create</a></li>
-            <li><a href="/logout">Logout</a></li>
+            <li id="nav-logout"><a href="#">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -48,19 +53,9 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
-         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <center><p>Login or sign up with Google+</p></center>
-        <span id="signinButton">
-      <span
-        class="g-signin"
-        data-callback="loginFinishedCallBack"
-        data-clientid="158485758125-bqrmkcp45496hdq96n6qika4l0tgafq6.apps.googleusercontent.com"
-        data-cookiepolicy="single_host_origin"
-        data-requestvisibleactions="http://schemas.google.com/AddActivity"
-        data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/plus.profile.emails.read">
-      </span>
-    </center>
-    </span>
+         <div id="gSignInWrapper">
+  <div id="myButton" type="button" class="close" data-dismiss="modal" aria-hidden="true">Sign in with Google</div>
+</div>
       </div>
     </div>
   </div>
