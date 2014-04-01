@@ -34,7 +34,9 @@ def index():
 
 @app.route('/maps/',methods=['GET','POST'])
 def maps():
-	return render_template('map.html', maps=getUserMaps(session['userId']))
+	query = getUserMaps(session['userId'])
+	return json.dumps([t.to_dict() for t in query.fetch()])
+	#return render_template('map.html', maps=getUserMaps(session['userId']))
 
 @app.route('/login',methods=['GET','POST'])
 def login():
@@ -91,7 +93,9 @@ def login():
 		if request.method == 'GET':
 			return page_not_found(404)
 
-
+@app.route('/app/')
+def route_view_app():
+	return render_template('view_maps.html');
 
 
 @app.route('/create/',methods=['GET','POST'])
@@ -151,7 +155,7 @@ def create_map():
 	if request.method == 'POST':
 		user =  session['username']
 		userId = session['userId']
-		mapName = request.args.get("name","")
+		mapName = getValue(request, "name", "")
 		ownMap = Map(creator=user,creatorId=userId,name=mapName)
 		ownMap.put()
 		return '200'
