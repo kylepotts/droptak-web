@@ -7,10 +7,7 @@
 
 console.log(window.location.pathname)
 
-var lin = getCookie("loggedIn")
-if( lin == "false" || lin == "" ){
   renderGButton()
-}
 
 
 function renderGButton(){
@@ -33,29 +30,14 @@ function loginFinishedCallBack(authResult){
       authRes = authResult
     // Hide the sign-in button now that the user is authorized, for example:
     $('#signinButton').attr('style', 'display: none');
-    if(loggedInCookie == "false" || loggedInCookie == ""){
-      setCookie("loggedIn","true",3);
     gapi.client.load('plus','v1', getInfo);  // Trigger request to get the email address.
-  }
 
-
-  if(loggedInCookie == "true"){
-    var name = getCookie("name")
-     $("#nav-login").html("<a href='#'>" + name + "</a>")
-  }
-
-    // Send the code to the server
-
- // xmlhttp = new XMLHttpRequest();
- // xmlhttp.open("POST","http://localhost:8080/login?storeToken="+authResult['code'],true);
- // xmlhttp.send();
   } else if (authResult['error']) {
     console.log("error " + authResult['error'])
     if(authResult['error'] == 'user_signed_out'){
       xmlhttp = new XMLHttpRequest();
       xmlhttp.open("POST","/logout")
       xmlhttp.send();
-      setCookie("loggedIn","false",3);
       window.location.href="/logout"
 
     }
@@ -75,12 +57,8 @@ function render() {
     'theme' : 'dark'
   };
 
-  var loggedIn = getCookie("loggedIn")
-  console.log("loggedIn is " + loggedIn)
-  if((loggedIn == "false" || loggedIn == "") && window.location.pathname != "/logout"){
-    console.log("rendering");
   gapi.signin.render('myButton', additionalParams);
-  }
+  
 }
 
 function loginHelper(auth){
@@ -134,8 +112,6 @@ function getProfileCallBack(obj){
   xmlhttp = new XMLHttpRequest();
   xmlhttp.open("POST","/login?storeToken="+storeToken+"&name="+name+"&email="+email,true);
   xmlhttp.send();
-  setCookie("loggedIn",true,3);
-  setCookie("name",name,3);
   //$("#nav-login").html("<a href='#'> <img src='https://plus.google.com/s2/photos/profile/" + profile.id + "?sz=25' />" + name + "</a>")
   }
 

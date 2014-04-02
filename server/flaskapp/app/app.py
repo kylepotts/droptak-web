@@ -48,7 +48,7 @@ def maps():
 	return json.dumps([t.to_dict() for t in query.fetch()])
 	#return render_template('map.html', maps=getUserMaps(session['userId']))
 
-@app.route('/logout',methods=['GET','POST'])
+@app.route('/logout/',methods=['GET','POST'])
 def logout():
 	if request.method == 'POST':
 		name = session['username']
