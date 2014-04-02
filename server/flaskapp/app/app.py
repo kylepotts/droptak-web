@@ -238,9 +238,12 @@ def api_login():
 	    	h = httplib2.Http()
 	    	result = json.loads(h.request(url,'GET')[1])
 	    	query = Account.query(Account.email == email)
+	    	account = query.get()
 	    	if query.count() != 0:
 	    		logging.info("Account Already Exists")
-	    		return '200'
+	    		key = account.key
+	    		return json.dumps({"uuid":key.integer_id()
+    			})
 
 	    	logging.info("first time logging in")
 	    	session['gplus_id'] = gplus_id
@@ -248,12 +251,43 @@ def api_login():
 	    	account = Account(name=name,email=email,gplusId=gplus_id,accessToken=access_token,loggedIn=True)
 	    	key = account.put()
 	    	session['userId'] = key.integer_id()
-	    	uid = uuid.uuid4()
-    		return json.dumps({"uuid":uid.hex
+    		return json.dumps({"uuid":key.integer_id()
     			})
 
 		if request.method == 'GET':
 			return page_not_found(404)
+@app.route('/api/map',methods=['GET','POST'])
+def api_map():
+	if request.method == 'POST':
+		userName = request.args.get("username","")
+		mapName = request.args.get("mapname","")
+		userId = request.args.get("userId","")
+		userId = str(userId.encode('utf-8').decode('ascii', 'ignore'))
+		uid = int(userId)
+		ownMap =Map(creator=userName,creatorId=uid,name=mapName)
+		key = ownMap.put()
+		return json.dumps({"mapId":key.integer_id()}) 
+
+@app.route('/api/tak',methods=['GET','POST'])
+def api_tak():
+	if request.method == 'POST':
+		userName = request.args.get("name","")
+		mapId = request.args.get("mapId","")
+		mapId = str(mapId.encode('utf-8').decode('ascii', 'ignore'))
+		userId = request.args.get("id","")
+		userId = int(str(userId.encode('utf-8').decode('ascii', 'ignore')))
+		title = request.args.get("title","")
+		lat = request.args.get("lat","")
+		lat = str(lat.encode('utf-8').decode('ascii', 'ignore'))
+		lng = request.args.get("lng","")
+		lng =str(lng.encode('utf-8').decode('ascii', 'ignore'))
+		tak = Tak(title=title,lat=lat,lng=lng,creator=userName,creatorId=userId,mapId=mapId)
+		key = tak.put()
+		logging.info("tak added")
+		return json.dumps({"takId":key.integer_id()})
+	if request.method == 'GET':
+		return '200'
+
 
 
 # register Blueprints
