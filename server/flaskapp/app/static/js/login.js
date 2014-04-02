@@ -5,6 +5,7 @@
        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
      })();
 
+console.log(window.location.pathname)
 
 var lin = getCookie("loggedIn")
 if( lin == "false" || lin == "" ){
@@ -76,7 +77,7 @@ function render() {
 
   var loggedIn = getCookie("loggedIn")
   console.log("loggedIn is " + loggedIn)
-  if(loggedIn == "false" || loggedIn == ""){
+  if((loggedIn == "false" || loggedIn == "") && window.location.pathname != "/logout"){
     console.log("rendering");
   gapi.signin.render('myButton', additionalParams);
   }
