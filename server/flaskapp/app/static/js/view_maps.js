@@ -63,9 +63,10 @@ function Map(){
 	self.taks  			= ko.observableArray();
 
 	self.addTak = function(){
-			self.taks.push( new Tak());
+			var tak = new Tak();
+			self.taks.push( tak);
+			return tak;
 		}
-	self.addTak();
 	self.removeTak = function(tak){
 			self.taks.remove(tak);
 		}
@@ -81,6 +82,23 @@ function MapTakModel() {
 	self.maps 	  	= ko.observableArray();
 	self.selected		= ko.observable();
 	self.form 			= new FormMap();
+
+	self.select = function(element, mapid){
+		self.selected(element);
+		console.log(element.id());
+		$.getJSON("/api/maps/" + element.id(), function(data) { 
+	    element.taks().length = 0;
+	    for (var i = 0; i < data.length; i++) { 
+	    	var tak = element.addTak();
+	    	tak.title(data[i].title);
+	    	tak.lat(data[i].lat);
+	    	tak.lng(data[i].lng);
+			}
+			console.log(element.taks());
+			setMarkers(ko.toJS(element.taks ));
+		});
+		
+	}
 
 	/**
 	* add a new map
@@ -118,6 +136,7 @@ function MapTakModel() {
 	*/
 	self.removeMap = function(map) {
 			self.maps.remove(map);
+			//send delete to server
 		};
 
 	$.getJSON("/maps", function(data) { 
@@ -126,6 +145,7 @@ function MapTakModel() {
 	    for (var i = 0; i < data.length; i++) { 
 	    	var local = self.addMap();
 	    	local.name(data[i].name);
+	    	local.id(data[i].id)
 			}
 		});
 }

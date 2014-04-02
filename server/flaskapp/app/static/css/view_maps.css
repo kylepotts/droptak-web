@@ -1,17 +1,19 @@
-
+.main-content{
+	height: 100%;
+}
 .panel-add-outer{
-	background-color: #ffffff;
+	background-color: #eee;
 	-webkit-box-shadow: 0 0px 0px rgba(0,0,0,.05);
 	box-shadow: 0 0px 0px rgba(0,0,0,.05);
 }
 .panel-add-heading{
-	background-color: #ffffff;
+	background-color: #eee;
 	-moz-border-radius: 30px !important;
 	border-radius: 30px !important;
 	border: 2px dotted #d3d3d3 !important;
 }
 .panel-add{
-	background-color: #ffffff;
+	background-color: #eee;
 	text-align: center ;
 }
 #publish{
@@ -29,7 +31,7 @@
 	padding: 20px;
 	overflow-x: hidden;
 	overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-	background-color: #f5f5f5;
+	background-color: #eee;
 	border-right: 1px solid #eee;
 }
 input.invalid{

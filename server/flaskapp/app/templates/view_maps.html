@@ -54,7 +54,7 @@
 						</div>
 					</div>
 					<!-- ko foreach: maps -->
-					<div class="panel panel-info">
+					<div class="panel panel-info" data-bind="click: function () {$root.select($data,'#map-canvas')}">
 						<div class="panel-heading">
 							<button type="button" class="close" data-bind="click: $root.removeMap" aria-hidden="true">&times;</button>
 							<h4 class="panel-title">
@@ -71,8 +71,9 @@
 
 
 		</div>
-		<div class="col-sm-offset-3 col-md-offset-2" style="padding:0px;">
-			<!--<div id="map-canvas" style="height:500px; width:100%"></div>-->
+		<div class="col-sm-offset-3 col-md-offset-2 main-content" style="padding:0px;">
+				<h2>Get started by selecting a map, or create a new one</h2>
+					<div id="map-canvas" style="height:500px; width:100%"></div>
 		</div>
 	</div>
 </div>

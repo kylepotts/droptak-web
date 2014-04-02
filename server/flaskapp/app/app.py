@@ -128,7 +128,6 @@ def create_tak():
 def taks(mapId=-1, mapName=''):
 	logging.info("in taks")
 	if mapName != '':
-		logging.info("empty map name")
 		qry = getUserMaps(session['userId'])
 		qry = qry.filter(Map.name == mapName)
 		mapId = qry.get().key.integer_id()
@@ -185,14 +184,10 @@ def getMapTaks(id):
 	query = Tak.query(Tak.mapId == id)
 	return query
 
-
-
-@app.route('/api/taks/')
-def api_taks():
-	user = getValue(request, "user", "")
-	if user:
-		query = Tak.query(Tak.creator == user)
-	else: query = Tak.query()
+# returns taks in map
+@app.route('/api/maps/<id>/')
+def api_taks(id='-1'):
+	query = getMapTaks(id);
 	return json.dumps([t.to_dict() for t in query.fetch()])
 
 @app.route('/api/login',methods=['GET','POST'])
