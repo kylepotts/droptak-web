@@ -55,7 +55,7 @@ function loginFinishedCallBack(authResult){
       xmlhttp.open("POST","/logout")
       xmlhttp.send();
       setCookie("loggedIn","false",3);
-      //window.location.href="/"
+      window.location.href="/logout"
 
     }
     // There was an error.

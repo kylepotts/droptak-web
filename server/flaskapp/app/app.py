@@ -48,7 +48,6 @@ def maps():
 
 @app.route('/logout',methods=['GET','POST'])
 def logout():
-	if request.method == 'POST':
 		name = session['username']
 		account = Account.query(Account.name == name).get()
 		account.loggedIn = False
@@ -57,9 +56,8 @@ def logout():
 		logging.info("session after " + str(len(session)))
 		session['loggedIn'] = False
 		logging.info("session set to loggedin = false")
-		#return redirect(url_for('index'),code=302)
-		flash("You were logged out")
-		return '200'
+		return render_template('logout.html')
+
 @app.route('/login',methods=['GET','POST'])
 def login():
 		if request.method == 'POST':
