@@ -44,7 +44,9 @@ def index():
 
 @app.route('/maps/',methods=['GET','POST'])
 def maps():
-	return render_template('map.html', maps=getUserMaps(session['userId']))
+	query = getUserMaps(session['userId'])
+	return json.dumps([t.to_dict() for t in query.fetch()])
+	#return render_template('map.html', maps=getUserMaps(session['userId']))
 
 @app.route('/logout',methods=['GET','POST'])
 def logout():
@@ -123,7 +125,9 @@ def login():
 		if request.method == 'GET':
 			return page_not_found(404)
 
-
+@app.route('/app/')
+def route_view_app():
+	return render_template('view_maps.html');
 
 
 @app.route('/create/',methods=['GET','POST'])
@@ -131,6 +135,9 @@ def create_tak():
 	if request.method == 'POST':
 		# login required
 		mapId = getValue(request, "mapId", "")
+		map = Map.get_by_id(int(mapId))
+		if map is None:
+			return jsonify(message="Map does not exist", response=400) 
 		logging.info("mapid %s" %mapId)
 		title = getValue(request, "title", "")
 		lat = getValue(request, "lat", "")
@@ -146,6 +153,8 @@ def create_tak():
 		logging.info("Add lat %s, lng %s" %(lat, lng) )
 		tak  = Tak(lng=lng,lat=lat, creator=user, title=title,mapId=mapId)
 		key = tak.put()
+		map.takIds.append(str(key.id()))
+		map.put();
 		return redirect(url_for('show_taks', id=key.id()))
 
 	if request.method == 'GET': 
@@ -156,7 +165,6 @@ def create_tak():
 def taks(mapId=-1, mapName=''):
 	logging.info("in taks")
 	if mapName != '':
-		logging.info("empty map name")
 		qry = getUserMaps(session['userId'])
 		qry = qry.filter(Map.name == mapName)
 		mapId = qry.get().key.integer_id()
@@ -183,10 +191,10 @@ def create_map():
 	if request.method == 'POST':
 		user =  session['username']
 		userId = session['userId']
-		mapName = request.args.get("name","")
+		mapName = getValue(request, "name", "")
 		ownMap = Map(creator=user,creatorId=userId,name=mapName)
 		ownMap.put()
-		return '200'
+		return json.dumps(ownMap.to_dict())
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -213,15 +221,26 @@ def getMapTaks(id):
 	query = Tak.query(Tak.mapId == id)
 	return query
 
+# returns taks in map
+@app.route('/api/maps/<int:id>/', methods=['GET','POST', 'DELETE', 'PUT'])
+def api_taks(id=-1):
+	if request.method == 'GET':
+		query = getMapTaks(str(id));
+		return json.dumps([t.to_dict() for t in query.fetch()])
+	if request.method == 'DELETE':
+		map = Map.get_by_id(id)
+		logging.info("DELETE " + str(id))
+		if map is not None:
+			# remove taks in map
+			for takid in map.takIds:
+				tak = Tak.get_by_id(int(takid))
+				logging.info("_DELETE sub-tak" + str(takid))
+				if tak is not None:
+					tak.key.delete()
+			map.key.delete()
+			return "Success"
+		return "Map does not exist"
 
-
-@app.route('/api/taks/')
-def api_taks():
-	user = getValue(request, "user", "")
-	if user:
-		query = Tak.query(Tak.creator == user)
-	else: query = Tak.query()
-	return json.dumps([t.to_dict() for t in query.fetch()])
 
 @app.route('/api/login',methods=['GET','POST'])
 def api_login():

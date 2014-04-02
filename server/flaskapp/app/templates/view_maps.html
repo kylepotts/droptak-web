@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{{ super() }}
+<link href="/static/css/view_maps.css" rel="stylesheet">
+<script src="/static/js/vendor/knockout-3.1.0.js"></script>
+<script src="/static/js/vendor/knockout-switch-case.js"></script>
+<script src="/static/js/vendor/knockout.validation.min.js"></script>
+<script src="/static/js/maptak.js"></script>
+<script src="/static/js/view_maps.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="modal fade" id="map-name-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Create Map</h4>
+			</div>
+			<form id="mapNameForm" data-bind="submit: function () {$root.submit('#map-name-modal')}">
+				<div class="modal-body">
+
+					<div class="form-group">
+						<label for="name">Map Name</label>
+						<input type="text" class="form-control" data-bind="value: form.name, valueUpdate: 'afterkeydown'" id="name" placeholder="Really cool map name">
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary" >Add Map</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</form>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<!-- Sidebar -->
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-3 col-md-2 sidebar">
+			<div id="maps-sidebar">
+				<div class="panel-group" id="accordion">
+					<!-- add map -->
+					<div class="panel panel-add-outer">
+						<div class="panel-heading panel-add-heading" data-toggle="modal" data-target="#map-name-modal">
+							<h4 class="panel-title panel-add">
+								<span>Add Map</span>
+							</h4>
+						</div>
+					</div>
+					<!-- ko foreach: maps -->
+					<div class="panel panel-info" data-bind="click: function () {$root.select($data,'#map-canvas')}">
+						<div class="panel-heading">
+							<button type="button" class="close" data-bind="click: $root.removeMap" aria-hidden="true">&times;</button>
+							<h4 class="panel-title">
+								<span data-bind="text: name()? name : 'No Name'"></span>
+							</h4>
+						</div>
+					</div>
+					<!-- /ko -->
+
+				</div>
+			</div><!-- end of sidebar -->
+
+
+
+
+		</div>
+		<div class="col-sm-offset-3 col-md-offset-2 main-content" style="padding:0px;">
+				<h2>Get started by selecting a map, or create a new one</h2>
+					<div id="map-canvas" style="height:500px; width:100%"></div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+{{ super() }}
+{% endblock javascript %}

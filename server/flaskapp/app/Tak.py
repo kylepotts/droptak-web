@@ -19,6 +19,7 @@ class Tak(ndb.Model):
 
 	def to_dict(self):
 		return {
+			'title' : self.title,
 			'id': self.key.id(),
 			'lat': self.lat,
 			'lng': self.lng,

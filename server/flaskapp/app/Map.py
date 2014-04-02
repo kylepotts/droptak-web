@@ -8,4 +8,13 @@ class Map(ndb.Model):
 	creatorId = ndb.IntegerProperty()
 	takIds = ndb.StringProperty(repeated=True)
 	name = ndb.StringProperty()
+
+
+	def to_dict(self):
+		return {
+			'name' : self.name,
+			'id': self.key.id(),
+			'creator': self.creator,
+			'creatorId': self.creatorId,
+			}
 	

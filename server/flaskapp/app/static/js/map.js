@@ -30,9 +30,9 @@ function onAddMapClick(e){
                                     </div>\
                                     <div class='separator clear-left'>\
                                         <p class='btn-add'>\
-                                            <i class='fa fa-shopping-cart'></i><a href='http://www.jquery2dotnet.com' class='hidden-sm'>Add to cart</a></p>\
+                                            <i class='fa'></i></p>\
                                         <p class='btn-details'>\
-                                            <i class='fa fa-list'></i><a href='http://www.jquery2dotnet.com' class='hidden-sm'>More details</a></p>\
+                                            <i class='fa fa-list'></i></p>\
                                     </div>\
                                     <div class='clearfix'>\
                                     </div>\
