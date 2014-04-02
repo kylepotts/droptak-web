@@ -24,7 +24,7 @@ function initialize() {
 		zoom: 14,
 		center: myLatlng,
 		styles: styleArray,
-		mapTypeId: google.maps.MapTypeId.SATELLITE,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
 		panControl: true, 
 		zoomControl: true, 
 		zoomControlOptions: {

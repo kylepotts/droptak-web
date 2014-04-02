@@ -68,10 +68,9 @@ function Map(){
 			return tak;
 		}
 	self.removeTak = function(tak){
+
 			self.taks.remove(tak);
 		}
-
-
 
 }
 /**
@@ -117,10 +116,14 @@ function MapTakModel() {
 				console.log("valid");
 				// if it is, then submit it to server
 				$.post('/maps/new',{name: self.form.name()}) 
-					.done(function() {
-				    	//alert( "Submitted" );
+					.done(function(response) {
+				    	// parse JSON text response
+				    	var obj = jQuery.parseJSON(response);;
 				    	//and display it locally
-				    	self.addMap().name(self.form.name());
+				    	var map = self.addMap();
+				    	map.name(obj.name);
+				    	map.id(obj.id);
+				    	// reset form and hide it
 				    	self.form.name(undefined);
 							self.form.name.isModified(false);
 							$(modal).modal("hide");
@@ -135,8 +138,16 @@ function MapTakModel() {
 	* remove a map from model
 	*/
 	self.removeMap = function(map) {
-			self.maps.remove(map);
 			//send delete to server
+			if(!confirm("This cannot be undone (yet). Delete?")) return;
+			$.ajax({
+		    url: '/api/maps/' + map.id(),
+		    type: 'DELETE',
+		    success: function(result) {
+		        self.maps.remove(map);
+		        console.log(result);
+		    }
+			});
 		};
 
 	$.getJSON("/maps", function(data) { 
