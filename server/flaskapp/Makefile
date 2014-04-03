@@ -19,6 +19,9 @@ deploy:
 	python google_appengine/appcfg.py update app/ 
 	@echo "Successfully deployed at ${DATE}. ${CHECK}	"
 
+deploy-auth: 
+	python google_appengine/appcfg.py --oauth2 update app/
+
 tests:
 	python app/utils/tests.py google_appengine app/blueprints/
 
