@@ -59,8 +59,13 @@
 					<div class="panel panel-info" >
 						<div class="panel-heading">
 							<div class="pull-left">
+								<!-- link to single map list -->
 								<a href="#" data-bind="urlFor: $data"><span class="glyphicon glyphicon-th-list" style="color:#000000;"></span></a>
-								
+								<!-- QRcode popover -->
+								 <div  data-bind="uniqueId: $data">
+			             <div style="display: none;" data-bind="uniquePopover: $data, qrcodify: $data"></div>
+			          </div>  
+								<a href="#" data-bind="qrcodePopover : $data">Info</a>
 							</div>
 							<button type="button" class="close" data-bind="click: $root.removeMap" aria-hidden="true">&times; </button>
 							<div data-bind="click: function () {$root.select($data,'#map-canvas')}">

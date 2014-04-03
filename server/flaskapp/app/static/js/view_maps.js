@@ -22,9 +22,9 @@ ko.validation.init( {
 ko.bindingHandlers.uniqueId = {
     init: function(element, valueAccessor) {
         var value = valueAccessor();
-        value.id = value.id || ko.bindingHandlers.uniqueId.prefix + (++ko.bindingHandlers.uniqueId.counter);
+        value.cuid = value.cuid || ko.bindingHandlers.uniqueId.prefix + (++ko.bindingHandlers.uniqueId.counter);
 
-        element.id = value.id;
+        element.id = value.cuid;
     },
     counter: 0,
     prefix: "unique"
@@ -33,12 +33,19 @@ ko.bindingHandlers.uniqueId = {
 ko.bindingHandlers.uniqueFor = {
     init: function(element, valueAccessor) {
         var value = valueAccessor();
-        value.id = value.id || ko.bindingHandlers.uniqueId.prefix + (++ko.bindingHandlers.uniqueId.counter);
+        value.cuid = value.cuid || ko.bindingHandlers.uniqueId.prefix + (++ko.bindingHandlers.uniqueId.counter);
 
-        element.setAttribute("for", value.id);
+        element.setAttribute("for", value.cuid);
     } 
 };
-
+ko.bindingHandlers.uniquePopover = {
+    init: function(element, valueAccessor) {
+        var value = valueAccessor();
+        value.cuid = value.cuid || ko.bindingHandlers.uniqueId.prefix + (++ko.bindingHandlers.uniqueId.counter);
+        value.popcuid = "popover" + value.cuid;
+        element.id = "popover" + value.cuid;
+    } 
+};
 ko.bindingHandlers.urlFor = {
     update: function(element, valueAccessor) {
         // This will be called once when the binding is first applied to an element,
@@ -47,6 +54,47 @@ ko.bindingHandlers.urlFor = {
         var value = valueAccessor();
         element.setAttribute("href", "/maps/" + value.id());
 
+    }
+};
+ko.bindingHandlers.qrcodify = {
+    init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+    		$(element).empty();
+        $(element).qrcode({
+					text: "mapitapps.appspot.com/maps/"+ (valueAccessor().id() || "") 
+				});        
+    },
+    update: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+       	$(element).empty();
+        $(element).qrcode({
+					text: "mapitapps.appspot.com/maps/"+ (valueAccessor().id() || "") 
+				});        
+    }
+};
+
+ko.bindingHandlers.qrcodePopover = {
+    init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+        var mapcuid = valueAccessor().popcuid;
+        console.log(mapcuid);
+        var options = {};
+        options.content = $("#" + mapcuid).html();
+        options.html = true;
+        options.placement = "auto top";
+        var defaultOptions = {};   
+        options = $.extend(true, {}, defaultOptions, options);
+        $(element).popover(options);
+    },
+     update: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+        var mapcuid = valueAccessor().popcuid;
+        console.log(mapcuid);
+        var options = {};
+        options.content = $(element).qrcode({
+					text: "mapitapps.appspot.com/maps/"+ (valueAccessor().id() || "") 
+				}).html();
+        options.html = true;
+        options.placement = "auto top";
+        var defaultOptions = {};   
+        options = $.extend(true, {}, defaultOptions, options);
+        $(element).popover(options);
     }
 };
 /**
@@ -106,11 +154,6 @@ function MapTakModel() {
 			}
 			console.log(element.taks());
 			setMarkers(ko.toJS(element.taks ));
-				jQuery('#qrcode').qrcode({
-		text: "mapitapps.appspot.com/maps/"+element.id()
-			})
-
-
 		});
 		
 	}
