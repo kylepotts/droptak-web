@@ -95,7 +95,9 @@ function MapTakModel() {
 			}
 			console.log(element.taks());
 			setMarkers(ko.toJS(element.taks ));
-			$('#qrUrl').attr("href","/maps/"+mapid)
+				jQuery('#qrcode').qrcode({
+		text: "mapitapps.appspot.com/maps/"+element.id()
+			})
 
 
 		});
