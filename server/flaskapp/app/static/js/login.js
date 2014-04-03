@@ -102,6 +102,6 @@ function getProfileCallBack(obj){
   xmlhttp.open("POST","/login?storeToken="+storeToken+"&name="+name+"&email="+email,true);
   xmlhttp.send();
   $('#myModal').modal('hide');
-  window.location.href='/dash';
+  //window.location.href='/dash';
   }
 
