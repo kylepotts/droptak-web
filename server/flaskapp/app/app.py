@@ -32,7 +32,6 @@ def logoutIndex():
 @app.route('/')
 def index():
 	if "userId" in session:
-		logging.info("loggedIn=" + str(session['loggedIn']))
 		account = Account.get_by_id(session['userId'])
 		lin = account.loggedIn
 		logging.info("lin="+str(lin))

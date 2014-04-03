@@ -38,6 +38,17 @@ ko.bindingHandlers.uniqueFor = {
         element.setAttribute("for", value.id);
     } 
 };
+
+ko.bindingHandlers.urlFor = {
+    update: function(element, valueAccessor) {
+        // This will be called once when the binding is first applied to an element,
+        // and again whenever the associated observable changes value.
+        // Update the DOM element based on the supplied values here.
+        var value = valueAccessor();
+        element.setAttribute("href", "/maps/" + value.id());
+
+    }
+};
 /**
 *	Knockout models for data binding
 */

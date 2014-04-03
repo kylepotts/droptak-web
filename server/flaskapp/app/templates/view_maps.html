@@ -54,12 +54,18 @@
 						</div>
 					</div>
 					<!-- ko foreach: maps -->
-					<div class="panel panel-info" data-bind="click: function () {$root.select($data,'#map-canvas')}">
+					<div class="panel panel-info" >
 						<div class="panel-heading">
-							<button type="button" class="close" data-bind="click: $root.removeMap" aria-hidden="true">&times;</button>
+							<div class="pull-left">
+								<a href="#" data-bind="urlFor: $data"><span class="glyphicon glyphicon-th-list" style="color:#000000;"></span></a>
+								
+							</div>
+							<button type="button" class="close" data-bind="click: $root.removeMap" aria-hidden="true">&times; </button>
+							<div data-bind="click: function () {$root.select($data,'#map-canvas')}">
 							<h4 class="panel-title">
 								<span data-bind="text: name()? name : 'No Name'"></span>
 							</h4>
+						</div>
 						</div>
 					</div>
 					<!-- /ko -->
