@@ -56,7 +56,7 @@
 {{ super() }}
 <script>
 $("#qrcode").qrcode({
-	text: "mapitapps.appspot.com/maps/",
+	text: $(location).attr('href'),
 	width: 128,
 	height: 128
 });   

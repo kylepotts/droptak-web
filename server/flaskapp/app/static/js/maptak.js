@@ -7,11 +7,14 @@
  var map;
  var bounds;
  var myLatlng;
+ // var geocoder;
+  
 
 /**
 * initialize the map
 */
 function initialize() {
+	// geocoder = new google.maps.Geocoder();
 	myLatlng = new google.maps.LatLng(40.43, -86.92);
 	var styleArray = [{
 		"featureType": "poi",
@@ -45,10 +48,13 @@ function initialize() {
 	});
 }
 
-function addMarker(lat, lng) {
+function addMarker(lat, lng, opts) {
+	opts = opts || {};
+    opts.title = opts.title || "";
 	marker = new google.maps.Marker({
 		position: new google.maps.LatLng(lat, lng),
-		map: map
+		map: map,
+		title: opts.title
 	});
 	markers.push(marker);
 	bounds.extend(marker.position);
@@ -88,7 +94,7 @@ function setMarkers(data) {
 	deleteMarkers();
 	console.log(data);
 	for (var i = 0; i < data.length; i++) {
-		addMarker(data[i].lat, data[i].lng);
+		addMarker(data[i].lat, data[i].lng, {title: data[i].title});
 	}
 	fitMarkers();
 }
