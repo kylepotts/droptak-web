@@ -25,7 +25,7 @@
 
 <body>
   <div class="jumbotron">
-    <div class="navbar navbar-default navbar-fixed-top navbar-custom" role="navigation">
+    <div id="staticNavBar" class="navbar navbar-default navbar-fixed-top navbar-custom" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -38,10 +38,12 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li  id="nav-login"> <a onclick="hideMenu()" data-toggle="modal" data-target="#myModal" href="javascript:void(0);">Login | Signup</a></li>
-            <li><a href="/maps/">Maps</a></li>
-            <li><a href="/create/">Create</a></li>
-            <li><a href="/logout">Logout</a></li>
+            <li><a href="/app/">Maps</a>
+            </li>
+            <li><a href="/create/">Create</a>
+            </li>
+            <li id="nav-logout"><a href="javascript:void(0);">Logout</a>
+            </li>
           </ul>
         </div>
         <!--/.nav-collapse -->

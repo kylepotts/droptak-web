@@ -41,3 +41,5 @@ body {
         width: 100px;
         height: 200px;
       }
+
+iframe[src^="https://support.google.com"] {display: none;}
