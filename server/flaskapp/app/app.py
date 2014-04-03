@@ -24,6 +24,10 @@ app = Flask(__name__)
 app.secret_key = 'key'
 currentAccount = 1
 
+@app.route('/logoutIndex')
+def logoutIndex():
+		return render_template('index.html')
+
 
 @app.route('/')
 def index():
@@ -48,7 +52,7 @@ def maps():
 	return json.dumps([t.to_dict() for t in query.fetch()])
 	#return render_template('map.html', maps=getUserMaps(session['userId']))
 
-@app.route('/logout/',methods=['GET','POST'])
+@app.route('/logout',methods=['GET','POST'])
 def logout():
 	if request.method == 'POST':
 		name = session['username']
@@ -59,6 +63,7 @@ def logout():
 		logging.info("session after " + str(len(session)))
 		session['loggedIn'] = False
 		logging.info("session set to loggedin = false")
+		session.clear() 
 		return '200'
 
 	if request.method == 'GET':
