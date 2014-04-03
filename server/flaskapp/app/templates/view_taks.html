@@ -2,48 +2,63 @@
 
 {% block head %}
 {{ super() }}
-	<script src="/static/js/maptak.js"></script>
+<script src="/static/js/maptak.js"></script>
+<script type="text/javascript" src="/static/js/jquery.qrcode.js"></script>
+<script type="text/javascript" src="/static/js/qrcode.js"></script>
 {% endblock %}
-	
+
 {% block content %}
 
 <div class="jumbotron">
-			<div class="container">
-				<div id="map-canvas" style="height:500px; width:100%"></div>
-				<div class="table-responsive">
-				<table class="table table-striped table-bordered">
-					<thead>
-						<tr>
-							<th id="view" style="text-align: center; "></th>
-							<th id="title" style="text-align: center; ">Title</th>
-							<th id="lat" style="text-align: center; ">Latitude</th>
-							<th id="lng" style="text-align: center; ">Longitude</th>
-							<th id="creator" style="text-align: center; ">Creator</th>
-						</tr>
-					</thead>
-					<tbody>
-						
-						{% for tak in taks %}
-						<tr>
-							<td headers="view">
-								<a role="button" class="btn btn-primary" href="/taks/{{tak.key.id()}}">
-									View
-								</a>
-							</td>
-							<td headers="title">{{tak.title}}</td>
-							<td headers="lat">{{tak.lat}}</td>
-							<td headers="lng">{{tak.lng}}</td>
-							<td headers="creator">{{tak.creator}}</td>
-						</tr>
-						{% endfor %}
+	<div class="container">
+		<h2>{{mapName}}</h2>
+		<div id="map-canvas" style="height:500px; width:100%"></div>     
 
-					</tbody>
-				</table>
-			</div>
-			</div>
+		<div class="table-responsive">
+			<table class="table table-striped table-bordered">
+				<thead>
+					<tr>
+						<th id="view" style="text-align: center; "></th>
+						<th id="title" style="text-align: center; ">Title</th>
+						<th id="lat" style="text-align: center; ">Latitude</th>
+						<th id="lng" style="text-align: center; ">Longitude</th>
+						<th id="creator" style="text-align: center; ">Creator</th>
+					</tr>
+				</thead>
+				<tbody>
+
+					{% for tak in taks %}
+					<tr>
+						<td headers="view">
+							<a role="button" class="btn btn-primary" href="/taks/{{tak.key.id()}}">
+								View
+							</a>
+						</td>
+						<td headers="title">{{tak.title}}</td>
+						<td headers="lat">{{tak.lat}}</td>
+						<td headers="lng">{{tak.lng}}</td>
+						<td headers="creator">{{tak.creator}}</td>
+					</tr>
+					{% endfor %}
+
+				</tbody>
+			</table>
 		</div>
+		<div class="share">
+			<span>Share this map: </span>
+			<div id="qrcode"></div>
+		</div>
+	</div>
+</div>
 {% endblock %}
 
 {% block javascript %}
 {{ super() }}
+<script>
+$("#qrcode").qrcode({
+	text: "mapitapps.appspot.com/maps/",
+	width: 128,
+	height: 128
+});   
+</script>
 {% endblock javascript %}

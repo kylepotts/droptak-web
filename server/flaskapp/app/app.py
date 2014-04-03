@@ -176,9 +176,12 @@ def taks(mapId=-1, mapName=''):
 		logging.info("MapID %s" %mapId)
 
 	if mapId == "":
-		return
+		return redirect('/app')
+	map = Map.get_by_id(mapId)
+	if map is None:
+		return redirect('/app')
 	taks = getMapTaks(str(mapId))
-	return render_template('view_taks.html',taks = taks)
+	return render_template('view_taks.html',taks = taks, mapName=map.name)
 
 @app.route('/taks/<int:id>', methods = ['GET', 'POST'])
 def show_taks(id=-1):
@@ -187,7 +190,7 @@ def show_taks(id=-1):
 			tak = Tak.get_by_id(id)
 			if tak is not None:
 				return tak.view()
-	return redirect('/maps')
+	return redirect('/app')
 
 @app.route('/maps/new', methods=['GET','POST'])
 def create_map():
