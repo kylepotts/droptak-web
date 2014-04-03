@@ -11,6 +11,8 @@ $('#nav-logout').on('click', logout)
 
 
 function loginFinishedCallBack(authResult){
+  if(window.location.pathname == '/'){
+    console.log("true")
     if (authResult['code']) {
       //console.log(authResult)
       authRes = authResult
@@ -40,6 +42,7 @@ function loginFinishedCallBack(authResult){
     //   "immediate_failed" - Could not automatially log in the user
     // console.log('There was an error: ' + authResult['error']);
   }
+}
 
 }
 
@@ -99,5 +102,6 @@ function getProfileCallBack(obj){
   xmlhttp.open("POST","/login?storeToken="+storeToken+"&name="+name+"&email="+email,true);
   xmlhttp.send();
   $('#myModal').modal('hide');
+  window.location.href='/dash';
   }
 

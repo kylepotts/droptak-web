@@ -24,9 +24,9 @@ app = Flask(__name__)
 app.secret_key = 'key'
 currentAccount = 1
 
-@app.route('/logoutIndex')
+@app.route('/dash')
 def logoutIndex():
-		return render_template('index.html')
+		return render_template('dashboard.html')
 
 
 @app.route('/')
