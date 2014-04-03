@@ -38,65 +38,13 @@ ko.bindingHandlers.uniqueFor = {
         element.setAttribute("for", value.cuid);
     } 
 };
-ko.bindingHandlers.uniquePopover = {
-    init: function(element, valueAccessor) {
-        var value = valueAccessor();
-        value.cuid = value.cuid || ko.bindingHandlers.uniqueId.prefix + (++ko.bindingHandlers.uniqueId.counter);
-        value.popcuid = "popover" + value.cuid;
-        element.id = "popover" + value.cuid;
-    } 
-};
 ko.bindingHandlers.urlFor = {
     update: function(element, valueAccessor) {
-        // This will be called once when the binding is first applied to an element,
-        // and again whenever the associated observable changes value.
-        // Update the DOM element based on the supplied values here.
         var value = valueAccessor();
         element.setAttribute("href", "/maps/" + value.id());
-
-    }
-};
-ko.bindingHandlers.qrcodify = {
-    init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
-    		$(element).empty();
-        $(element).qrcode({
-					text: "mapitapps.appspot.com/maps/"+ (valueAccessor().id() || "") 
-				});        
-    },
-    update: function(element, valueAccessor, allBindingsAccessor, viewModel) {
-       	$(element).empty();
-        $(element).qrcode({
-					text: "mapitapps.appspot.com/maps/"+ (valueAccessor().id() || "") 
-				});        
     }
 };
 
-ko.bindingHandlers.qrcodePopover = {
-    init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
-        var mapcuid = valueAccessor().popcuid;
-        console.log(mapcuid);
-        var options = {};
-        options.content = $("#" + mapcuid).html();
-        options.html = true;
-        options.placement = "auto top";
-        var defaultOptions = {};   
-        options = $.extend(true, {}, defaultOptions, options);
-        $(element).popover(options);
-    },
-     update: function(element, valueAccessor, allBindingsAccessor, viewModel) {
-        var mapcuid = valueAccessor().popcuid;
-        console.log(mapcuid);
-        var options = {};
-        options.content = $(element).qrcode({
-					text: "mapitapps.appspot.com/maps/"+ (valueAccessor().id() || "") 
-				}).html();
-        options.html = true;
-        options.placement = "auto top";
-        var defaultOptions = {};   
-        options = $.extend(true, {}, defaultOptions, options);
-        $(element).popover(options);
-    }
-};
 /**
 *	Knockout models for data binding
 */

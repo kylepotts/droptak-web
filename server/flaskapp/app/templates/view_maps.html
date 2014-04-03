@@ -61,11 +61,6 @@
 							<div class="pull-left">
 								<!-- link to single map list -->
 								<a href="#" data-bind="urlFor: $data"><span class="glyphicon glyphicon-th-list" style="color:#000000;"></span></a>
-								<!-- QRcode popover -->
-								 <div  data-bind="uniqueId: $data">
-			             <div style="display: none;" data-bind="uniquePopover: $data, qrcodify: $data"></div>
-			          </div>  
-								<a href="#" data-bind="qrcodePopover : $data">Info</a>
 							</div>
 							<button type="button" class="close" data-bind="click: $root.removeMap" aria-hidden="true">&times; </button>
 							<div data-bind="click: function () {$root.select($data,'#map-canvas')}">
@@ -85,9 +80,8 @@
 
 		</div>
 		<div class="col-sm-offset-3 col-md-offset-2 main-content" style="padding:0px;">
-				<h2>Get started by selecting a map, or create a new one</h2>
+				<h2 data-bind="text: selected()? selected().name() : 'Get started by selecting a map, or create a new one'"></h2>
 					<div id="map-canvas" style="height:500px; width:100%"></div>
-					<div id="qrcode"></div>
 		</div>
 	</div>
 </div>
