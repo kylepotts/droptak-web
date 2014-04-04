@@ -150,13 +150,14 @@ def create_tak():
 		#user = getValue(request, "user", "")
 		#change form to not supply user
 		user = session['username']
+		uid = session['userId']
 			
 		if not ( user and lat and lng ):
 			return jsonify(message="Bad Request", response=400)
 			# check if args blank
 
 		logging.info("Add lat %s, lng %s" %(lat, lng) )
-		tak  = Tak(lng=lng,lat=lat, creator=user, title=title,mapId=mapId)
+		tak  = Tak(lng=lng,lat=lat, creator=user, title=title,mapId=mapId,creatorId=uid)
 		key = tak.put()
 		map.takIds.append(str(key.id()))
 		map.put();
@@ -234,7 +235,10 @@ def getMapTaks(id):
 def api_taks(id=-1):
 	if request.method == 'GET':
 		query = getMapTaks(str(id));
-		return json.dumps([t.to_dict() for t in query.fetch()])
+		if query.count == 0:
+			return json.dumps({})
+		else:
+			return json.dumps([t.to_dict() for t in query.fetch()])
 	if request.method == 'DELETE':
 		map = Map.get_by_id(id)
 		logging.info("DELETE " + str(id))
