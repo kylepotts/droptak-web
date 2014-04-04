@@ -297,6 +297,11 @@ def api_map():
 		key = ownMap.put()
 		return json.dumps({"mapId":key.integer_id()}) 
 
+	if request.method == 'GET':
+		id = request.args.get("id","")
+		ownMap = Map.get_by_id(int(id))
+		return json.dumps({"creator":ownMap.creator,"name":ownMap.name,"creatorId":ownMap.creatorId,"id":int(id)})
+
 @app.route('/api/tak',methods=['GET','POST'])
 def api_tak():
 	if request.method == 'POST':

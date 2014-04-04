@@ -56,9 +56,11 @@
 {{ super() }}
 <script>
 url = "http://"+window.location.host+"/api"+window.location.pathname
+var id = url.match(/([^\/]*)\/*$/)[1]
+console.log("end="+name)
 console.log(url)
 $("#qrcode").qrcode({
-	text: url,
+	text: "http://"+window.location.host+"/api/map?id="+id,
 	width: 128,
 	height: 128
 });   
