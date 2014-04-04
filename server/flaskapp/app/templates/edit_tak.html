@@ -2,11 +2,14 @@
 {% block head %}
     {{ super() }}
     <script src="/static/js/vendor/knockout-3.1.0.js"></script>
-<script src="/static/js/vendor/knockout-switch-case.js"></script>
-<script src="/static/js/vendor/knockout.validation.min.js"></script>
+    <script src="/static/js/vendor/knockout-switch-case.js"></script>
+    <script src="/static/js/vendor/knockout.validation.min.js"></script>
     <script src="/static/js/maptak.js"></script>
-
-     <script src="/static/js/edit_tak.js"></script>
+    <script src="/static/js/edit_tak.js"></script>
+    <script>
+    // used to load data via javascript
+      var currentTakID = {{id}};
+    </script>
     
 {% endblock %}
 	
@@ -21,36 +24,31 @@
           <div class="form-group">
             <label for="title" class="col-sm-2 control-label">Title</label>
             <div class="col-sm-10">
-              <p class="form-control-static" id="title" align="left" name="title" >{{tak.title}}</p>
+              <input type="text" class="form-control" id="title" name="title" data-bind="enable: edit, value: tak().title" placeholder="Enter Title">
         </div>
       </div>
         <div class="form-group">
         <label for="lat" class="col-sm-2 control-label">Latitude</label>
         <div class="col-sm-10">
-          <p class="form-control-static" id="lat" align="left" name="lat" >{{tak.lat}}</p>
+          <p class="form-control-static" id="lat" align="left" name="lat" data-bind="text: tak().lat"></p>
         </div>
       </div>
       <div class="form-group">
         <label for="lng" class="col-sm-2 control-label">Longitude</label>
         <div class="col-sm-10">
-          <p class="form-control-static" id="lng" align="left" name="lng" >{{tak.lng}}</p>
+          <p class="form-control-static" id="lng" align="left" name="lng" data-bind="text: tak().lng"></p>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="mapId" class="col-sm-2 control-label">Map</label>
-        <div class="col-sm-10">
-            <p class="form-control-static" id="mapId" align="left" name="mapId" >{{tak.mapId}}</p>
-          </div>
       </div>
       <div class="form-group">
         <label class="col-sm-2 control-label">Creator</label>
         <div class="col-sm-10">
-            <p class="form-control-static" id="creator" align="left" name="creator" >{{tak.creator}}</p>
+            <p class="form-control-static" id="creator" align="left" name="creator" data-bind="text: tak().creator"></p>
           </div>
       </div>
       <div class="form-group" align="left">
         <div class="col-sm-offset-2 col-sm-10">
-          <button type="button" class="btn btn-primary" align="left" data-bind="click: toggleEdit, text: edit()? 'Edit': 'Save'">Edit</button>
+          <button type="button" class="btn btn-primary" align="left" data-bind="click: toggleEdit, text: edit()? 'Save': 'Edit'"></button>
+          <button type="button" class="btn btn-primary" align="left" data-bind="click: cancel, visible: edit()">Cancel</button>
         </div>
       </div>
     </form>
@@ -61,5 +59,4 @@
 
 {% block javascript %}
 {{ super() }}
-
 {% endblock javascript %}

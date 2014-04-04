@@ -63,6 +63,10 @@ $("#qrcode").qrcode({
 	text: "http://"+window.location.host+"/api/map?id="+id,
 	width: 128,
 	height: 128
-});   
+});  
+
+{% for tak in taks %}
+	addMarker({{tak.lat}}, {{tak.lng}}, {title: "{{tak.title}}" });
+{% endfor %}
 </script>
 {% endblock javascript %}

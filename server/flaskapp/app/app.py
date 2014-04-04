@@ -322,6 +322,29 @@ def api_tak():
 	if request.method == 'GET':
 		return '200'
 
+@app.route('/api/tak/<int:id>',methods=['GET','POST','PUT', 'DELETE'])
+def api_single_tak(id=-1):
+	tak = Tak.get_by_id(id)
+	if tak is None:
+		return '404: '
+
+	if request.method == 'GET':
+		return json.dumps(tak.to_dict())
+
+	if request.method == 'DELETE':
+		# TODO: first find what map it's in and delete it from there
+		tak.key.delete()
+		return '200'
+
+	if request.method == 'PUT':
+		title = getValue(request, "title", "")
+		logging.info("title: " + title)
+		tak.update(title=title)
+		tak.put()
+		return '200'
+
+	if request.method == 'POST':
+		return '200'
 
 
 # register Blueprints

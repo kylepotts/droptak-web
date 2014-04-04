@@ -2,8 +2,9 @@
  * Maptak JS Library
  * requires: Google maps v3 , JQuery
  **/
-
+ var map_initialized = false;
  var markers = [];
+ var asycmarkers = [];
  var map;
  var bounds;
  var myLatlng;
@@ -46,18 +47,32 @@ function initialize() {
 		google.maps.event.trigger(map, "resize");
 		map.setCenter(center);
 	});
+	map_initialized = true;
+	for (var i = 0; i < asycmarkers.length; i++) {
+		setMarkers(asycmarkers);
+	}
 }
 
 function addMarker(lat, lng, opts) {
 	opts = opts || {};
     opts.title = opts.title || "";
-	marker = new google.maps.Marker({
-		position: new google.maps.LatLng(lat, lng),
-		map: map,
-		title: opts.title
-	});
-	markers.push(marker);
-	bounds.extend(marker.position);
+    if(map_initialized){
+		marker = new google.maps.Marker({
+			position: new google.maps.LatLng(lat, lng),
+			map: map,
+			title: opts.title
+		});
+		markers.push(marker);
+		bounds.extend(marker.position);
+	}
+	else{
+		var c = {
+			lat: lat,
+			lng: lng,
+			opts: opts
+		}
+		asycmarkers.push(c);
+	}
 }
 // Sets the map on all markers in the array.
 function setAllMap(map) {
