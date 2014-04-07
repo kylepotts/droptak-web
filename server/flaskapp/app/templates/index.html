@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_index.html' %}
 
 {% block content %}
 
@@ -8,7 +8,17 @@
         <p>Geotagging points of interest has never been easier. MapTak is mobile and web application for tagging gps locations with meta-data and viewing it on a map. Whether it's all of the vendors in an outdoor mall, or your favorite picnic places: Tag it, save it, share it.</p>
         <img src="https://maps.googleapis.com/maps/api/staticmap?center=40.4270836,-86.916121&zoom=15&size=400x300&sensor=false">
         <p>Get started today by signing up with your Google account</p>
-        <p><a class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" href="#" role="button">Get Started</a></p>
+        <span id="signinButton">
+       	<span
+        class="g-signin"
+        data-callback="loginFinishedCallBack"
+        data-clientid="158485758125-bqrmkcp45496hdq96n6qika4l0tgafq6.apps.googleusercontent.com"
+        data-cookiepolicy="single_host_origin"
+        data-requestvisibleactions="http://schemas.google.com/AddActivity"
+        data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/plus.profile.emails.read">
+      	</span>
+		</span>
+
   </div>
 </div>
 {% endblock %}

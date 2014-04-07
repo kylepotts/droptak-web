@@ -1,28 +1,31 @@
 <!DOCTYPE html>
-  <head>
-    {% block head %}
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>MapTak</title>
-    <link href="/static/css/vendor/bootstrap.min.css" rel="stylesheet">
-    <link href="/static/css/cover.css" rel="stylesheet">
-    <script src="/static/js/vendor/jquery.min.js"></script>
-    <script src="/static/js/login.js"></script>
+<head>
+  {% block head %}
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>MapTak</title>
+  <link href="/static/css/vendor/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/css/cover.css" rel="stylesheet">
+  <script src="/static/js/vendor/jquery.min.js"></script>
+  <script src="/static/js/login.js"></script>
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-  <style type="text/css"></style><style id="holderjs-style" type="text/css"></style>
+  <style type="text/css"></style>
+  <style id="holderjs-style" type="text/css"></style>
   {% endblock %}
 </head>
-  <body>
-     <div class="jumbotron">
-    <div class="navbar navbar-default navbar-fixed-top navbar-custom" role="navigation">
+
+<body>
+  <div class="jumbotron">
+    <div id="staticNavBar" class="navbar navbar-default navbar-fixed-top navbar-custom" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -35,59 +38,65 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li  id="nav-login"> <a onclick="hideMenu()" data-toggle="modal" data-target="#myModal" href="javascript:void(0);">Login | Signup</a></li>
-            <li><a href="/maps/">Maps</a></li>
-            <li><a href="/create/">Create</a></li>
+            <li><a href="/app/">Maps</a>
+            </li>
+            <li><a href="/create/">Create</a>
+            </li>
+            <li id="nav-logout"><a href="javascript:void(0);">Logout</a>
+            </li>
           </ul>
-        </div><!--/.nav-collapse -->
+        </div>
+        <!--/.nav-collapse -->
       </div>
     </div>
     <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <center><p>Login or sign up with Google+</p></center>
-        <span id="signinButton">
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <center>
+              <p>Login or sign up with Google+</p>
+            </center>
+            <span id="signinButton">
       <span
         class="g-signin"
         data-callback="loginFinishedCallBack"
-        
-        data-clientid="158485758125-j71rc29hfol4d4lk247j81nmccbcuoah.apps.googleusercontent.com"
+        data-clientid="158485758125-bqrmkcp45496hdq96n6qika4l0tgafq6.apps.googleusercontent.com"
         data-cookiepolicy="single_host_origin"
         data-requestvisibleactions="http://schemas.google.com/AddActivity"
         data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/plus.profile.emails.read">
       </span>
-    </center>
-    </span>
+            </center>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
+
+    {% block content %} {% endblock %}
+
   </div>
-</div>
+  <!-- /container -->
 
-      {% block content %}
+  {% block javascript %}
 
-      {% endblock %}
+  <script src="/static/js/vendor/bootstrap.min.js"></script>
 
-    </div> <!-- /container -->
+  <script src="/static/js/main.js"></script>
 
-        {% block javascript %}
-        
-        <script src="/static/js/vendor/bootstrap.min.js"></script>
-
-    <script src="/static/js/main.js"></script>
-    
-    <script>
-         // in mobile view, collapses menu
-         function hideMenu(){
-          $(".navbar-collapse").collapse("hide");
-         }
-        </script> 
-    {% endblock javascript %}
+  <script>
+    // in mobile view, collapses menu
+    function hideMenu() {
+      $(".navbar-collapse")
+        .collapse("hide");
+    }
+  </script>
+  {% endblock javascript %}
 
 
 
 
-  </body>
+</body>
+
 </html>

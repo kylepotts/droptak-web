@@ -104,6 +104,9 @@
 {
     margin-top: 20px;
 }
+.black{
+    color: #000000;
+}
 [data-slide="prev"]
 {
     margin-right: 10px;

@@ -19,6 +19,7 @@ class Tak(ndb.Model):
 
 	def to_dict(self):
 		return {
+			'title' : self.title,
 			'id': self.key.id(),
 			'lat': self.lat,
 			'lng': self.lng,
@@ -26,10 +27,10 @@ class Tak(ndb.Model):
 			'creatorId': self.creatorId,
 			}
 
-	def update(self):
-		
+	def update(self, title):
+		self.title = title
 		return
 
 	def view(self):
-		return render_template('edit_tak.html',tak=self)
+		return render_template('edit_tak.html',id=self.key.id())
 
