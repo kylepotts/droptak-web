@@ -68,6 +68,7 @@ function Map(){
 	self.name      = ko.observable();
 	self.id 				= ko.observable();
 	self.taks  			= ko.observableArray();
+	self.loaded = false; // update after loading
 
 	self.addTak = function(){
 			var tak = new Tak();
@@ -92,17 +93,28 @@ function MapTakModel() {
 	self.select = function(element, mapid){
 		self.selected(element);
 		console.log(element.id());
-		$.getJSON("/api/maps/" + element.id(), function(data) { 
-	    element.taks().length = 0;
-	    for (var i = 0; i < data.length; i++) { 
-	    	var tak = element.addTak();
-	    	tak.title(data[i].title);
-	    	tak.lat(data[i].lat);
-	    	tak.lng(data[i].lng);
-			}
+		if(!element.loaded){
+			console.log("Loading data..")
+			$.getJSON("/api/maps/" + element.id(), function(data) { 
+			    element.taks().length = 0;
+			    for (var i = 0; i < data.length; i++) { 
+			    	var tak = element.addTak();
+			    	tak.title(data[i].title);
+			    	tak.lat(data[i].lat);
+			    	tak.lng(data[i].lng);
+				}
+				element.loaded = true;
+				console.log(element.taks());
+				setMarkers(ko.toJS(element.taks ));
+			});
+
+		}
+		else{
+			// ajax call is async so needs to be in both options
 			console.log(element.taks());
 			setMarkers(ko.toJS(element.taks ));
-		});
+		}
+
 		
 	}
 
