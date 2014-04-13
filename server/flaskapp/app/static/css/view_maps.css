@@ -60,4 +60,5 @@ textarea.invalid{
 	right: 20px;
 	bottom: 20px;
 	overflow: auto;
+	border: 1px dotted #000000 !important;
 }
