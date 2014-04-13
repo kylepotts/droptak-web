@@ -24,6 +24,15 @@ app = Flask(__name__)
 app.secret_key = 'key'
 currentAccount = 1
 
+#the following appends headers to every request to tell the client not to cache contents
+#TODO: remove for final demo and submission
+@app.after_request
+def after_request(response):
+	logging.info("attaching no cache header")
+	response.headers.add('Cache-Control', 'no-cache, no-store') # http-1.1
+	response.headers.add('Pragma', 'no-cache') # http-1
+	return response
+
 @app.route('/dash')
 def logoutIndex():
 		return render_template('dashboard.html')
@@ -34,6 +43,8 @@ def index():
 	if "userId" in session:
 		#logging.info("loggedIn=" + str(session['loggedIn']))
 		account = Account.get_by_id(session['userId'])
+		if account is None: # prevent interal error
+			return render_template('index.html')
 		lin = account.loggedIn
 		logging.info("lin="+str(lin))
 		if lin == False:
