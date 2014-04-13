@@ -1,5 +1,14 @@
-.main-content{
+body{
+	background-color: #eee;
 	height: 100%;
+}
+.main-content{
+	position: absolute;
+	top: 51px;
+	left: 300px;
+	right:0;
+	bottom:0;
+	overflow: auto;
 }
 .panel-add-outer{
 	background-color: #eee;
@@ -21,12 +30,12 @@
 	padding-top: 30px;
 }
 
-.sidebar {
-	position: fixed;
+.maps-sidebar {
+	position: absolute;
+	width: 300px;
 	top: 51px;
-	bottom: 0;
-	left: 0;
-	z-index: 1000;
+	bottom: 20px;
+	left: 0px;
 	display: block;
 	padding: 20px;
 	overflow-x: hidden;
@@ -41,4 +50,14 @@ input.invalid{
 textarea.invalid{
     border-color:hsl(0, 50%, 50%);
     background:hsl(0, 50%, 90%);
+}
+#map-canvas{
+	padding: 0;
+	margin: 0;
+	position: absolute;
+	top:100px;
+	left:0;
+	right: 20px;
+	bottom: 20px;
+	overflow: auto;
 }

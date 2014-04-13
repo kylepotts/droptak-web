@@ -107,7 +107,6 @@ function MapTakModel() {
 				console.log(element.taks());
 				setMarkers(ko.toJS(element.taks ));
 			});
-
 		}
 		else{
 			// ajax call is async so needs to be in both options
@@ -158,7 +157,7 @@ function MapTakModel() {
 	*/
 	self.removeMap = function(map) {
 			//send delete to server
-			if(!confirm("This cannot be undone (yet). Delete?")) return;
+			if(!confirm("Are you sure you want to permanently delete this map?")) return;
 			$.ajax({
 		    url: '/api/maps/' + map.id(),
 		    type: 'DELETE',

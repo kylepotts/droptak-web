@@ -23,7 +23,7 @@
 
 					<div class="form-group">
 						<label for="name">Map Name</label>
-						<input type="text" class="form-control" data-bind="value: form.name, valueUpdate: 'afterkeydown'" id="name" placeholder="Really cool map name">
+						<input type="text" class="form-control" data-bind="value: form.name, valueUpdate: 'afterkeydown'" id="name-textbox" placeholder="Really cool map name">
 					</div>
 
 				</div>
@@ -39,51 +39,48 @@
 
 
 <!-- Sidebar -->
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-sm-3 col-md-2 sidebar">
-			<div id="maps-sidebar">
-				<div class="panel-group" id="accordion">
-					<!-- add map -->
-					<div class="panel panel-add-outer">
-						<div class="panel-heading panel-add-heading" data-toggle="modal" data-target="#map-name-modal">
-							<h4 class="panel-title panel-add">
-								<span>Add Map</span>
-							</h4>
-						</div>
-					</div>
-					<!-- ko foreach: maps -->
-					<div class="panel panel-info" >
-						<div class="panel-heading">
-							<div class="pull-left">
-								<!-- link to single map list -->
-								<a href="#" data-bind="urlFor: $data"><span class="glyphicon glyphicon-th-list" style="color:#000000;"></span></a>
-							</div>
-							<button type="button" class="close" data-bind="click: $root.removeMap" aria-hidden="true">&times; </button>
-							<div data-bind="click: function () {$root.select($data,'#map-canvas')}">
-							<h4 class="panel-title">
-								<span data-bind="text: name()? name : 'No Name'"></span>
-							</h4>
-						</div>
-						</div>
-					</div>
-					<!-- /ko -->
-
+<div class="maps-sidebar">
+	<div class="panel-group" id="accordion">
+		<!-- add map -->
+		<div class="panel panel-add-outer">
+			<div class="panel-heading panel-add-heading" data-toggle="modal" data-target="#map-name-modal">
+				<h4 class="panel-title panel-add">
+					<span>Add Map</span>
+				</h4>
+			</div>
+		</div>
+		<!-- ko foreach: maps -->
+		<div title="Select this map" class="panel panel-info" data-bind="click: function () {$root.select($data,'#map-canvas')}" >
+			<div class="panel-heading">
+				<div class="pull-left">
+					<!-- link to single map list -->
+					<a href="#" title="View map list" data-bind="urlFor: $data, click: function(){return true;}, clickBubble: false"><span  class="glyphicon glyphicon-th-list" style="color:#000000;"></span></a>
 				</div>
-			</div><!-- end of sidebar -->
-
-
-
-
+				<button type="button" class="close" title="Delete this map." data-bind="click: $root.removeMap" aria-hidden="true">&times; </button>
+				<div>
+					<h4 class="panel-title">
+						<span data-bind="text: name()? name : 'No Name'"></span>
+					</h4>
+				</div>
+			</div>
 		</div>
-		<div class="col-sm-offset-3 col-md-offset-2 main-content" style="padding:0px;">
-				<h2 data-bind="text: selected()? selected().name() : 'Get started by selecting a map, or create a new one'"></h2>
-					<div id="map-canvas" style="height:500px; width:100%"></div>
-		</div>
+		<!-- /ko -->
 	</div>
 </div>
+<div class="main-content">
+	<h2 data-bind="text: selected()? selected().name() : 'Get started by selecting a map, or create a new one'"></h2>
+	<img src="/static/img/indicator.gif" style="visibility:hidden;"></img>
+	<div id="map-canvas"></div>
+</div>
+
+
 {% endblock %}
 
 {% block javascript %}
 {{ super() }}
+<script>
+$('#map-name-modal').on('shown.bs.modal', function () {
+	$('#name-textbox').focus();
+})
+</script>
 {% endblock javascript %}
