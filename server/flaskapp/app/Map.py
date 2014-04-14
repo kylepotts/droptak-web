@@ -8,6 +8,7 @@ class Map(ndb.Model):
 	creatorId = ndb.IntegerProperty()
 	takIds = ndb.StringProperty(repeated=True)
 	name = ndb.StringProperty()
+	adminIds = ndb.IntegerProperty(repeated=True)
 
 
 	def to_dict(self):

@@ -9,3 +9,4 @@ class Account(ndb.Model):
 	gplusId = ndb.StringProperty()
 	accessToken = ndb.StringProperty()
 	loggedIn = ndb.BooleanProperty()
+	adminMaps = ndb.IntegerProperty(repeated=True)

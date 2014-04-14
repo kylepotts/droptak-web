@@ -63,6 +63,13 @@ function FormMap(){
 		minLength: 1
 	});
 }
+function addAdminForm(){
+	var self = this;
+	self.email = ko.observable().extend({
+		required: true,
+		minLength: 1
+	});
+}
 function Map(){
 	var self        = this;
 	self.name      = ko.observable();
@@ -89,10 +96,13 @@ function MapTakModel() {
 	self.maps 	  	= ko.observableArray();
 	self.selected		= ko.observable();
 	self.form 			= new FormMap();
+	self.adminForm = new addAdminForm();
 
 	self.select = function(element, mapid){
+		console.log(element)
 		self.selected(element);
 		console.log(element.id());
+		setCookie("mapId",element.id(),10)
 		if(!element.loaded){
 			console.log("Loading data..")
 			$.getJSON("/api/maps/" + element.id(), function(data) { 
@@ -106,6 +116,8 @@ function MapTakModel() {
 				element.loaded = true;
 				console.log(element.taks());
 				setMarkers(ko.toJS(element.taks ));
+				
+
 			});
 		}
 		else{
@@ -152,6 +164,34 @@ function MapTakModel() {
 			}
 		};
 
+
+			self.addAdmin = function(data,modal){
+			// check if form is valid
+			console.log("addAdmin mapId="+self.selected().id())
+			if(self.adminForm.email.isValid()){
+				console.log("valid");
+				// if it is, then submit it to server
+				$.post('/map/admin/'+self.selected().id()+'/'+self.adminForm.email(),{}) 
+					.done(function(response) {
+				    	// parse JSON text response
+				    	var obj = jQuery.parseJSON(response);;
+				    	//and display it locally
+				    	//var map = self.addMap();
+				    	//map.name(obj.name);
+				    	//map.id(obj.id);
+				    	// reset form and hide it
+				    	self.form.name(undefined);
+							self.form.name.isModified(false);
+							$(modal).modal("hide");
+					})
+					.fail(function() {
+						alert( "Error submitting" );
+					});
+
+			}
+			
+		};
+
 	/**
 	* remove a map from model
 	*/
@@ -185,4 +225,43 @@ function MapTakModel() {
 $(document).ready(function() {
 	ko.applyBindings( new MapTakModel());
 });
+
+function setCookie(cname,cvalue,exdays)
+{
+var d = new Date();
+d.setTime(d.getTime()+(exdays*24*60*60*1000));
+var expires = "expires="+d.toGMTString();
+document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
+function getCookie(cname)
+{
+var name = cname + "=";
+var ca = document.cookie.split(';');
+for(var i=0; i<ca.length; i++) 
+  {
+  var c = ca[i].trim();
+  if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+}
+return "";
+}
+
+function checkCookie()
+{
+var user=getCookie("username");
+if (user!="")
+  {
+  alert("Welcome again " + user);
+  }
+else 
+  {
+  user = prompt("Please enter your name:","");
+  if (user!="" && user!=null)
+    {
+    setCookie("username",user,365);
+    }
+  }
+}
+
+$("[name='my-checkbox']").bootstrapSwitch();
 
