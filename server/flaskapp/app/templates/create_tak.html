@@ -2,56 +2,25 @@
 {% block head %}
     {{ super() }}
     <link href="/static/css/taks.css" rel="stylesheet">
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHXLk2GBOiUDeMZp5VMtUY9Pu8aiPZrao&sensor=false&libraries=drawing"></script>
+    <script src="/static/js/maptak.js"></script>
     <script>
-    var marker;
-function initialize() {
-  var myLatlng = new google.maps.LatLng(40.43,-86.92);
-  var mapOptions = {
-    zoom: 14,
-    center: myLatlng
-  }
-  var styleArray = [
-  {
-    "featureType": "poi",
-    "stylers": [
-      { "visibility": "off" }
-    ]
-  }
-]
-
-  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-  map.setOptions({styles: styleArray});
-
-
-// Add a marker to the map and push to the array.
-function addMarker(location) {
-  if(marker !== undefined){
-    marker.setMap(null);}
-    marker = new google.maps.Marker({
-      position: location,
-      map: map
-    });
-    
-    $('#lat').val(location.lat());
-    $('#lng').val(location.lng());
-  }
-
-  google.maps.event.addDomListener(window, "resize", function() {
-   var center = map.getCenter();
-   google.maps.event.trigger(map, "resize");
-   map.setCenter(center); 
-  });
-
-
-  google.maps.event.addListener(map, 'click', function(event) {
-  addMarker(event.latLng); 
-  });
-}
- google.maps.event.addDomListener(window, 'load', initialize);
-
-
- </script>
+    var tmarker;
+    var old_init = initialize; // super call to initialize
+    initialize = function(){
+      old_init();
+      
+      google.maps.event.addListener(map, 'click', function(event) {
+        if(tmarker !== undefined){ tmarker.setMap(null);}
+        tmarker = new google.maps.Marker({
+            position: event.latLng,
+            map: map
+          });
+        $('#lat').val(event.latLng.lat());
+        $('#lng').val(event.latLng.lng());
+      });
+    }
+   
+  </script>
 {% endblock %}
 	
 {% block content %}
@@ -83,7 +52,7 @@ function addMarker(location) {
         <label for="mapId" class="col-sm-2 control-label">Map</label>
         <div class="col-sm-10">
           <select class="form-control" name="mapId" id="mapId">
-            <option>New Map</option>
+            <option value='-1'>New Map</option>
           {% for map in maps %}
             <option value="{{map.key.id()}}">{{map.name}}</option>
           {% endfor %}
@@ -102,5 +71,14 @@ function addMarker(location) {
 
 {% block javascript %}
 {{ super() }}
+<script>
+$( "#create_tak" ).submit(function( event ) {
+  if($('#mapId').val() < 0){
+     alert("<New map> from <create_tak> is not implemented yet. Create a map first and then select it from this list.");
+     event.preventDefault();
+  }
+ 
+});
+</script>
 
 {% endblock javascript %}
