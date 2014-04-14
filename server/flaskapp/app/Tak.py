@@ -16,6 +16,7 @@ class Tak(ndb.Model):
 	creator = ndb.StringProperty()
 	creatorId = ndb.IntegerProperty()
 	mapId = ndb.StringProperty()
+	tags = ndb.JsonProperty()
 
 	def to_dict(self):
 		return {
@@ -25,7 +26,26 @@ class Tak(ndb.Model):
 			'lng': self.lng,
 			'creator': self.creator,
 			'creatorId': self.creatorId,
+			'tags' : self.tags,
 			}
+
+	# api class controller for GET method
+	def Get(self):
+		
+		return
+
+	# api class controller for PUT method
+	def Put(self):
+
+		return
+
+	# api class controller for DELETE method
+	def Delete(self):
+		return
+
+	# api class controller for POST method
+	def Post(self):
+		return
 
 	def update(self, title):
 		self.title = title
