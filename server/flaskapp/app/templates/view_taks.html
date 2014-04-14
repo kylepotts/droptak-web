@@ -3,8 +3,8 @@
 {% block head %}
 {{ super() }}
 <script src="/static/js/maptak.js"></script>
-<script type="text/javascript" src="/static/js/jquery.qrcode.js"></script>
-<script type="text/javascript" src="/static/js/qrcode.js"></script>
+<script type="text/javascript" src="/static/js/jquery.qrcode.min.js"></script>
+<script type="text/javascript" src="/static/js/qrcode.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -57,7 +57,6 @@
 <script>
 url = "http://"+window.location.host+"/api"+window.location.pathname
 var id = url.match(/([^\/]*)\/*$/)[1]
-console.log("end="+name)
 console.log(url)
 $("#qrcode").qrcode({
 	text: "http://"+window.location.host+"/api/map?id="+id,

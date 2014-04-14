@@ -8,6 +8,7 @@
  var map;
  var bounds;
  var myLatlng;
+ var globalinfowindow;
  // var geocoder;
   
 
@@ -48,11 +49,23 @@ function initialize() {
 		map.setCenter(center);
 	});
 	map_initialized = true;
+	globalinfowindow = new google.maps.InfoWindow();
 	for (var i = 0; i < asycmarkers.length; i++) {
 		setMarkers(asycmarkers);
 	}
 }
+function addInfoWindow(marker) {
+	var infoWindow = new google.maps.InfoWindow({
+		content: '<h2>' + marker.title + '</h2>' +
+				' <div><span>' + marker.position.lat() + ', ' + marker.position.lng() + '</span></div>' 
+	});
 
+	google.maps.event.addListener(marker, 'click', function () {
+		globalinfowindow.close();
+		globalinfowindow = infoWindow;
+		infoWindow.open(map, marker);
+	});
+}
 function addMarker(lat, lng, opts) {
 	opts = opts || {};
     opts.title = opts.title || "";
@@ -62,6 +75,7 @@ function addMarker(lat, lng, opts) {
 			map: map,
 			title: opts.title
 		});
+		addInfoWindow(marker);
 		markers.push(marker);
 		bounds.extend(marker.position);
 	}
