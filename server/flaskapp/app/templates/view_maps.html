@@ -23,12 +23,14 @@
 
 					<div class="form-group">
 						<label for="name">Map Name</label>
-						<input type="text" class="form-control" data-bind="value: form.name, valueUpdate: 'afterkeydown'" id="name-textbox" placeholder="Really cool map name">
+						<input type="text" class="form-control" data-bind="enable: !modalSubmit(),value: form.name, valueUpdate: 'afterkeydown'" id="name-textbox" placeholder="Really cool map name">
 					</div>
 
 				</div>
 				<div class="modal-footer">
-					<button type="submit" class="btn btn-primary" >Add Map</button>
+					<div class="emptyloading" data-bind="visible: !modalSubmit()"></div>
+					<div class="loading" data-bind="visible: modalSubmit()"></div>
+					<button type="submit" id="submitButton" data-bind="enable: !modalSubmit()" class="btn btn-primary" >Add Map</button>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>
 			</form>
@@ -69,7 +71,6 @@
 </div>
 <div class="main-content">
 	<h2 data-bind="text: selected()? selected().name() : 'Get started by selecting a map, or create a new one'"></h2>
-	<img src="/static/img/indicator.gif" style="visibility:hidden;"></img>
 	<div id="map-canvas"></div>
 </div>
 

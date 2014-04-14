@@ -89,6 +89,7 @@ function MapTakModel() {
 	self.maps 	  	= ko.observableArray();
 	self.selected		= ko.observable();
 	self.form 			= new FormMap();
+	self.modalSubmit	= ko.observable(false);
 
 	self.select = function(element, mapid){
 		self.selected(element);
@@ -128,28 +129,41 @@ function MapTakModel() {
 
 	self.submit = function(modal){
 			// check if form is valid
-			console.log("submit");
-			console.log(self.form.name());
-			if(self.form.name.isValid()){
-				console.log("valid");
-				// if it is, then submit it to server
-				$.post('/maps/new',{name: self.form.name()}) 
-					.done(function(response) {
-				    	// parse JSON text response
-				    	var obj = jQuery.parseJSON(response);;
-				    	//and display it locally
-				    	var map = self.addMap();
-				    	map.name(obj.name);
-				    	map.id(obj.id);
-				    	// reset form and hide it
-				    	self.form.name(undefined);
-							self.form.name.isModified(false);
-							$(modal).modal("hide");
-					})
-					.fail(function() {
-						alert( "Error submitting" );
-					});
+			if(!self.modalSubmit()){
+				self.modalSubmit(true);
+				console.log("submit");
+				console.log(self.form.name());
+				if(self.form.name.isValid()){
+					console.log("valid");
+					// if it is, then submit it to server
+					$.post('/maps/new',{name: self.form.name()}) 
+						.done(function(response) {
+					    	// parse JSON text response
+					    	var obj = jQuery.parseJSON(response);;
+					    	//and display it locally
+					    	var map = self.addMap();
+					    	map.name(obj.name);
+					    	map.id(obj.id);
+					    	// reset form and hide it
+					    	setTimeout(function(){
+					    		self.form.name(undefined);
+								self.form.name.isModified(false);
+								self.modalSubmit(false);
+								$(modal).modal("hide");
+					    	}, 5000);
+					    	
+						})
+						.fail(function() {
+							self.modalSubmit(false);
+							alert( "Error submitting" );
+						});
+				}
+				else{
+					//invalid form
+					self.modalSubmit(false);
+				}
 			}
+
 		};
 
 	/**

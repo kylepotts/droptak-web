@@ -2,6 +2,23 @@ body{
 	background-color: #eee;
 	height: 100%;
 }
+.emptyloading{
+	width: 32px;
+	height: 32px;
+	text-align: right;
+	margin-right: 0;
+	float: right;
+}
+.loading{
+	width: 32px;
+	height: 32px;
+	background-image: url('/static/img/indicator.gif');
+	background-size: cover;
+	background-repeat: no-repeat;
+	text-align: right;
+	margin-right: 0;
+	float: right;
+}
 .main-content{
 	position: absolute;
 	top: 51px;
