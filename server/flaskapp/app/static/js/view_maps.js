@@ -145,12 +145,10 @@ function MapTakModel() {
 					    	map.name(obj.name);
 					    	map.id(obj.id);
 					    	// reset form and hide it
-					    	setTimeout(function(){
-					    		self.form.name(undefined);
-								self.form.name.isModified(false);
-								self.modalSubmit(false);
-								$(modal).modal("hide");
-					    	}, 5000);
+					    	self.form.name(undefined);
+							self.form.name.isModified(false);
+							self.modalSubmit(false);
+							$(modal).modal("hide");
 					    	
 						})
 						.fail(function() {
