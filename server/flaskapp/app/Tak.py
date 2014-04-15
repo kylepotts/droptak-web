@@ -16,7 +16,7 @@ class Tak(ndb.Model):
 	creator = ndb.StringProperty()
 	creatorId = ndb.IntegerProperty()
 	mapId = ndb.StringProperty()
-	tags = ndb.JsonProperty()
+	data = ndb.JsonProperty()
 
 	def to_dict(self):
 		return {
@@ -26,7 +26,7 @@ class Tak(ndb.Model):
 			'lng': self.lng,
 			'creator': self.creator,
 			'creatorId': self.creatorId,
-			'tags' : self.tags,
+			'data' : self.data,
 			}
 
 	# api class controller for GET method

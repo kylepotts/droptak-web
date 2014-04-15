@@ -59,8 +59,14 @@ def index():
 
 @app.route('/maps/',methods=['GET','POST'])
 def maps():
-	query = getUserMaps(session['userId'])
-	return json.dumps([t.to_dict() for t in query.fetch()])
+	userMaps = getMaps(session['userId'])
+	listOfMaps = []
+	for mapId in userMaps:
+		logging.info(mapId)
+		aMap = Map.get_by_id(mapId)
+		listOfMaps.append(aMap.to_dict())
+	return json.dumps(listOfMaps)
+	return '200'
 	#return render_template('map.html', maps=getUserMaps(session['userId']))
 
 @app.route('/logout',methods=['GET','POST'])
@@ -151,6 +157,7 @@ def create_tak():
 	if request.method == 'POST':
 		# login required
 		mapId = getValue(request, "mapId", "")
+		logging.info("mapId="+mapId)
 		map = Map.get_by_id(int(mapId))
 		if map is None:
 			return jsonify(message="Map does not exist", response=400) 
@@ -176,7 +183,13 @@ def create_tak():
 
 	if request.method == 'GET': 
 		# return list of maps too for selecting
-		return render_template('create_tak.html', maps=getUserMaps(session['userId']))
+		listOfMaps = []
+		mapIds = getMaps(session['userId'])
+		for mapid in mapIds:
+			ownMap = Map.get_by_id(mapid)
+			listOfMaps.append(ownMap)
+
+		return render_template('create_tak.html', maps=listOfMaps)
 @app.route('/maps/<mapName>/',methods=['GET','POST'])
 @app.route('/maps/<int:mapId>/',methods=['GET','POST'])
 def taks(mapId=-1, mapName=''):
@@ -212,9 +225,32 @@ def create_map():
 		user =  session['username']
 		userId = session['userId']
 		mapName = getValue(request, "name", "")
-		ownMap = Map(creator=user,creatorId=userId,name=mapName)
-		ownMap.put()
+		admin = [userId]
+		ownMap = Map(creator=user,creatorId=userId,name=mapName,adminIds=admin)
+		key = ownMap.put()
+
+		adminAccount = Account.get_by_id(userId)
+		adminAccount.adminMaps.append(key.integer_id())
+		adminAccount.put()
 		return json.dumps(ownMap.to_dict())
+
+@app.route('/map/admin/<int:mapId>/<string:email>',methods=['GET','POST'])
+def admin_add(mapId,email):
+	if request.method == 'POST':
+		logging.info("email="+email)
+		user = session['username']
+		uid = session['userId']
+		map = Map.get_by_id(mapId)
+		adminAccount = Account.query(Account.email == email).get()
+		adminId = adminAccount.key.integer_id()
+		if adminId not in map.adminIds:
+			map.adminIds.append(adminId)
+			map.put()
+		if mapId not in adminAccount.adminMaps:
+			adminAccount.adminMaps.append(mapId)
+			adminAccount.put()
+
+		return '200'
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -236,6 +272,10 @@ def getUserMaps(id):
 	logging.info("getUserMaps id is " + str(id))
 	query = Map.query(Map.creatorId == id)
 	return query
+
+def getMaps(id):
+	account = Account.get_by_id(id)
+	return account.adminMaps
 
 def getMapTaks(id):
 	query = Tak.query(Tak.mapId == id)
@@ -260,6 +300,11 @@ def api_taks(id=-1):
 				logging.info("_DELETE sub-tak" + str(takid))
 				if tak is not None:
 					tak.key.delete()
+			for mid in map.adminIds:
+				logging.info("mid="+str(mid))
+				adminAcct = Account.get_by_id(mid)
+				adminAcct.adminMaps.remove(id)
+				adminAcct.put()
 			map.key.delete()
 			return "Success"
 		return "Map does not exist"

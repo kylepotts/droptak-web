@@ -8,8 +8,11 @@ class Map(ndb.Model):
 	creatorId = ndb.IntegerProperty()
 	takIds = ndb.StringProperty(repeated=True)
 	name = ndb.StringProperty()
+	
 	public = ndb.BooleanProperty()
-	tags = ndb.JsonProperty()
+	data = ndb.JsonProperty()
+
+	adminIds = ndb.IntegerProperty(repeated=True)
 
 
 	def to_dict(self):
@@ -19,7 +22,7 @@ class Map(ndb.Model):
 			'creator': self.creator,
 			'creatorId': self.creatorId,
 			'public': self.public,
-			'tags' : self.tags,
+			'data' : self.data,
 			}
 
 	# api class controller for GET method

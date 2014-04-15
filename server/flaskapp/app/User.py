@@ -10,3 +10,4 @@ class Account(ndb.Model):
 	accessToken = ndb.StringProperty()
 	loggedIn = ndb.BooleanProperty()
 	mapIds = ndb.StringProperty(repeated=True)
+	adminMaps = ndb.IntegerProperty(repeated=True)
