@@ -5,6 +5,7 @@
 <script src="/static/js/maptak.js"></script>
 <script type="text/javascript" src="/static/js/jquery.qrcode.min.js"></script>
 <script type="text/javascript" src="/static/js/qrcode.min.js"></script>
+<script src="/static/js/view_taks.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -30,9 +31,12 @@
 					{% for tak in taks %}
 					<tr>
 						<td headers="view">
-							<a role="button" class="btn btn-primary" href="/taks/{{tak.id}}">
+							<a role="button" title="View this tak." class="btn btn-primary" href="/taks/{{tak.id}}">
 								View
 							</a>
+							<button type="button" class="btn btn-primary" title="Delete this tak." onClick="removeTak({{tak.id}})"  aria-hidden="true"> 
+								Delete 
+							</button>
 						</td>
 						<td headers="name">{{tak.name}}</td>
 						<td headers="lat">{{tak.lat}}</td>
