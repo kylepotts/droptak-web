@@ -202,7 +202,6 @@ function MapTakModel() {
         }
 
     };
-
     /**
      * remove a map from model
      */
@@ -214,33 +213,7 @@ function MapTakModel() {
             type: 'DELETE',
             success: function (result) {
                 self.maps.remove(map);
-                console.log(result);
-            }
-        });
-    };
-
-    $.getJSON("/maps", function (data) {
-        // Now use this data to update your view models, 
-        // and Knockout will update your UI automatically 
-        for (var i = 0; i < data.length; i++) {
-            var local = self.addMap();
-            local.name(data[i].name);
-            local.id(data[i].id)
-        }
-    });
-
-
-    /**
-     * remove a map from model
-     */
-    self.removeMap = function (map) {
-        //send delete to server
-        if (!confirm("Are you sure you want to permanently delete this map?")) return;
-        $.ajax({
-            url: '/api/maps/' + map.id(),
-            type: 'DELETE',
-            success: function (result) {
-                self.maps.remove(map);
+                self.selected(null);
                 console.log(result);
             }
         });
