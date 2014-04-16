@@ -30,21 +30,20 @@ class Tak(ndb.Model):
 			}
 
 	# api class controller for GET method
-	def Get(self):
-		
-		return
+	def get(self):
+		return json.dumps(self.to_dict())
 
 	# api class controller for PUT method
-	def Put(self):
+	def put(self):
 
 		return
 
 	# api class controller for DELETE method
-	def Delete(self):
+	def delete(self):
 		return
 
 	# api class controller for POST method
-	def Post(self):
+	def post(self):
 		return
 
 	def update(self, title):

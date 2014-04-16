@@ -30,7 +30,10 @@ class Map(ndb.Model):
 			}
 
 	# api class controller for GET method
-	def Get(self):
+	def get(self):
+		return json.dumps(self.to_dict())
+
+	def getTaks(self):
 		taks = []
 		for takid in self.takIds:
 			tak = Tak.get_by_id(int(takid))
@@ -39,15 +42,15 @@ class Map(ndb.Model):
 		return json.dumps(taks)
 
 	# api class controller for PUT method
-	def Put(self):
+	def put(self):
 
 		return
 
 	# api class controller for DELETE method
-	def Delete(self):
+	def delete(self):
 		return
 
 	# api class controller for POST method
-	def Post(self):
+	def post(self):
 		return
 	

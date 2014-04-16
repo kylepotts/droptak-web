@@ -429,11 +429,16 @@ def api_single_tak(id=-1):
 #/api/v1/user/<user id>/
 @app.route('/api/v1/user/<int:userid>/',methods=['GET'])
 def userData(userid = -1):
-	if request.method == 'GET': #todo
+	if userid <= 0:
+		return '400: bad request'
+	user = Account.get_by_id(userid)
+	if user is None:
+		return '400: bad request'
+
+	if request.method == 'GET': # done
 #	GET: returns json object of user
-		return '200'
+		return user.get()
 #	these require higher security:
-#	POST none
 #	PUT: update user info
 #	DELETE: delete user
 
@@ -447,19 +452,15 @@ def mapsForUser(userid = -1):
 	if user is None:
 		return '400: bad request'
 
-	if request.method == 'GET': # test OK
+	if request.method == 'GET': # done
 #		GET: returns json array of information about user's map objects
-		maps = []
-		for mapid in user.adminMaps:
-			map = Map.get_by_id(mapid)
-			maps.append(map.to_dict())
-		return json.dumps(maps)
+		return user.getMaps()
 
 	if request.method == 'POST': #todo
 	# parameters: name
 	# returns json map object created
 	#		POST: used to create maps
-		return '200'
+		return '501 Not Implemented'
 
 #/api/v1/maps/<map id>/taks/	
 @app.route('/api/v1/maps/<int:mapid>/taks/',methods=['GET','POST'])
@@ -471,55 +472,57 @@ def taksForMap(mapid = -1):
 		return '400: bad request'
 
 #		GET: json data of taks in selected map
-	if request.method == 'GET':  # test OK
-		return map.Get() 
+	if request.method == 'GET': # done
+		return map.getTaks() 
 	if request.method == 'POST': #todo
 # POST: Creates a tak in map, return tak object
-		return '200'
+		return '501 Not Implemented'
 
 
 #/api/v1/maps/<map id>/
-@app.route('/api/v1/maps/<int:mapid>/',methods=['GET','POST','PUT', 'DELETE'])
+@app.route('/api/v1/maps/<int:mapid>/',methods=['GET','PUT', 'DELETE'])
 def mapData(mapid = -1):
-	if request.method == 'GET': #todo
-		# parameters: none
-		# returns json object of map + inner array of tak ids
+	if mapid <= 0:
+		return '400: bad request'
+	map = Map.get_by_id(mapid)
+	if map is None:
+		return '400: bad request'
 
-		return '200'
+	if request.method == 'GET': # done
+		# returns json map info
+		return map.get()
 
 	if request.method == 'DELETE': #todo
 		# DELETE: used to delete a map object and all associated tak objects, parameters: none
-		return '200'
+		return '501 Not Implemented'
 
 	if request.method == 'PUT': #todo
 		#PUT: 	used to update map in database, parameters: (any map parameter)
 		# return json map object
-		return '200'
-
-	if request.method == 'POST': #todo
-		# no action
-		return '200'
+		return '501 Not Implemented'
 	
 
 
 #/api/v1/taks/<tak id>
-@app.route('/api/v1/taks/<int:takid>/',methods=['GET','POST','PUT', 'DELETE'])
-def takData(mapid = -1):
-	if request.method == 'GET': #todo
-		# GET: returns a single json tak object
-		return '200'
+@app.route('/api/v1/taks/<int:takid>/',methods=['GET','PUT', 'DELETE'])
+def takData(takid = -1):
+	if takid <= 0:
+		return '400: bad request'
+	tak = Tak.get_by_id(takid)
+	if tak is None:
+		return '400: bad request'
+
+	if request.method == 'GET': # done
+		# GET: returns a single json tak information
+		return tak.get()
 
 	if request.method == 'DELETE': #todo
 		# DELETE: deletes that tak
-		return '200'
+		return '501 Not Implemented'
 
 	if request.method == 'PUT': #todo
 		# PUT: updates a tak returns that object
-		return '200'
-
-	if request.method == 'POST': #todo
-		# no action
-		return '200'
+		return '501 Not Implemented'
 
 #updating map/tak attributes
 #/api/v1/<maps | taks>/<mapid | takid>/ <attribute-name>
