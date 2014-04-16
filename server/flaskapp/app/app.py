@@ -406,6 +406,127 @@ def api_single_tak(id=-1):
 	if request.method == 'POST':
 		return '200'
 
+#
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#
+# 						START OFFICIAL API ROUTING
+#
+# 
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+#/api/v1/search?<key1>=<value1>&<key2>=<value2>
+#/api/v1/search?name=<name>
+#	GET only
+#	No authentication -> public maps only
+#	Authentication -> public maps + personal maps + maps shared with that person
+#	
+#	example keys:
+#id: maps only from this user id
+#name: maps with name equal to this value
+#taks: true or false, include searching of tak data, false by default  
+#<key>=<value>: unmapped keys look for maps with that key and value in meta-data
+
+#/api/v1/user/<user id>/
+@app.route('/api/v1/user/<int:userid>/',methods=['GET'])
+def userData(userid = -1):
+	if request.method == 'GET':
+#	GET: returns json object of user
+		return '200'
+#	these require higher security:
+#	POST none
+#	PUT: update user info
+#	DELETE: delete user
+
+
+#/api/v1/user/<user id>/maps/
+@app.route('/api/v1/user/<int:userid>/maps/',methods=['GET','POST'])
+def mapsForUser(userid = -1):
+	if request.method == 'GET':
+#		GET: returns json array of users map objects
+		return '200'
+	if request.method == 'POST':
+# parameters: name
+# returns json map object created
+#		POST: used to create maps
+		return '200'
+
+#/api/v1/maps/<map id>/taks/	
+@app.route('/api/v1/maps/<int:mapid>/taks/',methods=['GET','POST'])
+def taksForMap(mapid = -1):
+	if request.method == 'GET':
+#		GET: json data of taks in selected map
+		return '200'
+	if request.method == 'POST':
+# POST: Creates a tak for user, return tak object
+		return '200'
+
+
+#/api/v1/maps/<map id>/
+@app.route('/api/v1/maps/<int:mapid>/',methods=['GET','POST','PUT', 'DELETE'])
+def mapData(mapid = -1):
+	if request.method == 'GET':
+		# parameters: none
+		# returns json object of map + inner array of tak ids
+
+		return '200'
+
+	if request.method == 'DELETE':
+		# DELETE: used to delete a map object and all associated tak objects, parameters: none
+		return '200'
+
+	if request.method == 'PUT':
+		#PUT: 	used to update map in database, parameters: (any map parameter)
+		# return json map object
+		return '200'
+
+	if request.method == 'POST':
+		# no action
+		return '200'
+	
+
+
+#/api/v1/taks/<tak id>
+@app.route('/api/v1/taks/<int:takid>/',methods=['GET','POST','PUT', 'DELETE'])
+def takData(mapid = -1):
+	if request.method == 'GET':
+		# GET: returns a single json tak object
+		return '200'
+
+	if request.method == 'DELETE':
+		# DELETE: deletes that tak
+		return '200'
+
+	if request.method == 'PUT':
+		# PUT: updates a tak returns that object
+		return '200'
+
+	if request.method == 'POST':
+		# no action
+		return '200'
+
+#updating map/tak attributes
+#/api/v1/<maps | taks>/<mapid | takid>/ <attribute-name>
+#	common attributes:
+#		title, name, lat, lng, privacy
+#	else: add to list of attributes
+#	POST: new attribute
+#	PUT: edit existing attribute, params: value
+#	GET: get attribute
+#	DELETE: delete only from list of attributes
+#
+#/api/v1/maps/<map id>/admins/<email | userid?>
+#	POST:  Add a admin to current list of admins for a map with id mapid
+#	GET: returns array of userIds of the admins assigned to the map
+#	DELETE: Remove admin from the list of current admins for the  map
+	
+
+#
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#
+# 						END OFFICIAL API ROUTING
+#
+#
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 # register Blueprints
 app.register_blueprint(example_blueprint)
