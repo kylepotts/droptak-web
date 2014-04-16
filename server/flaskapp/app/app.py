@@ -429,7 +429,7 @@ def api_single_tak(id=-1):
 #/api/v1/user/<user id>/
 @app.route('/api/v1/user/<int:userid>/',methods=['GET'])
 def userData(userid = -1):
-	if request.method == 'GET':
+	if request.method == 'GET': #todo
 #	GET: returns json object of user
 		return '200'
 #	these require higher security:
@@ -441,45 +441,62 @@ def userData(userid = -1):
 #/api/v1/user/<user id>/maps/
 @app.route('/api/v1/user/<int:userid>/maps/',methods=['GET','POST'])
 def mapsForUser(userid = -1):
-	if request.method == 'GET':
-#		GET: returns json array of users map objects
-		return '200'
-	if request.method == 'POST':
-# parameters: name
-# returns json map object created
-#		POST: used to create maps
+	if userid <= 0:
+		return '400: bad request'
+	user = Account.get_by_id(userid)
+	if user is None:
+		return '400: bad request'
+
+	if request.method == 'GET': # test OK
+#		GET: returns json array of information about user's map objects
+		maps = []
+		for mapid in user.adminMaps:
+			map = Map.get_by_id(mapid)
+			maps.append(map.to_dict())
+		return json.dumps(maps)
+
+	if request.method == 'POST': #todo
+	# parameters: name
+	# returns json map object created
+	#		POST: used to create maps
 		return '200'
 
 #/api/v1/maps/<map id>/taks/	
 @app.route('/api/v1/maps/<int:mapid>/taks/',methods=['GET','POST'])
 def taksForMap(mapid = -1):
-	if request.method == 'GET':
+	if mapid <= 0:
+		return '400: bad request'
+	map = Map.get_by_id(mapid)
+	if map is None:
+		return '400: bad request'
+
 #		GET: json data of taks in selected map
-		return '200'
-	if request.method == 'POST':
-# POST: Creates a tak for user, return tak object
+	if request.method == 'GET':  # test OK
+		return map.Get() 
+	if request.method == 'POST': #todo
+# POST: Creates a tak in map, return tak object
 		return '200'
 
 
 #/api/v1/maps/<map id>/
 @app.route('/api/v1/maps/<int:mapid>/',methods=['GET','POST','PUT', 'DELETE'])
 def mapData(mapid = -1):
-	if request.method == 'GET':
+	if request.method == 'GET': #todo
 		# parameters: none
 		# returns json object of map + inner array of tak ids
 
 		return '200'
 
-	if request.method == 'DELETE':
+	if request.method == 'DELETE': #todo
 		# DELETE: used to delete a map object and all associated tak objects, parameters: none
 		return '200'
 
-	if request.method == 'PUT':
+	if request.method == 'PUT': #todo
 		#PUT: 	used to update map in database, parameters: (any map parameter)
 		# return json map object
 		return '200'
 
-	if request.method == 'POST':
+	if request.method == 'POST': #todo
 		# no action
 		return '200'
 	
@@ -488,19 +505,19 @@ def mapData(mapid = -1):
 #/api/v1/taks/<tak id>
 @app.route('/api/v1/taks/<int:takid>/',methods=['GET','POST','PUT', 'DELETE'])
 def takData(mapid = -1):
-	if request.method == 'GET':
+	if request.method == 'GET': #todo
 		# GET: returns a single json tak object
 		return '200'
 
-	if request.method == 'DELETE':
+	if request.method == 'DELETE': #todo
 		# DELETE: deletes that tak
 		return '200'
 
-	if request.method == 'PUT':
+	if request.method == 'PUT': #todo
 		# PUT: updates a tak returns that object
 		return '200'
 
-	if request.method == 'POST':
+	if request.method == 'POST': #todo
 		# no action
 		return '200'
 
