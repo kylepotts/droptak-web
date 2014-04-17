@@ -2,8 +2,7 @@ import json
 from google.appengine.ext import ndb
 from google.appengine.api.logservice import logservice
 import logging
-
-from Map import Map
+import Map
 
 class Account(ndb.Model):
 	email = ndb.StringProperty()
@@ -18,16 +17,15 @@ class Account(ndb.Model):
 		return {
 			'name' : self.name,
 			'id': self.key.id(),
-			'adminMaps':self.adminMaps,
 			}
 
-	def get(self):
+	def Get(self):
 		return json.dumps(self.to_dict())
 
 	def getMaps(self):
 		maps = []
 		for mapid in self.adminMaps:
-			map = Map.get_by_id(mapid)
+			map = Map.Map.get_by_id(mapid)
 			if map is not None:
 				maps.append(map.to_dict())
 		return json.dumps(maps)

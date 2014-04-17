@@ -426,7 +426,7 @@ def api_single_tak(id=-1):
 #taks: true or false, include searching of tak data, false by default  
 #<key>=<value>: unmapped keys look for maps with that key and value in meta-data
 
-#/api/v1/user/<user id>/
+#/api/v1/user/<user_id>/
 @app.route('/api/v1/user/<int:userid>/',methods=['GET'])
 def userData(userid = -1):
 	if userid <= 0:
@@ -437,7 +437,7 @@ def userData(userid = -1):
 
 	if request.method == 'GET': # done
 #	GET: returns json object of user
-		return user.get()
+		return user.Get()
 #	these require higher security:
 #	PUT: update user info
 #	DELETE: delete user
@@ -462,23 +462,6 @@ def mapsForUser(userid = -1):
 	#		POST: used to create maps
 		return '501 Not Implemented'
 
-#/api/v1/maps/<map id>/taks/	
-@app.route('/api/v1/maps/<int:mapid>/taks/',methods=['GET','POST'])
-def taksForMap(mapid = -1):
-	if mapid <= 0:
-		return '400: bad request'
-	map = Map.get_by_id(mapid)
-	if map is None:
-		return '400: bad request'
-
-#		GET: json data of taks in selected map
-	if request.method == 'GET': # done
-		return map.getTaks() 
-	if request.method == 'POST': #todo
-# POST: Creates a tak in map, return tak object
-		return '501 Not Implemented'
-
-
 #/api/v1/maps/<map id>/
 @app.route('/api/v1/maps/<int:mapid>/',methods=['GET','PUT', 'DELETE'])
 def mapData(mapid = -1):
@@ -490,7 +473,7 @@ def mapData(mapid = -1):
 
 	if request.method == 'GET': # done
 		# returns json map info
-		return map.get()
+		return map.Get()
 
 	if request.method == 'DELETE': #todo
 		# DELETE: used to delete a map object and all associated tak objects, parameters: none
@@ -514,7 +497,7 @@ def takData(takid = -1):
 
 	if request.method == 'GET': # done
 		# GET: returns a single json tak information
-		return tak.get()
+		return tak.Get()
 
 	if request.method == 'DELETE': #todo
 		# DELETE: deletes that tak

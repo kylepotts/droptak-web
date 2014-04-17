@@ -16,34 +16,36 @@ class Tak(ndb.Model):
 	creator = ndb.StringProperty()
 	creatorId = ndb.IntegerProperty()
 	mapId = ndb.StringProperty()
-	data = ndb.JsonProperty()
+	metadata = ndb.JsonProperty()
 
 	def to_dict(self):
 		return {
-			'title' : self.title,
+			'name' : self.title,
 			'id': self.key.id(),
 			'lat': self.lat,
 			'lng': self.lng,
-			'creator': self.creator,
-			'creatorId': self.creatorId,
-			'data' : self.data,
+			'creator': {
+				'name': self.creator,
+				'id': self.creatorId,
+			},
+			'metadata' : self.metadata,
 			}
 
 	# api class controller for GET method
-	def get(self):
+	def Get(self):
 		return json.dumps(self.to_dict())
 
 	# api class controller for PUT method
-	def put(self):
+	def Put(self):
 
 		return
 
 	# api class controller for DELETE method
-	def delete(self):
+	def Delete(self):
 		return
 
 	# api class controller for POST method
-	def post(self):
+	def Post(self):
 		return
 
 	def update(self, title):

@@ -2,7 +2,7 @@ import json
 from google.appengine.ext import ndb
 from google.appengine.api.logservice import logservice
 import logging
-
+import User # cyclical import 
 from Tak import Tak 
 
 class Map(ndb.Model):
@@ -12,45 +12,46 @@ class Map(ndb.Model):
 	name = ndb.StringProperty()
 	
 	public = ndb.BooleanProperty()
-	data = ndb.JsonProperty()
-
 	adminIds = ndb.IntegerProperty(repeated=True)
 
 
 	def to_dict(self):
-		return {
-			'name' : self.name,
-			'id': self.key.id(),
-			'creator': self.creator,
-			'creatorId': self.creatorId,
-			'takIds': self.takIds,
-			'public': self.public,
-			'data' : self.data,
-			'adminIds':self.adminIds,
-			}
-
-	# api class controller for GET method
-	def get(self):
-		return json.dumps(self.to_dict())
-
-	def getTaks(self):
 		taks = []
 		for takid in self.takIds:
 			tak = Tak.get_by_id(int(takid))
 			if tak is not None:
 				taks.append(tak.to_dict())
-		return json.dumps(taks)
+		admins = []
+		for adminid in self.adminIds:
+			user = User.Account.get_by_id(int(adminid))
+			if user is not None:
+				admins.append(user.to_dict())
+		return {
+			'name' : self.name,
+			'id': self.key.id(),
+			'owner': {
+				'name': self.creator,
+				'id': self.creatorId,
+			},
+			'taks': taks,
+			'public': self.public,
+			'admins': admins,
+			}
+
+	# api class controller for GET method
+	def Get(self):
+		return json.dumps(self.to_dict())
 
 	# api class controller for PUT method
-	def put(self):
+	def Put(self):
 
 		return
 
 	# api class controller for DELETE method
-	def delete(self):
+	def Delete(self):
 		return
 
 	# api class controller for POST method
-	def post(self):
+	def Post(self):
 		return
 	
