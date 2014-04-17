@@ -8,10 +8,8 @@ class Map(ndb.Model):
 	creatorId = ndb.IntegerProperty()
 	takIds = ndb.StringProperty(repeated=True)
 	name = ndb.StringProperty()
-	
-	public = ndb.BooleanProperty()
+	isPublic = ndb.BooleanProperty()
 	data = ndb.JsonProperty()
-
 	adminIds = ndb.IntegerProperty(repeated=True)
 
 
@@ -21,7 +19,7 @@ class Map(ndb.Model):
 			'id': self.key.id(),
 			'creator': self.creator,
 			'creatorId': self.creatorId,
-			'public': self.public,
+			'public': self.isPublic,
 			'data' : self.data,
 			}
 
