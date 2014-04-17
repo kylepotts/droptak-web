@@ -462,8 +462,8 @@ def mapsForUser(userid = -1):
 	#		POST: used to create maps
 		return '501 Not Implemented'
 
-#/api/v1/maps/<map id>/
-@app.route('/api/v1/maps/<int:mapid>/',methods=['GET','PUT', 'DELETE'])
+#/api/v1/map/<map id>/
+@app.route('/api/v1/map/<int:mapid>/',methods=['GET','PUT', 'DELETE'])
 def mapData(mapid = -1):
 	if mapid <= 0:
 		return '400: bad request'
@@ -486,8 +486,8 @@ def mapData(mapid = -1):
 	
 
 
-#/api/v1/taks/<tak id>
-@app.route('/api/v1/taks/<int:takid>/',methods=['GET','PUT', 'DELETE'])
+#/api/v1/tak/<tak id>
+@app.route('/api/v1/tak/<int:takid>/',methods=['GET','PUT', 'DELETE'])
 def takData(takid = -1):
 	if takid <= 0:
 		return '400: bad request'
