@@ -1,4 +1,3 @@
-$("[name='my-checkbox']").bootstrapSwitch();
 $(document).ready(function(){
     console.log("ready");
     $('.btn-toggle').click(function() {
@@ -299,4 +298,4 @@ function checkCookie() {
     }
 }
 
-$("[name='my-checkbox']").bootstrapSwitch();
+

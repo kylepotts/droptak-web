@@ -1,6 +1,7 @@
 from utils.path import fix_path
 import os, json
 from google.appengine.api.logservice import logservice
+from google.appengine.ext.db.metadata import Kind
 import logging
 import random
 import string
@@ -259,6 +260,23 @@ def admin_add(mapId,email):
 			adminAccount.put()
 
 		return '200'
+
+@app.route('/search', methods=['GET','POST'])
+def search():
+	if request.method == 'GET':
+		maps = []
+		queryType=request.args.get("queryType","")
+		query = request.args.get("query","")
+		logging.info("searching for " + queryType + " " + query)
+		mapQuery = Map.query(Map.isPublic == True)
+		for map in mapQuery:
+			if queryType == 'searchMaps':
+				if(query.lower() == map.name.lower()):
+					logging.info("match!")
+					maps.append(map)
+		logging.info(len(maps))
+		return render_template('search.html',maps=maps)
+
 
 @app.errorhandler(404)
 def page_not_found(e):

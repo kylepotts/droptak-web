@@ -7,7 +7,32 @@
 
 $(document).ready(function() {
 $('#nav-logout').on('click', logout)
+$('#searchMapName').on('click', searchMaps);
+$('#searchLocation').on('click',searchLoc);
+$('#searchKeyword').on('click',searchKeyword);
+
 });
+
+
+function searchMaps(){
+  var query = $('#searchBox').val();
+  console.log("query="+query);
+  //alert("Search for Map Name " + query)
+  xmlhttp = new XMLHttpRequest();
+  var qUrl = "/search?queryType=searchMaps&query="+query
+  window.location.href = qUrl;
+  //xmlhttp.open("GET",qUrl);
+}
+
+function searchLoc(){
+  var query = $('#searchBox').val();
+  alert("Search for Loc " + query);
+}
+
+function searchKeyword(){
+  var query = $('#searchBox').val();
+  alert("Search for Keyword " + query);
+}
 
 
 function loginFinishedCallBack(authResult){

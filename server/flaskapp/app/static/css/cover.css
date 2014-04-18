@@ -40,3 +40,22 @@ body {
 .inner {
   padding: 30px;
 }
+
+  .dropdown-menu {
+
+  background-color:#666E6C;
+}
+
+.list-group-item{
+
+       background-color: #666E6C
+}
+
+.list-group > a.disabled {
+  color: #999999;
+}
+
+.dropdown-menu li > a:hover, .dropdown-menu li > a:focus, .dropdown-submenu:hover > a {
+
+  background-color: #606060;
+}
