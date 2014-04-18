@@ -8,11 +8,12 @@ from Tak import Tak
 class Map(ndb.Model):
 	creator = ndb.StringProperty()
 	creatorId = ndb.IntegerProperty()
-	takIds = ndb.StringProperty(repeated=True)
+	takIds = ndb.IntegerProperty(repeated=True)
 	name = ndb.StringProperty()
 	
 	public = ndb.BooleanProperty()
 	adminIds = ndb.IntegerProperty(repeated=True)
+	metadata = ndb.JsonProperty()
 
 
 	def to_dict(self):
@@ -36,6 +37,7 @@ class Map(ndb.Model):
 			'taks': taks,
 			'public': self.public,
 			'admins': admins,
+			'metadata' : self.metadata,
 			}
 
 	# api class controller for GET method

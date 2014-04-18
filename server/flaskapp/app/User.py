@@ -10,7 +10,7 @@ class Account(ndb.Model):
 	gplusId = ndb.StringProperty()
 	accessToken = ndb.StringProperty()
 	loggedIn = ndb.BooleanProperty()
-	mapIds = ndb.StringProperty(repeated=True)
+	mapIds = ndb.IntegerProperty(repeated=True)
 	adminMaps = ndb.IntegerProperty(repeated=True)
 
 	def to_dict(self):

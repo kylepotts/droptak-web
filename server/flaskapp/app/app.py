@@ -162,7 +162,7 @@ def create_tak():
 		if map is None:
 			return jsonify(message="Map does not exist", response=400) 
 		logging.info("mapid %s" %mapId)
-		title = getValue(request, "title", "")
+		name = getValue(request, "title", "")
 		lat = getValue(request, "lat", "")
 		lng = getValue(request, "lng", "")
 		#user = getValue(request, "user", "")
@@ -175,9 +175,9 @@ def create_tak():
 			# check if args blank
 
 		logging.info("Add lat %s, lng %s" %(lat, lng) )
-		tak  = Tak(lng=lng,lat=lat, creator=user, title=title,mapId=mapId,creatorId=uid)
+		tak  = Tak(lng=lng,lat=lat, creator=user, name=name,mapId=int(mapId),creatorId=int(uid))
 		key = tak.put()
-		map.takIds.append(str(key.id()))
+		map.takIds.append(int(key.id()))
 		map.put();
 		return redirect(url_for('show_taks', id=key.id()))
 
@@ -226,7 +226,7 @@ def create_map():
 		userId = session['userId']
 		mapName = getValue(request, "name", "")
 		admin = [userId]
-		ownMap = Map(creator=user,creatorId=userId,name=mapName,adminIds=admin)
+		ownMap = Map(creator=user,creatorId=int(userId),name=mapName,adminIds=admin)
 		key = ownMap.put()
 
 		adminAccount = Account.get_by_id(userId)
@@ -264,7 +264,6 @@ def getValue(request, key, default):
 			try:
 				value = request.form[key]
 			except KeyError:
-				print "Item requested not accessible"
 				value = default
 	return value
 
@@ -285,11 +284,11 @@ def getMapTaks(id):
 @app.route('/api/maps/<int:id>/', methods=['GET','POST', 'DELETE', 'PUT'])
 def api_taks(id=-1):
 	if request.method == 'GET':
-		query = getMapTaks(str(id));
-		if query.count == 0:
+		map = Map.get_by_id(id)
+		if map is None:
 			return json.dumps({})
 		else:
-			return json.dumps([t.to_dict() for t in query.fetch()])
+			return map.Get()
 	if request.method == 'DELETE':
 		map = Map.get_by_id(id)
 		logging.info("DELETE " + str(id))
@@ -370,12 +369,12 @@ def api_tak():
 		mapId = str(mapId.encode('utf-8').decode('ascii', 'ignore'))
 		userId = request.args.get("id","")
 		userId = int(str(userId.encode('utf-8').decode('ascii', 'ignore')))
-		title = request.args.get("title","")
+		name = request.args.get("title","")
 		lat = request.args.get("lat","")
 		lat = str(lat.encode('utf-8').decode('ascii', 'ignore'))
 		lng = request.args.get("lng","")
 		lng =str(lng.encode('utf-8').decode('ascii', 'ignore'))
-		tak = Tak(title=title,lat=lat,lng=lng,creator=userName,creatorId=userId,mapId=mapId)
+		tak = Tak(name=name,lat=lat,lng=lng,creator=userName,creatorId=int(userId),mapId=int(mapId))
 		key = tak.put()
 		logging.info("tak added")
 		return json.dumps({"takId":key.integer_id()})
@@ -399,7 +398,7 @@ def api_single_tak(id=-1):
 	if request.method == 'PUT':
 		title = getValue(request, "title", "")
 		logging.info("title: " + title)
-		tak.update(title=title)
+		tak.update(name=title)
 		tak.put()
 		return '200'
 
@@ -506,6 +505,37 @@ def takData(takid = -1):
 	if request.method == 'PUT': #todo
 		# PUT: updates a tak returns that object
 		return '501 Not Implemented'
+
+#/api/v1/tak
+@app.route('/api/v1/tak/',methods=['POST'])
+def newTak():
+	# login required
+	user = session['username']
+	uid = session['userId']
+	if uid is None or user is None:
+		return json.dumps({'message':'403: Forbidden', 'response': 403 }) 
+	name = getValue(request, "name", None)
+	lat = getValue(request, "lat", None)
+	lng = getValue(request, "lng", None)
+	if not ( name and lat and lng ):
+		return json.dumps({'message':'400: Bad Request', 'response': 400 }) 
+	mapid = getValue(request, "mapid", None)
+	map = None
+	if mapid is not None:
+		map = Map.get_by_id(int(mapid))
+	if map is None:
+		map = Map(creator=user,creatorId=int(uid),name='Untitled',adminIds=[int(uid)])
+		key = map.put()
+		mapid = key.id()
+		account = Account.get_by_id(int(uid))
+		account.adminMaps.append(int(mapid))
+		account.put()
+	tak  = Tak(lng=lng,lat=lat, creator=user, name=name,mapId=int(mapid),creatorId=int(uid))
+	key = tak.put()
+	map.takIds.append(key.integer_id())
+	map.put();
+	return tak.Get()
+
 
 #updating map/tak attributes
 #/api/v1/<maps | taks>/<mapid | takid>/ <attribute-name>

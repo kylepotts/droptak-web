@@ -10,17 +10,17 @@ fix_path(os.path.abspath(os.path.dirname(__file__)))
 from flask import Flask, render_template, request, jsonify, redirect, url_for, g, session
 
 class Tak(ndb.Model):
-	title = ndb.StringProperty() # latitude
+	name = ndb.StringProperty() # latitude
 	lat = ndb.StringProperty() # latitude
 	lng = ndb.StringProperty() # longitude
 	creator = ndb.StringProperty()
 	creatorId = ndb.IntegerProperty()
-	mapId = ndb.StringProperty()
+	mapId = ndb.IntegerProperty()
 	metadata = ndb.JsonProperty()
 
 	def to_dict(self):
 		return {
-			'name' : self.title,
+			'name' : self.name,
 			'id': self.key.id(),
 			'lat': self.lat,
 			'lng': self.lng,
@@ -28,6 +28,7 @@ class Tak(ndb.Model):
 				'name': self.creator,
 				'id': self.creatorId,
 			},
+			'mapid': self.mapId,
 			'metadata' : self.metadata,
 			}
 
