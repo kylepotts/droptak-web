@@ -205,7 +205,7 @@ def taks(mapId=-1, mapName=''):
 	map = Map.get_by_id(mapId)
 	if map is None:
 		return redirect('/app')
-	taks = getMapTaks(str(mapId))
+	taks = map.to_dict()['taks']
 	return render_template('view_taks.html',taks = taks, mapName=map.name)
 
 @app.route('/taks/<int:id>', methods = ['GET', 'POST'])
@@ -277,7 +277,7 @@ def getMaps(id):
 	return account.adminMaps
 
 def getMapTaks(id):
-	query = Tak.query(Tak.mapId == id)
+	query = Tak.query(Tak.mapId == int(id))
 	return query
 
 # returns taks in map
@@ -396,9 +396,9 @@ def api_single_tak(id=-1):
 		return '200'
 
 	if request.method == 'PUT':
-		title = getValue(request, "title", "")
-		logging.info("title: " + title)
-		tak.update(name=title)
+		name = getValue(request, "name", "")
+		logging.info("name: " + name)
+		tak.update(name=name)
 		tak.put()
 		return '200'
 

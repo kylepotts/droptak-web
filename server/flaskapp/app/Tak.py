@@ -49,8 +49,8 @@ class Tak(ndb.Model):
 	def Post(self):
 		return
 
-	def update(self, title):
-		self.title = title
+	def update(self, name):
+		self.name = name
 		return
 
 	def view(self):

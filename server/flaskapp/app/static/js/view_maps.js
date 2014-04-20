@@ -51,7 +51,7 @@ ko.bindingHandlers.urlFor = {
 
 function Tak() {
     var self = this;
-    self.title = ko.observable();
+    self.name = ko.observable();
     self.lat = ko.observable();
     self.lng = ko.observable();
 
@@ -78,7 +78,6 @@ function Map() {
     self.name = ko.observable();
     self.id = ko.observable();
     self.taks = ko.observableArray();
-    self.loaded = false; // update after loading
 
     self.addTak = function () {
         var tak = new Tak();
@@ -106,27 +105,8 @@ function MapTakModel() {
         self.selected(element);
         console.log(element.id());
         setCookie("mapId", element.id(), 10)
-        if (!element.loaded) {
-            console.log("Loading data..")
-            $.getJSON("/api/maps/" + element.id(), function (data) {
-                element.taks().length = 0;
-                for (var i = 0; i < data.length; i++) {
-                    var tak = element.addTak();
-                    tak.title(data[i].title);
-                    tak.lat(data[i].lat);
-                    tak.lng(data[i].lng);
-                }
-                element.loaded = true;
-                console.log(element.taks());
-                setMarkers(ko.toJS(element.taks));
-            });
-        } else {
-            // ajax call is async so needs to be in both options
-            console.log(element.taks());
-            setMarkers(ko.toJS(element.taks));
-        }
-
-
+        console.log(element.taks());
+        setMarkers(ko.toJS(element.taks));
     }
 
     /**
@@ -222,10 +202,18 @@ function MapTakModel() {
     $.getJSON("/maps", function (data) {
         // Now use this data to update your view models, 
         // and Knockout will update your UI automatically 
+        console.log(data);
         for (var i = 0; i < data.length; i++) {
             var local = self.addMap();
             local.name(data[i].name);
             local.id(data[i].id)
+            var taks = data[i].taks;
+            for (var j = 0; j < taks.length; j++) {
+                    var tak = local.addTak();
+                    tak.name(taks[j].name);
+                    tak.lat(taks[j].lat);
+                    tak.lng(taks[j].lng);
+                }
         }
     });
 }

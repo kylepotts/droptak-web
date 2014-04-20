@@ -63,7 +63,13 @@
 					<!-- link to single map list -->
 					<a href="#" title="View map list" data-bind="urlFor: $data, click: function(){return true;}, clickBubble: false"><span  class="glyphicon glyphicon-th-list" style="color:#000000;"></span></a>
 				</div>
-				<button type="button" class="close" title="Delete this map." data-bind="click: $root.removeMap" aria-hidden="true">&times; </button>
+				<div class="pull-right">
+					<button type="button" class="close" title="Delete this map." data-bind="click: $root.removeMap" aria-hidden="true"> &times; </button>
+					<span class="badge " data-bind="text: $data.taks().length != 0 ? $data.taks().length + '  ': ''"></span>
+					
+				</div>
+
+				
 				<div>
 					<h4 class="panel-title">
 						<span data-bind="text: name()? name : 'No Name'"></span>

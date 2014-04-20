@@ -55,6 +55,7 @@ function initialize() {
 	}
 }
 function addInfoWindow(marker) {
+	console.log(marker);
 	var infoWindow = new google.maps.InfoWindow({
 		content: '<h2>' + marker.title + '</h2>' +
 				' <div><span>' + marker.position.lat() + ', ' + marker.position.lng() + '</span></div>' 
@@ -68,12 +69,12 @@ function addInfoWindow(marker) {
 }
 function addMarker(lat, lng, opts) {
 	opts = opts || {};
-    opts.title = opts.title || "";
+    opts.name = opts.name || "";
     if(map_initialized){
-		marker = new google.maps.Marker({
+		var marker = new google.maps.Marker({
 			position: new google.maps.LatLng(lat, lng),
 			map: map,
-			title: opts.title
+			title: opts.name
 		});
 		addInfoWindow(marker);
 		markers.push(marker);
@@ -83,7 +84,7 @@ function addMarker(lat, lng, opts) {
 		var c = {
 			lat: lat,
 			lng: lng,
-			opts: opts
+			name: opts.name
 		}
 		asycmarkers.push(c);
 	}
@@ -121,9 +122,8 @@ function deleteMarkers(){
 }
 function setMarkers(data) {
 	deleteMarkers();
-	console.log(data);
 	for (var i = 0; i < data.length; i++) {
-		addMarker(data[i].lat, data[i].lng, {title: data[i].title});
+		addMarker(data[i].lat, data[i].lng, {name: data[i].name});
 	}
 	fitMarkers();
 }

@@ -38,6 +38,10 @@ body{
 	border-radius: 30px !important;
 	border: 2px dotted #d3d3d3 !important;
 }
+.panel-title{
+	margin-left: 30px;
+	text-align: left;
+}
 .panel-add{
 	background-color: #eee;
 	text-align: center ;
@@ -45,6 +49,9 @@ body{
 #publish{
 	padding: 15px;
 	padding-top: 30px;
+}
+.badge {
+	margin-right: 10px;
 }
 
 .maps-sidebar {
