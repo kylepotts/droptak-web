@@ -1,3 +1,19 @@
+$(document).ready(function(){
+    console.log("ready");
+    $('.btn-toggle').click(function() {
+    $(this).find('.btn').toggleClass('active');  
+    
+    if ($(this).find('.btn-primary').size()>0) {
+        console.log("toggle to private")
+        $(this).find('.btn').toggleClass('btn-primary');
+    }    
+    $(this).find('.btn').toggleClass('btn-default');
+    var val = $('#toggleGroup .active').data("value")
+       
+});
+
+});
+
 ko.validation.rules['unique'] = {
     validator: function (val, otherVal) {
         /*eventually use to check if item exists
@@ -123,12 +139,23 @@ function MapTakModel() {
         if (!self.modalSubmit()) {
             self.modalSubmit(true);
             console.log("submit");
+            var val = $('#toggleGroup .active').data("value")
+            var isPublic;
+            if(val == 1){
+                isPublic = true;
+            }
+
+            if(val == 0){
+                isPublic = false;
+            }
+            console.log("isPublic="+isPublic);
             console.log(self.form.name());
             if (self.form.name.isValid()) {
                 console.log("valid");
                 // if it is, then submit it to server
                 $.post('/maps/new', {
-                    name: self.form.name()
+                    name: self.form.name(),
+                    isPublic: isPublic
                 })
                     .done(function (response) {
                         // parse JSON text response
@@ -144,7 +171,7 @@ function MapTakModel() {
                         $(modal).modal("hide");
 
                     })
-                    .fail(function () {
+                    .fail(function (response) {
                         self.modalSubmit(false);
                         alert("Error submitting");
                     });
@@ -164,6 +191,12 @@ function MapTakModel() {
             // if it is, then submit it to server
             $.post('/map/admin/' + self.selected().id() + '/' + self.adminForm.email(), {})
                 .done(function (response) {
+                    console.log(response);
+                    var obj = jQuery.parseJSON(response)
+                    if(obj.hasOwnProperty("error")){
+                        alert(obj['error']);
+                        return;
+                    }
                     // parse JSON text response
                     var obj = jQuery.parseJSON(response);;
                     //and display it locally
@@ -253,4 +286,4 @@ function checkCookie() {
     }
 }
 
-$("[name='my-checkbox']").bootstrapSwitch();
+

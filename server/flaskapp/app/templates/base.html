@@ -12,7 +12,6 @@
   <link href="/static/css/vendor/bootstrap-switch.css" rel="stylesheet">
   <link href="/static/css/cover.css" rel="stylesheet">
   <script src="/static/js/vendor/jquery.min.js"></script>
-  <script src="/static/js/vendor/bootstrap-switch.min.js"
   <script src="/static/js/login.js"></script>
 
   <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -39,6 +38,21 @@
           <a class="navbar-brand" href="/">MapTak</a>
         </div>
         <div class="navbar-collapse collapse">
+          <form class="navbar-form navbar-left" role="search">
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Search" id="searchBox">
+            </div>
+            <div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+     <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li><a href="#" id="searchMapName">Map Name</a></li>
+    <li><a href="#" id="searchLocation">Location</a></li>
+    <li><a href="#" id="searchKeyword">Keyword</a></li>
+  </ul>
+</div>
+          </form>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/app/">Maps</a>
             </li>

@@ -1,6 +1,7 @@
 from utils.path import fix_path
 import os, json
 from google.appengine.api.logservice import logservice
+from google.appengine.ext.db.metadata import Kind
 import logging
 import random
 import string
@@ -240,8 +241,13 @@ def create_map():
 		user =  session['username']
 		userId = session['userId']
 		mapName = getValue(request, "name", "")
+		isPublic = getValue(request, "isPublic","")
+		if isPublic == 'true':
+			isPublic = True
+		else: # default false if not set
+			isPublic = False
 		admin = [userId]
-		ownMap = Map(creator=user,creatorId=int(userId),name=mapName,adminIds=admin)
+		ownMap = Map(creator=user,creatorId=int(userId),name=mapName,adminIds=admin, public=isPublic)
 		key = ownMap.put()
 
 		adminAccount = Account.get_by_id(userId)
@@ -257,6 +263,9 @@ def admin_add(mapId,email):
 		uid = session['userId']
 		map = Map.get_by_id(mapId)
 		adminAccount = Account.query(Account.email == email).get()
+		if adminAccount == None:
+			return json.dumps({'error':"No Account with that email exists"})
+
 		adminId = adminAccount.key.integer_id()
 		if adminId not in map.adminIds:
 			map.adminIds.append(adminId)
@@ -266,6 +275,23 @@ def admin_add(mapId,email):
 			adminAccount.put()
 
 		return '200'
+
+@app.route('/search', methods=['GET','POST'])
+def search():
+	if request.method == 'GET':
+		maps = []
+		queryType=request.args.get("queryType","")
+		query = request.args.get("query","")
+		logging.info("searching for " + queryType + " " + query)
+		mapQuery = Map.query(Map.public == True)
+		for map in mapQuery:
+			if queryType == 'searchMaps':
+				if(query.lower() == map.name.lower()):
+					logging.info("match!")
+					maps.append(map)
+		logging.info(len(maps))
+		return render_template('search.html',maps=maps)
+
 
 @app.errorhandler(404)
 def page_not_found(e):

@@ -25,12 +25,10 @@
 						<label for="name">Map Name</label>
 						<input type="text" class="form-control" data-bind="enable: !modalSubmit(),value: form.name, valueUpdate: 'afterkeydown'" id="name-textbox" placeholder="Really cool map name">
 					</div>
-					<div class="btn-toggle"> 
-    						<button class="btn btn-xs btn-primary">Public</button>
-    						<button class="btn btn-xs btn-success active">Private</button>
-    				</div>
-
-
+					  <div class="btn-group btn-toggle" id="toggleGroup"> 
+   						 <button class="btn btn-lg btn-default" id="on" type="button" data-value="0">Private</button>
+    					 <button class="btn btn-lg btn-primary active" id="off" type="button" data-value="1">Public</button>
+  					</div>
 				</div>
 				<div class="modal-footer">
 					<div class="emptyloading" data-bind="visible: !modalSubmit()"></div>

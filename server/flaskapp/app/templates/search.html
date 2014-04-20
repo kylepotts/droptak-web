@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block head %}
+    {{ super() }}
+ 
+{% endblock %}
+	
+{% block content %}
+<ul class="list-group">
+{% for map in maps %}
+{% set url = '/maps/'+map.key.integer_id()|string %}
+<div class="list-group-item">
+<a href={{url}}>{{map.name}}</a>
+</div>
+{% endfor %}
+</ul>
+
+{% endblock %}
