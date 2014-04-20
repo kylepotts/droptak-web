@@ -17,13 +17,35 @@ from Map import Map
 # this fix allows us to import modues/packages found in 'lib'
 fix_path(os.path.abspath(os.path.dirname(__file__)))
 
-from flask import Flask, render_template, request, jsonify, redirect, url_for, g, session,flash
+from flask import Flask,make_response, render_template, request, jsonify, redirect, url_for, g, session,flash
 from blueprints.example.views import bp as example_blueprint
 
 
 app = Flask(__name__)
 app.secret_key = 'key'
 currentAccount = 1
+
+httpcodes = {
+	'200':'OK',
+	'400':'Bad Request',
+	'403':'Forbidden',
+	'404':'File Not Found',
+}
+# attaches appropriate headers to json responses
+def json_success(data):
+	resp = make_response(json.dumps(data), 200)
+	resp.headers.extend({})
+	return resp
+
+def json_response(code, headers=None):
+	message = httpcodes.get(str(code),'')
+	data = {
+		'message' : message,
+		'code' : code,
+	}
+	resp = make_response(json.dumps(data), code)
+	resp.headers.extend(headers or {})
+	return resp
 
 #the following appends headers to every request to tell the client not to cache contents
 #TODO: remove for final demo and submission
@@ -37,7 +59,6 @@ def after_request(response):
 @app.route('/dash')
 def logoutIndex():
 		return render_template('dashboard.html')
-
 
 @app.route('/')
 def index():
@@ -242,18 +263,29 @@ def create_map():
 		userId = session['userId']
 		mapName = getValue(request, "name", "")
 		isPublic = getValue(request, "isPublic","")
-		if isPublic == 'true':
-			isPublic = True
-		else: # default false if not set
-			isPublic = False
-		admin = [userId]
-		ownMap = Map(creator=user,creatorId=int(userId),name=mapName,adminIds=admin, public=isPublic)
-		key = ownMap.put()
+		return newMap(userid=userId, name=mapName,public=isPublic )
 
-		adminAccount = Account.get_by_id(userId)
-		adminAccount.adminMaps.append(key.integer_id())
-		adminAccount.put()
-		return json.dumps(ownMap.to_dict())
+def newMap(userid='', name='', public=''):
+	if not (name and public and userid):
+		return '400: bad request'
+	user = Account.get_by_id(int(userid))
+	if user is None:
+		return '400: bad request'
+	if public == 'true':
+		public = True
+	else: # default false if not set
+		public = False
+	for mapid in user.adminMaps:
+			map = Map.get_by_id(int(mapid))
+			if map is not None and map.name == name:
+				return make_response(json.dumps({'message':'A map of that name already exists.', 'code':400}), 400)
+	map = Map(creator=user.name,creatorId=int(userid),name=name,adminIds=[int(userid)], public=public)
+	key = map.put()
+	# add map to user's list of maps
+	user.adminMaps.append(key.integer_id())
+	user.put()
+	#return map json
+	return json.dumps(map.to_dict());
 
 @app.route('/map/admin/<int:mapId>/<string:email>',methods=['GET','POST'])
 def admin_add(mapId,email):
@@ -501,6 +533,14 @@ def mapsForUser(userid = -1):
 	# returns json map object created
 	#		POST: used to create maps
 		return '501 Not Implemented'
+
+#/api/v1/map/
+@app.route('/api/v1/map/',methods=['POST'])
+def apiCreateMap():
+	name = getValue(request, "name", "")
+	isPublic = getValue(request, "isPublic", "")
+	owner = getValue(request, "owner", "")
+	return newMap(userid=owner, name=name,public=isPublic )
 
 #/api/v1/map/<map id>/
 @app.route('/api/v1/map/<int:mapid>/',methods=['GET','PUT', 'DELETE'])
