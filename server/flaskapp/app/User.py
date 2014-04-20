@@ -16,6 +16,7 @@ class Account(ndb.Model):
 	def to_dict(self):
 		return {
 			'name' : self.name,
+			'email' : self.email,
 			'id': self.key.id(),
 			}
 
