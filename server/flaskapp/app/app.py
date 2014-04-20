@@ -190,6 +190,21 @@ def create_tak():
 			listOfMaps.append(ownMap)
 
 		return render_template('create_tak.html', maps=listOfMaps)
+
+@app.route('/delete/', methods=['DELETE'])
+def delete_tak(mapid=-1, takid=-1):
+	if request.method == 'DELETE':
+		map = Map.get_by_id(mapid)
+                logging.info("DELETE " + str(mapid))
+                if map is not None:
+                        # remove taks in map
+                        tak = Tak.get_by_id(int(takid))
+                        logging.info("_DELETE sub-tak" + str(takid))
+                        if tak is not None:
+                     		   tak.key.delete()
+                        return "Success"
+                return "Map does not exist"
+
 @app.route('/maps/<mapName>/',methods=['GET','POST'])
 @app.route('/maps/<int:mapId>/',methods=['GET','POST'])
 def taks(mapId=-1, mapName=''):
