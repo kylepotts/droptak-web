@@ -12,7 +12,6 @@ class Map(ndb.Model):
 	name = ndb.StringProperty()
 	public = ndb.BooleanProperty()
 	adminIds = ndb.IntegerProperty(repeated=True)
-	metadata = ndb.JsonProperty()
 
 
 	def to_dict(self):
@@ -37,7 +36,6 @@ class Map(ndb.Model):
 			'taks': taks,
 			'public': str(self.public),
 			'admins': admins,
-			'metadata' : self.metadata,
 			}
 
 	# api class controller for GET method
