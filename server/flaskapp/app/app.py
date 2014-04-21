@@ -589,19 +589,12 @@ def mapAdmin(mapid=-1,userid=-1):
 		return json_response(code=400)
 
 	if request.method == 'POST':
-		logging.info("post")
 		if userid not in map.adminIds:
-			map.adminIds.append(adminId)
+			map.adminIds.append(userid)
 			map.put()
 		if mapid not in adminAccount.adminMaps:
-			adminAccount.adminMaps.append(mapId)
+			adminAccount.adminMaps.append(mapid)
 			adminAccount.put()
-
-
-
-
-
-
 	return json_response(code=200,message="Success")
 		
 # ********************************************************
