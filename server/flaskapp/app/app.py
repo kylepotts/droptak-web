@@ -229,24 +229,17 @@ def delete_tak(mapid=-1, takid=-1):
                         return "Success"
                 return "Map does not exist"
 
-@app.route('/maps/<mapName>/',methods=['GET','POST'])
+@app.route('/maps/<str>/',methods=['GET','POST'])
 @app.route('/maps/<int:mapId>/',methods=['GET','POST'])
-def taks(mapId=-1, mapName=''):
-	logging.info("in taks")
-	if mapName != '':
-		qry = getUserMaps(session['userId'])
-		qry = qry.filter(Map.name == mapName)
-		mapId = qry.get().key.integer_id()
-		logging.info("MapID %s" %mapId)
-
-	if mapId == "":
+def taks(mapId=-1, str=''):
+	if mapId == -1:
 		return redirect('/app')
 	map = Map.get_by_id(mapId)
 	if map is None:
 		return redirect('/app')
 	taks = map.to_dict()['taks']
 	return render_template('view_taks.html',taks = taks, mapName=map.name)
-
+	
 @app.route('/taks/<int:id>', methods = ['GET', 'POST'])
 def show_taks(id=-1):
 	if request.method == 'GET':
@@ -472,17 +465,10 @@ def api_single_tak(id=-1):
 # 
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-#/api/v1/search?<key1>=<value1>&<key2>=<value2>
-#/api/v1/search?name=<name>
-#	GET only
-#	No authentication -> public maps only
-#	Authentication -> public maps + personal maps + maps shared with that person
-#	
-#	example keys:
-#id: maps only from this user id
-#name: maps with name equal to this value
-#taks: true or false, include searching of tak data, false by default  
-#<key>=<value>: unmapped keys look for maps with that key and value in meta-data
+
+# ********************************************************
+#					Users
+# ********************************************************
 
 #/api/v1/user/<user_id>/
 @app.route('/api/v1/user/<int:userid>/',methods=['GET'])
@@ -500,8 +486,10 @@ def userData(userid = -1):
 #	PUT: update user info
 #	DELETE: delete user
 
+# ********************************************************
+#					User's Maps
+# ********************************************************
 
-#/api/v1/user/<user id>/maps/
 @app.route('/api/v1/user/<int:userid>/maps/',methods=['GET'])
 def mapsForUser(userid = -1):
 	if userid <= 0:
@@ -514,7 +502,10 @@ def mapsForUser(userid = -1):
 		#	GET: returns json array of information about user's map objects
 		return json_success(user.getMaps())
 
-#/api/v1/map/
+# ********************************************************
+#					Maps
+# ********************************************************
+
 @app.route('/api/v1/map/',methods=['POST'])
 def apiCreateMap():
 	name = getValue(request, "name", "")
@@ -522,7 +513,6 @@ def apiCreateMap():
 	owner = getValue(request, "owner", "")
 	return newMap(userid=owner, name=name,public=isPublic )
 
-#/api/v1/map/<map id>/
 @app.route('/api/v1/map/<int:mapid>/',methods=['GET','PUT', 'DELETE'])
 def mapData(mapid = -1):
 	if mapid <= 0:
@@ -546,30 +536,9 @@ def mapData(mapid = -1):
 		# return json map object
 		return json_response(code=501)
 		
-	
-
-
-#/api/v1/tak/<tak id>
-@app.route('/api/v1/tak/<int:takid>/',methods=['GET','PUT', 'DELETE'])
-def takData(takid = -1):
-	if takid <= 0:
-		return json_response(code=400)
-	tak = Tak.get_by_id(takid)
-	if tak is None:
-		return json_response(code=400)
-
-	if request.method == 'GET': # done
-		# GET: returns a single json tak information
-		return json_success(tak.Get())
-
-	if request.method == 'DELETE': #todo
-		# DELETE: deletes that tak
-		tak.Delete()
-		return json_response(code=200,message="Success")
-
-	if request.method == 'PUT': #todo
-		# PUT: updates a tak returns that object
-		return json_response(code=501)
+# ********************************************************
+#					Taks
+# ********************************************************
 
 #/api/v1/tak
 @app.route('/api/v1/tak/',methods=['POST'])
@@ -601,24 +570,30 @@ def newTak():
 	map.put();
 	return json_success(tak.Get())
 
+#/api/v1/tak/<tak id>
+@app.route('/api/v1/tak/<int:takid>/',methods=['GET','PUT', 'DELETE'])
+def takData(takid = -1):
+	if takid <= 0:
+		return json_response(code=400)
+	tak = Tak.get_by_id(takid)
+	if tak is None:
+		return json_response(code=400)
 
-#updating map/tak attributes
-#/api/v1/<maps | taks>/<mapid | takid>/ <attribute-name>
-#	common attributes:
-#		title, name, lat, lng, privacy
-#	else: add to list of attributes
-#	POST: new attribute
-#	PUT: edit existing attribute, params: value
-#	GET: get attribute
-#	DELETE: delete only from list of attributes
-#
-#/api/v1/maps/<map id>/admins/<email | userid?>
-#	POST:  Add a admin to current list of admins for a map with id mapid
-#	GET: returns array of userIds of the admins assigned to the map
-#	DELETE: Remove admin from the list of current admins for the  map
-	
+	if request.method == 'GET': # done
+		# GET: returns a single json tak information
+		return json_success(tak.Get())
 
-#
+	if request.method == 'DELETE': #todo
+		# DELETE: deletes that tak
+		tak.Delete()
+		return json_response(code=200,message="Success")
+
+	if request.method == 'PUT': #todo
+		# PUT: updates a tak returns that object
+		return json_response(code=501)
+
+
+
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 #
 # 						END OFFICIAL API ROUTING

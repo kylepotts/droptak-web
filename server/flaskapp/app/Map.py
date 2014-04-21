@@ -16,6 +16,10 @@ class Map(ndb.Model):
 
 
 	def to_dict(self):
+		owner = User.Account.get_by_id(int(self.creatorId))
+		ownerdata = {}
+		if owner is not None:
+			ownerdata = owner.to_dict()
 		taks = []
 		for takid in self.takIds:
 			tak = Tak.get_by_id(int(takid))
@@ -29,12 +33,9 @@ class Map(ndb.Model):
 		return {
 			'name' : self.name,
 			'id': self.key.id(),
-			'owner': {
-				'name': self.creator,
-				'id': self.creatorId,
-			},
+			'owner': ownerdata,
 			'taks': taks,
-			'public': self.public,
+			'public': str(self.public),
 			'admins': admins,
 			'metadata' : self.metadata,
 			}

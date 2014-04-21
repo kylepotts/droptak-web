@@ -159,7 +159,8 @@ function MapTakModel() {
                 })
                     .done(function (response) {
                         // parse JSON text response
-                        var obj = jQuery.parseJSON(response);;
+                        console.log(response);
+                        var obj = jQuery.parseJSON(response);
                         //and display it locally
                         var map = self.addMap();
                         map.name(obj.name);
@@ -172,8 +173,9 @@ function MapTakModel() {
 
                     })
                     .fail(function (response) {
+                        console.log(response.responseJSON);
                         self.modalSubmit(false);
-                        alert("Error submitting");
+                        alert("Error submitting: " + response.responseJSON.message);
                     });
             } else {
                 //invalid form
