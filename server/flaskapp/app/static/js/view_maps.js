@@ -158,9 +158,8 @@ function MapTakModel() {
                     isPublic: isPublic
                 })
                     .done(function (response) {
-                        // parse JSON text response
-                        console.log(response);
-                        var obj = jQuery.parseJSON(response);
+                        var obj = response; // reponse is an object so no need to parse reponse
+                        console.log(obj)
                         //and display it locally
                         var map = self.addMap();
                         map.name(obj.name);
