@@ -619,28 +619,28 @@ def mapAdmin(mapid=-1,email=""):
 #/api/v1/tak
 @app.route('/api/v1/tak/',methods=['POST'])
 def newTak():
-	# login required
-	user = session['username']
-	uid = session['userId']
-	if uid is None or user is None:
-		return json_response(code=403)
 	name = getValue(request, "name", None)
+	uid = getValue(request, "userid", None)
 	lat = getValue(request, "lat", None)
 	lng = getValue(request, "lng", None)
-	if not ( name and lat and lng ):
+	if not ( name and lat and lng and uid):
 		return json_response(code=400)
 	mapid = getValue(request, "mapid", None)
 	map = None
+	if uid is not None:
+		user = Account.get_by_id(int(uid))
+		if user is None:
+			return json_response(code=400)
 	if mapid is not None:
 		map = Map.get_by_id(int(mapid))
 	if map is None:
-		map = Map(creator=user,creatorId=int(uid),name='Untitled',adminIds=[int(uid)])
+		map = Map(creator=user.name,creatorId=int(uid),name='Untitled',adminIds=[int(uid)])
 		key = map.put()
 		mapid = key.id()
 		account = Account.get_by_id(int(uid))
 		account.adminMaps.append(int(mapid))
 		account.put()
-	tak  = Tak(lng=lng,lat=lat, creator=user, name=name,mapId=int(mapid),creatorId=int(uid))
+	tak  = Tak(lng=lng,lat=lat, creator=user.name, name=name,mapId=int(mapid),creatorId=int(uid))
 	key = tak.put()
 	map.takIds.append(key.integer_id())
 	map.put();
