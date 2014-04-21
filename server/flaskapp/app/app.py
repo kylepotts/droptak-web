@@ -485,6 +485,38 @@ def userData(userid = -1):
 #	PUT: update user info
 #	DELETE: delete user
 
+@app.route('/api/v1/login',methods=['POST'])
+def api_login():
+		logging.info("api_login Type "+ request.method)
+		if request.method == 'POST':
+			name = request.args.get("name","")
+			email =  request.args.get("email","")
+    		# once store token verified send a request for credential for gplus
+	    	access_token = request.args.get("oauth","")
+	    	gplus_id = request.args.get("gplusid","")
+
+	    	#check for valid arguments
+	    	if name == "" or email == "" or access_token == "" or gplus_id == "":
+	    		return json_response(code=400)
+
+	    	url = ("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s"% access_token)
+	    	h = httplib2.Http()
+	    	result = json.loads(h.request(url,'GET')[1])
+	    	query = Account.query(Account.email == email)
+	    	account = query.get()
+	    	if query.count() != 0:
+	    		key = account.key
+	    		return json_success({"uuid":key.integer_id() })
+
+	    	session['gplus_id'] = gplus_id
+	    	session['username'] = name 
+	    	account = Account(name=name,email=email,gplusId=gplus_id,accessToken=access_token,loggedIn=True)
+	    	key = account.put()
+	    	session['userId'] = key.integer_id()
+    		return json_success({"uuid":key.integer_id()})
+    	
+
+
 # ********************************************************
 #					User's Maps
 # ********************************************************
