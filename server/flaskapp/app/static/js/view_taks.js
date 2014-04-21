@@ -5,10 +5,8 @@ function removeTak(id){
             url: '/api/v1/tak/' + id,
             type: 'DELETE',
             success: function (result) {
-                self.taks.remove(tak);
-                self.selected(null);
                 console.log(result);
-		window.location.reload(true);
+		        window.location.reload(true);
             }
         });
 }
