@@ -71,7 +71,6 @@ def index():
 		if account is None: # prevent interal error
 			return render_template('index.html')
 		lin = account.loggedIn
-		logging.info("lin="+str(lin))
 		if lin == False:
 			return render_template('index.html')
 		if lin == True:
@@ -486,6 +485,38 @@ def userData(userid = -1):
 #	PUT: update user info
 #	DELETE: delete user
 
+@app.route('/api/v1/login',methods=['POST'])
+def api_login():
+		logging.info("api_login Type "+ request.method)
+		if request.method == 'POST':
+			name = request.args.get("name","")
+			email =  request.args.get("email","")
+    		# once store token verified send a request for credential for gplus
+	    	access_token = request.args.get("oauth","")
+	    	gplus_id = request.args.get("gplusid","")
+
+	    	#check for valid arguments
+	    	if name == "" or email == "" or access_token == "" or gplus_id == "":
+	    		return json_response(code=400)
+
+	    	url = ("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s"% access_token)
+	    	h = httplib2.Http()
+	    	result = json.loads(h.request(url,'GET')[1])
+	    	query = Account.query(Account.email == email)
+	    	account = query.get()
+	    	if query.count() != 0:
+	    		key = account.key
+	    		return json_success({"uuid":key.integer_id() })
+
+	    	session['gplus_id'] = gplus_id
+	    	session['username'] = name 
+	    	account = Account(name=name,email=email,gplusId=gplus_id,accessToken=access_token,loggedIn=True)
+	    	key = account.put()
+	    	session['userId'] = key.integer_id()
+    		return json_success({"uuid":key.integer_id()})
+    	
+
+
 # ********************************************************
 #					User's Maps
 # ********************************************************
@@ -534,7 +565,37 @@ def mapData(mapid = -1):
 	if request.method == 'PUT': #todo
 		#PUT: 	used to update map in database, parameters: (any map parameter)
 		# return json map object
-		return json_response(code=501)
+		newName = request.args.get("name","")
+		newIsPublic = request.args.get("isPublic","")
+		newOwner = request.args.get("owner","")
+		map.Put(newName=newName,newIsPublic=newIsPublic,newOwner=newOwner)
+		return json_response(code=200,message="Success")
+
+@app.route('/api/v1/map/<int:mapid>/admin/<int:userid>/',methods=['POST','DELETE'])
+def mapAdmin(mapid=-1,userid=-1):
+	if mapid <= 0:
+		return json_response(code=400)
+	if userid <= 0:
+		return json_response(code=400)
+
+	map = Map.get_by_id(mapid)
+
+	if map is None:
+		return json_response(code=400)
+
+	adminAccount = Account.get_by_id(userid)
+
+	if adminAccount is None:
+		return json_response(code=400)
+
+	if request.method == 'POST':
+		if userid not in map.adminIds:
+			map.adminIds.append(userid)
+			map.put()
+		if mapid not in adminAccount.adminMaps:
+			adminAccount.adminMaps.append(mapid)
+			adminAccount.put()
+	return json_response(code=200,message="Success")
 		
 # ********************************************************
 #					Taks
