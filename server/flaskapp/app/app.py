@@ -366,24 +366,11 @@ def api_taks(id=-1):
 			return json_success(map.Get())
 	if request.method == 'DELETE':
 		map = Map.get_by_id(id)
-		logging.info("DELETE " + str(id))
-		if map is not None:
-			# remove taks in map
-			for takid in map.takIds:
-				tak = Tak.get_by_id(int(takid))
-				logging.info("_DELETE sub-tak" + str(takid))
-				if tak is not None:
-					tak.key.delete()
-			for mid in map.adminIds:
-				logging.info("mid="+str(mid))
-				adminAcct = Account.get_by_id(mid)
-				adminAcct.adminMaps.remove(id)
-				adminAcct.put()
-			map.key.delete()
-			return json_response(code=200,message="Success")
-		return json_response(code=400, message="Map does not exist")
-
-
+		if map is None:
+			return json_response(code=400, message="Map does not exist")
+		map.Delete()
+		return json_response(code=200,message="Success")
+		
 @app.route('/api/login',methods=['GET','POST'])
 def api_login():
 		logging.info("api_login Type "+ request.method)
