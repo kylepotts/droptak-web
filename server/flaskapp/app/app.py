@@ -571,11 +571,11 @@ def mapData(mapid = -1):
 		map.Put(newName=newName,newIsPublic=newIsPublic,newOwner=newOwner)
 		return json_response(code=200,message="Success")
 
-@app.route('/api/v1/map/<int:mapid>/admin/<int:userid>/',methods=['POST','DELETE'])
-def mapAdmin(mapid=-1,userid=-1):
+@app.route('/api/v1/map/<int:mapid>/admin/<string:email>/',methods=['POST','DELETE'])
+def mapAdmin(mapid=-1,email=""):
 	if mapid <= 0:
 		return json_response(code=400)
-	if userid <= 0:
+	if email == "":
 		return json_response(code=400)
 
 	map = Map.get_by_id(mapid)
@@ -583,7 +583,8 @@ def mapAdmin(mapid=-1,userid=-1):
 	if map is None:
 		return json_response(code=400)
 
-	adminAccount = Account.get_by_id(userid)
+	adminAccount = Account.query(Account.email == email).get()
+	userid = adminAccount.key.integer_id()
 
 	if adminAccount is None:
 		return json_response(code=400)
@@ -595,7 +596,21 @@ def mapAdmin(mapid=-1,userid=-1):
 		if mapid not in adminAccount.adminMaps:
 			adminAccount.adminMaps.append(mapid)
 			adminAccount.put()
-	return json_response(code=200,message="Success")
+			return json_response(code=200,message="Success")
+
+	if request.method == 'DELETE':
+		logging.info("delete")
+		if userid not in map.adminIds:
+			return json_response(code=400)
+
+		if mapid not in adminAccount.adminMaps:
+			return json_response(code=400)
+
+		map.adminIds.remove(userid)
+		adminAccount.adminMaps.remove(mapid)
+		map.put()
+		adminAccount.put()
+		return json_response(code=200)
 		
 # ********************************************************
 #					Taks
