@@ -65,7 +65,7 @@ $("#qrcode").qrcode({
 });  
 
 {% for tak in taks %}
-	addMarker({{tak.lat}}, {{tak.lng}}, {title: "{{tak.title}}" });
+	addMarker({{tak.lat}}, {{tak.lng}}, {name: "{{tak.name}}" });
 {% endfor %}
 </script>
 {% endblock javascript %}

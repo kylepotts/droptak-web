@@ -55,7 +55,6 @@ function initialize() {
 	}
 }
 function addInfoWindow(marker) {
-	console.log(marker);
 	var infoWindow = new google.maps.InfoWindow({
 		content: '<h2>' + marker.title + '</h2>' +
 				' <div><span>' + marker.position.lat() + ', ' + marker.position.lng() + '</span></div>' 

@@ -30,20 +30,24 @@ httpcodes = {
 	'400':'Bad Request',
 	'403':'Forbidden',
 	'404':'File Not Found',
+	'501': 'Not Implemented',
 }
 # attaches appropriate headers to json responses
 def json_success(data):
 	resp = make_response(json.dumps(data), 200)
+	resp.mimetype ="application/json"
 	resp.headers.extend({})
 	return resp
 
-def json_response(code, headers=None):
-	message = httpcodes.get(str(code),'')
+def json_response(code, message = '', headers=None):
+	if not message:
+		message = httpcodes.get(str(code),'')
 	data = {
 		'message' : message,
 		'code' : code,
 	}
 	resp = make_response(json.dumps(data), code)
+	resp.mimetype ="application/json"
 	resp.headers.extend(headers or {})
 	return resp
 
@@ -51,7 +55,6 @@ def json_response(code, headers=None):
 #TODO: remove for final demo and submission
 @app.after_request
 def after_request(response):
-	logging.info("attaching no cache header")
 	response.headers.add('Cache-Control', 'no-cache, no-store') # http-1.1
 	response.headers.add('Pragma', 'no-cache') # http-1
 	return response
@@ -87,8 +90,7 @@ def maps():
 		logging.info(mapId)
 		aMap = Map.get_by_id(mapId)
 		listOfMaps.append(aMap.to_dict())
-	return json.dumps(listOfMaps)
-	return '200'
+	return json_success(listOfMaps)
 	#return render_template('map.html', maps=getUserMaps(session['userId']))
 
 @app.route('/logout',methods=['GET','POST'])
@@ -267,25 +269,25 @@ def create_map():
 
 def newMap(userid='', name='', public=''):
 	if not (name and public and userid):
-		return '400: bad request'
+		return json_response(code=400);
 	user = Account.get_by_id(int(userid))
 	if user is None:
-		return '400: bad request'
+		return json_response(code=400);
 	if public == 'true':
 		public = True
 	else: # default false if not set
 		public = False
 	for mapid in user.adminMaps:
 			map = Map.get_by_id(int(mapid))
-			if map is not None and map.name == name:
-				return make_response(json.dumps({'message':'A map of that name already exists.', 'code':400}), 400)
+			if map is not None and map.creatorId == int(userid) and map.name == name:
+				return json_response(message="You already have a map of that name", code=400);
 	map = Map(creator=user.name,creatorId=int(userid),name=name,adminIds=[int(userid)], public=public)
 	key = map.put()
 	# add map to user's list of maps
 	user.adminMaps.append(key.integer_id())
 	user.put()
 	#return map json
-	return json.dumps(map.to_dict());
+	return json_success(map.to_dict());
 
 @app.route('/map/admin/<int:mapId>/<string:email>',methods=['GET','POST'])
 def admin_add(mapId,email):
@@ -296,7 +298,7 @@ def admin_add(mapId,email):
 		map = Map.get_by_id(mapId)
 		adminAccount = Account.query(Account.email == email).get()
 		if adminAccount == None:
-			return json.dumps({'error':"No Account with that email exists"})
+			return json_response(message="No Account with that email exists",code=400)
 
 		adminId = adminAccount.key.integer_id()
 		if adminId not in map.adminIds:
@@ -359,9 +361,9 @@ def api_taks(id=-1):
 	if request.method == 'GET':
 		map = Map.get_by_id(id)
 		if map is None:
-			return json.dumps({})
+			return json_success({})
 		else:
-			return map.Get()
+			return json_success(map.Get())
 	if request.method == 'DELETE':
 		map = Map.get_by_id(id)
 		logging.info("DELETE " + str(id))
@@ -378,8 +380,8 @@ def api_taks(id=-1):
 				adminAcct.adminMaps.remove(id)
 				adminAcct.put()
 			map.key.delete()
-			return "Success"
-		return "Map does not exist"
+			return json_response(code=200,message="Success")
+		return json_response(code=400, message="Map does not exist")
 
 
 @app.route('/api/login',methods=['GET','POST'])
@@ -403,8 +405,7 @@ def api_login():
 	    	if query.count() != 0:
 	    		logging.info("Account Already Exists")
 	    		key = account.key
-	    		return json.dumps({"uuid":key.integer_id()
-    			})
+	    		return json_success({"uuid":key.integer_id() })
 
 	    	logging.info("first time logging in")
 	    	session['gplus_id'] = gplus_id
@@ -412,8 +413,7 @@ def api_login():
 	    	account = Account(name=name,email=email,gplusId=gplus_id,accessToken=access_token,loggedIn=True)
 	    	key = account.put()
 	    	session['userId'] = key.integer_id()
-    		return json.dumps({"uuid":key.integer_id()
-    			})
+    		return json_success({"uuid":key.integer_id()})
 
 		if request.method == 'GET':
 			return page_not_found(404)
@@ -427,12 +427,12 @@ def api_map():
 		uid = int(userId)
 		ownMap =Map(creator=userName,creatorId=uid,name=mapName)
 		key = ownMap.put()
-		return json.dumps({"mapId":key.integer_id()}) 
+		return json_success({"mapId":key.integer_id()}) 
 
 	if request.method == 'GET':
 		id = request.args.get("id","")
 		ownMap = Map.get_by_id(int(id))
-		return json.dumps({"creator":ownMap.creator,"name":ownMap.name,"creatorId":ownMap.creatorId,"id":int(id)})
+		return json_success({"creator":ownMap.creator,"name":ownMap.name,"creatorId":ownMap.creatorId,"id":int(id)})
 
 @app.route('/api/tak',methods=['GET','POST'])
 def api_tak():
@@ -450,7 +450,7 @@ def api_tak():
 		tak = Tak(name=name,lat=lat,lng=lng,creator=userName,creatorId=int(userId),mapId=int(mapId))
 		key = tak.put()
 		logging.info("tak added")
-		return json.dumps({"takId":key.integer_id()})
+		return json_success({"takId":key.integer_id()})
 	if request.method == 'GET':
 		return '200'
 
@@ -461,12 +461,11 @@ def api_single_tak(id=-1):
 		return '404: '
 
 	if request.method == 'GET':
-		return json.dumps(tak.to_dict())
+		return json_success(tak.to_dict())
 
 	if request.method == 'DELETE':
-		# TODO: first find what map it's in and delete it from there
-		tak.key.delete()
-		return '200'
+		tak.Delete()
+		return json_response(code=200,message="Success")
 
 	if request.method == 'PUT':
 		name = getValue(request, "name", "")
@@ -502,37 +501,31 @@ def api_single_tak(id=-1):
 @app.route('/api/v1/user/<int:userid>/',methods=['GET'])
 def userData(userid = -1):
 	if userid <= 0:
-		return '400: bad request'
+		return json_response(code=400)
 	user = Account.get_by_id(userid)
 	if user is None:
-		return '400: bad request'
+		return json_response(code=400)
 
 	if request.method == 'GET': # done
 #	GET: returns json object of user
-		return user.Get()
+		return json_success(user.Get())
 #	these require higher security:
 #	PUT: update user info
 #	DELETE: delete user
 
 
 #/api/v1/user/<user id>/maps/
-@app.route('/api/v1/user/<int:userid>/maps/',methods=['GET','POST'])
+@app.route('/api/v1/user/<int:userid>/maps/',methods=['GET'])
 def mapsForUser(userid = -1):
 	if userid <= 0:
-		return '400: bad request'
+		return json_response(code=400)
 	user = Account.get_by_id(userid)
 	if user is None:
-		return '400: bad request'
+		return json_response(code=400)
 
 	if request.method == 'GET': # done
-#		GET: returns json array of information about user's map objects
-		return user.getMaps()
-
-	if request.method == 'POST': #todo
-	# parameters: name
-	# returns json map object created
-	#		POST: used to create maps
-		return '501 Not Implemented'
+		#	GET: returns json array of information about user's map objects
+		return json_success(user.getMaps())
 
 #/api/v1/map/
 @app.route('/api/v1/map/',methods=['POST'])
@@ -546,23 +539,26 @@ def apiCreateMap():
 @app.route('/api/v1/map/<int:mapid>/',methods=['GET','PUT', 'DELETE'])
 def mapData(mapid = -1):
 	if mapid <= 0:
-		return '400: bad request'
+		return json_response(code=400)
 	map = Map.get_by_id(mapid)
 	if map is None:
-		return '400: bad request'
+		return json_response(code=400)
 
 	if request.method == 'GET': # done
 		# returns json map info
-		return map.Get()
+		return json_success(map.Get())
 
 	if request.method == 'DELETE': #todo
 		# DELETE: used to delete a map object and all associated tak objects, parameters: none
-		return '501 Not Implemented'
+		map.Delete()
+		return json_response(code=200,message="Success")
+		
 
 	if request.method == 'PUT': #todo
 		#PUT: 	used to update map in database, parameters: (any map parameter)
 		# return json map object
-		return '501 Not Implemented'
+		return json_response(code=501)
+		
 	
 
 
@@ -570,22 +566,23 @@ def mapData(mapid = -1):
 @app.route('/api/v1/tak/<int:takid>/',methods=['GET','PUT', 'DELETE'])
 def takData(takid = -1):
 	if takid <= 0:
-		return '400: bad request'
+		return json_response(code=400)
 	tak = Tak.get_by_id(takid)
 	if tak is None:
-		return '400: bad request'
+		return json_response(code=400)
 
 	if request.method == 'GET': # done
 		# GET: returns a single json tak information
-		return tak.Get()
+		return json_success(tak.Get())
 
 	if request.method == 'DELETE': #todo
 		# DELETE: deletes that tak
-		return '501 Not Implemented'
+		tak.Delete()
+		return json_response(code=200,message="Success")
 
 	if request.method == 'PUT': #todo
 		# PUT: updates a tak returns that object
-		return '501 Not Implemented'
+		return json_response(code=501)
 
 #/api/v1/tak
 @app.route('/api/v1/tak/',methods=['POST'])
@@ -594,12 +591,12 @@ def newTak():
 	user = session['username']
 	uid = session['userId']
 	if uid is None or user is None:
-		return json.dumps({'message':'403: Forbidden', 'response': 403 }) 
+		return json_response(code=403)
 	name = getValue(request, "name", None)
 	lat = getValue(request, "lat", None)
 	lng = getValue(request, "lng", None)
 	if not ( name and lat and lng ):
-		return json.dumps({'message':'400: Bad Request', 'response': 400 }) 
+		return json_response(code=400)
 	mapid = getValue(request, "mapid", None)
 	map = None
 	if mapid is not None:
@@ -615,7 +612,7 @@ def newTak():
 	key = tak.put()
 	map.takIds.append(key.integer_id())
 	map.put();
-	return tak.Get()
+	return json_success(tak.Get())
 
 
 #updating map/tak attributes

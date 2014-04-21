@@ -21,7 +21,7 @@ class Account(ndb.Model):
 			}
 
 	def Get(self):
-		return json.dumps(self.to_dict())
+		return self.to_dict()
 
 	def getMaps(self):
 		maps = []
@@ -29,5 +29,5 @@ class Account(ndb.Model):
 			map = Map.Map.get_by_id(mapid)
 			if map is not None:
 				maps.append(map.to_dict())
-		return json.dumps(maps)
+		return maps
 

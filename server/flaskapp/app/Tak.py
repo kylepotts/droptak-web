@@ -8,6 +8,7 @@ import logging
 fix_path(os.path.abspath(os.path.dirname(__file__)))
 
 from flask import Flask, render_template, request, jsonify, redirect, url_for, g, session
+import Map
 
 class Tak(ndb.Model):
 	name = ndb.StringProperty() # latitude
@@ -34,7 +35,7 @@ class Tak(ndb.Model):
 
 	# api class controller for GET method
 	def Get(self):
-		return json.dumps(self.to_dict())
+		return self.to_dict()
 
 	# api class controller for PUT method
 	def Put(self):
@@ -43,6 +44,11 @@ class Tak(ndb.Model):
 
 	# api class controller for DELETE method
 	def Delete(self):
+		map = Map.Map.get_by_id(self.mapId)
+		if map is not None:
+			map.takIds.remove(self.key.integer_id())
+			map.put()
+		self.key.delete()
 		return
 
 	# api class controller for POST method

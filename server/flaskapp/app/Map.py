@@ -41,7 +41,7 @@ class Map(ndb.Model):
 
 	# api class controller for GET method
 	def Get(self):
-		return json.dumps(self.to_dict())
+		return self.to_dict()
 
 	# api class controller for PUT method
 	def Put(self):
@@ -50,6 +50,17 @@ class Map(ndb.Model):
 
 	# api class controller for DELETE method
 	def Delete(self):
+		# remove taks in map
+		for takid in self.takIds:
+			tak = Tak.get_by_id(int(takid))
+			if tak is not None:
+				tak.key.delete()
+		for mid in self.adminIds:
+			admin = User.Account.get_by_id(mid)
+			if admin is not None:
+				admin.adminMaps.remove(self.key.integer_id())
+				admin.put()
+		self.key.delete()
 		return
 
 	# api class controller for POST method
