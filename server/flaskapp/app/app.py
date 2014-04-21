@@ -570,6 +570,39 @@ def mapData(mapid = -1):
 		newOwner = request.args.get("owner","")
 		map.Put(newName=newName,newIsPublic=newIsPublic,newOwner=newOwner)
 		return json_response(code=200,message="Success")
+
+@app.route('/api/v1/map/<int:mapid>/admin/<int:userid>/',methods=['POST','DELETE'])
+def mapAdmin(mapid=-1,userid=-1):
+	if mapid <= 0:
+		return json_response(code=400)
+	if userid <= 0:
+		return json_response(code=400)
+
+	map = Map.get_by_id(mapid)
+
+	if map is None:
+		return json_response(code=400)
+
+	adminAccount = Account.get_by_id(userid)
+
+	if adminAccount is None:
+		return json_response(code=400)
+
+	if request.method == 'POST':
+		logging.info("post")
+		if userid not in map.adminIds:
+			map.adminIds.append(adminId)
+			map.put()
+		if mapid not in adminAccount.adminMaps:
+			adminAccount.adminMaps.append(mapId)
+			adminAccount.put()
+
+
+
+
+
+
+	return json_response(code=200,message="Success")
 		
 # ********************************************************
 #					Taks
