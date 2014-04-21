@@ -45,8 +45,25 @@ class Map(ndb.Model):
 		return self.to_dict()
 
 	# api class controller for PUT method
-	def Put(self):
+	def Put(self, newName="", newIsPublic="",newOwner=""):
+		if newName != "":
+			self.name = newName
 
+		if newIsPublic != "":
+			isPublic = False
+			if newIsPublic == "true":
+				isPublic = True
+			elif newIsPublic == "false":
+				isPublic = False
+			logging.info("isPublic="+str(isPublic))
+			self.public = isPublic
+
+		if newOwner != "":
+			newId = int(newOwner)
+			newOwnerAccount = User.Account.get_by_id(newId)
+			self.creator = newOwnerAccount.name
+			self.creatorId = newOwnerAccount.key().integer_id()
+		self.put()
 		return
 
 	# api class controller for DELETE method

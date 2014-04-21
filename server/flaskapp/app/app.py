@@ -71,7 +71,6 @@ def index():
 		if account is None: # prevent interal error
 			return render_template('index.html')
 		lin = account.loggedIn
-		logging.info("lin="+str(lin))
 		if lin == False:
 			return render_template('index.html')
 		if lin == True:
@@ -534,7 +533,11 @@ def mapData(mapid = -1):
 	if request.method == 'PUT': #todo
 		#PUT: 	used to update map in database, parameters: (any map parameter)
 		# return json map object
-		return json_response(code=501)
+		newName = request.args.get("name","")
+		newIsPublic = request.args.get("isPublic","")
+		newOwner = request.args.get("owner","")
+		map.Put(newName=newName,newIsPublic=newIsPublic,newOwner=newOwner)
+		return json_response(code=200,message="Success")
 		
 # ********************************************************
 #					Taks
