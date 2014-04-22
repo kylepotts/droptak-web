@@ -677,6 +677,32 @@ def takData(takid = -1):
 # ********************************************************
 #					Search
 # ********************************************************
+@app.route('/api/v1/search/', methods=["GET"])
+def apiSearch():
+	queryType = request.args.get("query_type","")
+	query = request.args.get("query","")
+	maps = []
+	mapsResult = []
+	resp = []
+	result = {}
+	result["result_type"] = "map"
+	if queryType == "" or query == "":
+		return json_response(code=400)
+
+	logging.info(queryType)
+	if queryType == "mapName" or queryType == "location" or queryType == "keyword":
+		if queryType == "mapName":
+			mapQuery = Map.query(Map.public == True)
+			for map in mapQuery:
+				if(query.lower() == map.name.lower()):
+					mapsResult.append(map.to_dict())
+		result["result"] = mapsResult
+		resp.append(result)
+		return json_success(resp)
+		
+
+		return json_response(code=200)
+
 
 
 
