@@ -689,7 +689,7 @@ def apiSearch():
 	if queryType == "" or query == "":
 		return json_response(code=400)
 
-	logging.info(queryType)
+
 	if queryType == "mapName" or queryType == "location" or queryType == "keyword":
 		if queryType == "mapName":
 			mapQuery = Map.query(Map.public == True)
@@ -699,9 +699,6 @@ def apiSearch():
 		result["result"] = mapsResult
 		resp.append(result)
 		return json_success(resp)
-		
-
-		return json_response(code=200)
 
 
 # ********************************************************
