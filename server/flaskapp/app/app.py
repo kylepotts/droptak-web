@@ -704,6 +704,53 @@ def apiSearch():
 		return json_response(code=200)
 
 
+# ********************************************************
+#					Metadata
+# ********************************************************
+def _decode_list(data):
+    rv = []
+    for item in data:
+        if isinstance(item, unicode):
+            item = item.encode('utf-8')
+        elif isinstance(item, list):
+            item = _decode_list(item)
+        elif isinstance(item, dict):
+            item = _decode_dict(item)
+        rv.append(item)
+    return rv
+
+def _decode_dict(data):
+    rv = {}
+    for key, value in data.iteritems():
+        if isinstance(key, unicode):
+            key = key.encode('utf-8')
+        if isinstance(value, unicode):
+            value = value.encode('utf-8')
+        elif isinstance(value, list):
+            value = _decode_list(value)
+        elif isinstance(value, dict):
+            value = _decode_dict(value)
+        rv[key] = value
+    return rv
+@app.route('/api/v1/tak/<int:takid>/metadata/',methods=['POST'])
+def postMetadata(takid = -1):
+	if takid <= 0:
+		return json_response(code=400)
+	tak = Tak.get_by_id(takid)
+	if tak is None:
+		return json_response(code=400)
+	try:
+		logging.info("json")
+		data = json.loads(request.data, object_hook=_decode_dict)
+		logging.info(data)
+		for datum in data:
+			# datum is a metadata object 
+			logging.info(datum['key'])
+			logging.info(datum['value'])
+		return json_success(data)
+	except:
+		return json_response(code=400)
+	
 
 
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
