@@ -666,7 +666,12 @@ def takData(takid = -1):
 
 	if request.method == 'PUT': #todo
 		# PUT: updates a tak returns that object
-		return json_response(code=501)
+		newName = request.args.get("name","")
+		newLat = request.args.get("lat","")
+		newLng = request.args.get("lng","")
+		logging.info(newLat)
+		tak.Put(newName=newName,newLat=newLat,newLng=newLng)
+		return json_response(code=200)
 
 
 

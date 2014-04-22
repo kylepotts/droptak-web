@@ -38,8 +38,16 @@ class Tak(ndb.Model):
 		return self.to_dict()
 
 	# api class controller for PUT method
-	def Put(self):
+	def Put(self,newName="", newLat="", newLng=""):
+		if newName != "":
+			self.name = newName
+		if newLat != "":
+			self.lat = newLat
 
+		if newLng != "":
+			self.lng = newLng
+
+		self.put()
 		return
 
 	# api class controller for DELETE method
