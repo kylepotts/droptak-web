@@ -668,6 +668,21 @@ def takData(takid = -1):
 		# PUT: updates a tak returns that object
 		return json_response(code=501)
 
+# ********************************************************
+#					Metadata
+# ********************************************************
+
+@app.route('/api/v1/tak/<int:takid>/metadata/',methods=['POST'])
+def postMetadata(takid = -1):
+	if takid <= 0:
+		return json_response(code=400)
+	tak = Tak.get_by_id(takid)
+	if tak is None:
+		return json_response(code=400)
+
+	content = request.json['content']
+	console.log("content " + content)
+	return json_success(content)
 
 
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
