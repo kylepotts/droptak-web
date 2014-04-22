@@ -584,10 +584,10 @@ def mapAdmin(mapid=-1,email=""):
 		return json_response(code=400)
 
 	adminAccount = Account.query(Account.email == email).get()
-	userid = adminAccount.key.integer_id()
 
 	if adminAccount is None:
 		return json_response(code=400)
+	userid = adminAccount.key.integer_id()
 
 	if request.method == 'POST':
 		if userid not in map.adminIds:
@@ -596,7 +596,7 @@ def mapAdmin(mapid=-1,email=""):
 		if mapid not in adminAccount.adminMaps:
 			adminAccount.adminMaps.append(mapid)
 			adminAccount.put()
-			return json_response(code=200,message="Success")
+		return json_success(adminAccount.Get())
 
 	if request.method == 'DELETE':
 		logging.info("delete")
