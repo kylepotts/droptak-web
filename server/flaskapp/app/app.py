@@ -593,9 +593,14 @@ def mapAdmin(mapid=-1,email=""):
 		if userid not in map.adminIds:
 			map.adminIds.append(userid)
 			map.put()
+
+		else:
+			return json_success(adminAccount.Get())
+
 		if mapid not in adminAccount.adminMaps:
 			adminAccount.adminMaps.append(mapid)
 			adminAccount.put()
+			
 		return json_success(adminAccount.Get())
 
 	if request.method == 'DELETE':
