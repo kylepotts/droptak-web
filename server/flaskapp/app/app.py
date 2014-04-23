@@ -203,7 +203,7 @@ def create_tak():
 		key = tak.put()
 		map.takIds.append(int(key.id()))
 		map.put();
-		return redirect(url_for('show_taks', id=key.id()))
+		return json_success(tak.to_dict())
 
 	if request.method == 'GET': 
 		# return list of maps too for selecting
@@ -213,7 +213,7 @@ def create_tak():
 			ownMap = Map.get_by_id(mapid)
 			listOfMaps.append(ownMap)
 
-		return render_template('create_tak.html', maps=listOfMaps)
+		return render_template('create_tak.html', uid=session['userId'])
 
 @app.route('/delete/', methods=['DELETE'])
 def delete_tak(mapid=-1, takid=-1):

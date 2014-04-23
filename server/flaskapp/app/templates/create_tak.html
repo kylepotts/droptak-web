@@ -1,84 +1,92 @@
 {% extends 'base.html' %}
 {% block head %}
-    {{ super() }}
-    <link href="/static/css/taks.css" rel="stylesheet">
-    <script src="/static/js/maptak.js"></script>
-    <script>
-    var tmarker;
-    var old_init = initialize; // super call to initialize
-    initialize = function(){
-      old_init();
-      
-      google.maps.event.addListener(map, 'click', function(event) {
-        if(tmarker !== undefined){ tmarker.setMap(null);}
-        tmarker = new google.maps.Marker({
-            position: event.latLng,
-            map: map
-          });
-        $('#lat').val(event.latLng.lat());
-        $('#lng').val(event.latLng.lng());
-      });
-    }
-   
-  </script>
+		{{ super() }}
+		<link href="/static/css/taks.css" rel="stylesheet">
+		<script src="/static/js/vendor/knockout-3.1.0.js"></script>
+		<script src="/static/js/vendor/knockout.validation.min.js"></script>
+		<script src="/static/js/maptak.js"></script>
+		<script>var uid = {{uid}}</script>
+		<script src="/static/js/create_tak.js"></script>
+		<script>
+		var tmarker;
+		var old_init = initialize; // super call to initialize
+		initialize = function(){
+			old_init();
+			
+			google.maps.event.addListener(map, 'click', function(event) {
+				if(tmarker !== undefined){ tmarker.setMap(null);}
+				tmarker = new google.maps.Marker({
+						position: event.latLng,
+						map: map
+					});
+				cTak().lat(event.latLng.lat() );
+				cTak().lng(event.latLng.lng() );
+			});
+		}
+	 
+	</script>
 {% endblock %}
 	
 {% block content %}
 
 <div class="jumbotron">
-      <div class="container">
-        <div id="map-canvas" style="height:500px; width:100%"></div>
+			<div class="container">
+				<div id="map-canvas" style="height:500px; width:100%"></div>
 
-      <form class="form-horizontal" id='create_tak' role="form" action="" target="_self" method="post">
-		    <div class="form-group">
-        <label for="title" class="col-sm-2 control-label">Title</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="title" name="title" placeholder="Enter Title">
-        </div>
-      </div>
-        <div class="form-group">
-		   	<label for="lat" class="col-sm-2 control-label">Latitude</label>
-		    <div class="col-sm-10">
-		      <input type="number" class="form-control" id="lat" name="lat" step="any" placeholder="Enter Latitude" required aria-required=”true”>
-		    </div>
-		  </div>
-		  <div class="form-group">
-		   	<label for="lng" class="col-sm-2 control-label">Longitude</label>
-		    <div class="col-sm-10">
-		      <input type="number" class="form-control" id="lng" name="lng" step="any" placeholder="Enter Longitude"  required aria-required=”true”>
-		    </div>
-		  </div>
-      <div class="form-group">
-        <label for="mapId" class="col-sm-2 control-label">Map</label>
-        <div class="col-sm-10">
-          <select class="form-control" name="mapId" id="mapId">
-            <option value='-1'>New Map</option>
-          {% for map in maps %}
-            <option value="{{map.key.id()}}">{{map.name}}</option>
-          {% endfor %}
-          </select>
-          </div>
-      </div>
-		  <div class="form-group">
-		  	<div class="col-sm-offset-2 col-sm-10">
-     			<button type="submit" class="btn btn-primary">Submit</button>
-  			</div>
-    	</div>
+			<form class="form-horizontal" id='create_tak' role="form" data-bind="submit: submit">
+				<div class="form-group">
+				<label for="title" class="col-sm-2 control-label">Title</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" data-bind="value: currenttak().name, valueUpdate: 'afterkeydown'" id="title" name="title">
+				</div>
+			</div>
+				<div class="form-group">
+				<label for="lat" class="col-sm-2 control-label">Latitude</label>
+				<div class="col-sm-10">
+					<input type="number" class="form-control" id="lat" name="lat" data-bind="value: currenttak().lat,  valueUpdate: 'afterkeydown'" step="any" placeholder="Enter Latitude">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="lng" class="col-sm-2 control-label">Longitude</label>
+				<div class="col-sm-10">
+					<input type="number" class="form-control" id="lng" data-bind="value: currenttak().lng, valueUpdate: 'afterkeydown' "name="lng" step="any" placeholder="Enter Longitude">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="mapId" class="col-sm-2 control-label">Map</label>
+				<div class="col-sm-10">
+					<select class="form-control" name="mapId" id="mapId" data-bind="options: maps,
+											 optionsText: 'name',
+											 value: currenttak().map"></select>
+					</div>
+			</div>
+			<div class="form-group" data-bind="visible: currenttak().map().id() == -1">
+				<label for="newMapName" class="col-sm-offset-2 col-sm-2 control-label">Map Name</label>
+				<div class="col-sm-5">
+					<input type="text" class="form-control" data-bind="value: newMapName, valueUpdate: 'afterkeydown'">
+					</div>
+					<div class="col-sm-3">
+				 <div class="btn-group" data-toggle="buttons" style="text-align: left; margin-left: 0;">
+						<label class="btn btn-default" data-bind="click: function() { isPublic('1') }, css: { active: isPublic() == '1' }">
+							<input type="radio" name="options" id="option1" value="1" > Public
+						</label>
+						<label class="btn btn-default" data-bind="click: function() { isPublic('0') }, css: { active: isPublic() == '0' }">
+							<input type="radio" name="options" id="option2" value="0"> Private
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</div>
+			</div>
 		</form>
-      </div>
-    </div>
+			</div>
+		</div>
 {% endblock %}
 
 {% block javascript %}
 {{ super() }}
-<script>
-$( "#create_tak" ).submit(function( event ) {
-  if($('#mapId').val() < 0){
-     alert("<New map> from <create_tak> is not implemented yet. Create a map first and then select it from this list.");
-     event.preventDefault();
-  }
- 
-});
-</script>
 
 {% endblock javascript %}
