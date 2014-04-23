@@ -13,6 +13,7 @@ from oauth2client.client import FlowExchangeError
 from User import Account 
 from Tak import Tak 
 from Map import Map
+from Metadata import Metadata
 
 # this fix allows us to import modues/packages found in 'lib'
 fix_path(os.path.abspath(os.path.dirname(__file__)))
@@ -736,10 +737,12 @@ def _decode_dict(data):
     return rv
 @app.route('/api/v1/tak/<int:takid>/metadata/',methods=['POST'])
 def postMetadata(takid = -1):
+	mList = []
 	if takid <= 0:
 		return json_response(code=400)
 	tak = Tak.get_by_id(takid)
 	if tak is None:
+		logging.info("tak is None")
 		return json_response(code=400)
 	try:
 		logging.info("json")
@@ -749,8 +752,15 @@ def postMetadata(takid = -1):
 			# datum is a metadata object 
 			logging.info(datum['key'])
 			logging.info(datum['value'])
+			metadata = Metadata(key=datum['key'],value=datum['value'])
+			mList.append(metadata)
+		logging.info(mList)
+		tak.metadata = mList
+		tak.put()
+
 		return json_success(data)
-	except:
+	except Exception as e:
+		logging.info(e)
 		return json_response(code=400)
 	
 

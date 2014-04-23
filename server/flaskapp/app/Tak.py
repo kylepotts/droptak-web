@@ -9,6 +9,7 @@ fix_path(os.path.abspath(os.path.dirname(__file__)))
 
 from flask import Flask, render_template, request, jsonify, redirect, url_for, g, session
 import Map
+import Metadata
 
 class Tak(ndb.Model):
 	name = ndb.StringProperty() # latitude
@@ -17,9 +18,12 @@ class Tak(ndb.Model):
 	creator = ndb.StringProperty()
 	creatorId = ndb.IntegerProperty()
 	mapId = ndb.IntegerProperty()
-	metadata = ndb.JsonProperty()
+	metadata = ndb.StructuredProperty(Metadata.Metadata,repeated=True)
 
 	def to_dict(self):
+		data = []
+		for md in self.metadata:
+			data.append(md.to_dict())
 		return {
 			'name' : self.name,
 			'id': self.key.id(),
@@ -30,7 +34,7 @@ class Tak(ndb.Model):
 				'id': self.creatorId,
 			},
 			'mapid': self.mapId,
-			'metadata' : self.metadata,
+			'metadata' : data,
 			}
 
 	# api class controller for GET method
