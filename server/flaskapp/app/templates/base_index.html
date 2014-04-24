@@ -12,7 +12,6 @@
   <link href="/static/css/cover.css" rel="stylesheet">
   <script src="/static/js/vendor/jquery.min.js"></script>
   <script src="/static/js/login.js"></script>
-
   <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -22,7 +21,6 @@
   <style id="holderjs-style" type="text/css"></style>
   {% endblock %}
 </head>
-
 <body>
   <div class="jumbotron">
     <div id="staticNavBar" class="navbar navbar-default navbar-fixed-top navbar-custom" role="navigation">
@@ -67,16 +65,11 @@
         </div>
       </div>
     </div>
-
     {% block content %} {% endblock %}
-
   </div>
   <!-- /container -->
-
   {% block javascript %}
-
   <script src="/static/js/vendor/bootstrap.min.js"></script>
-
   <script>
     // in mobile view, collapses menu
     function hideMenu() {
@@ -85,10 +78,5 @@
     }
   </script>
   {% endblock javascript %}
-
-
-
-
 </body>
-
 </html>
