@@ -31,4 +31,12 @@ class Account(ndb.Model):
 				maps.append(map.to_dict())
 		return maps
 
+	def getMapsInfo(self):
+		maps = []
+		for mapid in self.adminMaps:
+			map = Map.Map.get_by_id(mapid)
+			if map is not None:
+				maps.append(map.getInfo())
+		return maps
+
 

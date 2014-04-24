@@ -534,6 +534,18 @@ def mapsForUser(userid = -1):
 		#	GET: returns json array of information about user's map objects
 		return json_success(user.getMaps())
 
+@app.route('/api/v1/user/<int:userid>/maps/info/',methods=['GET'])
+def mapInfoForUser(userid = -1):
+	if userid <= 0:
+		return json_response(code=400)
+	user = Account.get_by_id(userid)
+	if user is None:
+		return json_response(code=400)
+
+	if request.method == 'GET': # done
+		#	GET: returns json array of information about user's map objects
+		return json_success(user.getMapsInfo())
+
 # ********************************************************
 #					Maps
 # ********************************************************

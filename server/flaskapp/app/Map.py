@@ -38,6 +38,13 @@ class Map(ndb.Model):
 			'admins': admins,
 			}
 
+	def getInfo(self):
+		return {
+			'name' : self.name,
+			'id': self.key.id(),
+			'public': str(self.public),
+			}
+
 	# api class controller for GET method
 	def Get(self):
 		return self.to_dict()
