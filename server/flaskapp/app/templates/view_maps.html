@@ -70,7 +70,7 @@
 				
 				<div>
 					<h4 class="panel-title">
-						<span data-bind="text: name()? name : 'No Name'"></span>
+						<span data-bind="text: name()? name : 'No Name', style: { fontStyle: $data.isPublic() == 'True' ? '': 'italic' }"></span>
 					</h4>
 				</div>
 			</div>

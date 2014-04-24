@@ -93,6 +93,7 @@ function Map() {
     var self = this;
     self.name = ko.observable();
     self.id = ko.observable();
+    self.isPublic = ko.observable();
     self.taks = ko.observableArray();
 
     self.addTak = function () {
@@ -164,6 +165,7 @@ function MapTakModel() {
                         var map = self.addMap();
                         map.name(obj.name);
                         map.id(obj.id);
+                        map.isPublic(obj.public);
                         // reset form and hide it
                         self.form.name(undefined);
                         self.form.name.isModified(false);
@@ -241,6 +243,7 @@ function MapTakModel() {
             var local = self.addMap();
             local.name(data[i].name);
             local.id(data[i].id)
+            local.isPublic(data[i].public);
             var taks = data[i].taks;
             for (var j = 0; j < taks.length; j++) {
                     var tak = local.addTak();
