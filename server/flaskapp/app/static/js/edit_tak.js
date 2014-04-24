@@ -1,10 +1,44 @@
+ko.validation.registerExtenders();
+/* setup ko validation */
+ko.validation.init({
+    decorateInputElement: true,
+    errorElementClass: 'invalid',
+    insertMessages: true
 
+});
+/*
+TODO: combine all these models later on
+*/
+function Metadata(){
+	var self = this;
+	self.key = ko.observable().extend({
+		required: true
+	});
+	self.value = ko.observable().extend({
+		required: true
+	});
+}
 function Tak () {
 	var self = this;
-	self.name = ko.observable();
-	self.lat = ko.observable();
-	self.lng = ko.observable();
+	self.name = ko.observable().extend({
+		required: true
+	});
+	self.lat = ko.observable().extend({
+		required: true
+	});
+	self.lng = ko.observable().extend({
+		required: true
+	});
+	self.metadata = ko.observableArray();
 	self.creator = ko.observable();
+	self.createMetadata = ko.observable(new Metadata());
+	
+	self.addMetadata = function(){
+		var data = new Metadata();
+		self.metadata.push(data);
+		return data;
+	};
+
 }
 function EditTakModel(){
 	var self = this;
@@ -35,6 +69,12 @@ function EditTakModel(){
 	    tak.lat(data.lat);
 	    tak.lng(data.lng);
 	    tak.creator(data.creator.name);
+	    for(var i = 0; i < data.metadata.length; i++){
+	    	console.log(data.metadata[i]);
+	    	var meta = tak.addMetadata();
+	    	meta.key(data.metadata[i].key);
+	    	meta.value(data.metadata[i].value);
+	    }
 		addMarker(data.lat, data.lng, {name: data.name});
 	    self.tak(tak);
 	});
