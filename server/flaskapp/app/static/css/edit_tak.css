@@ -14,3 +14,20 @@ textarea.invalid{
     border-color:hsl(0, 50%, 50%);
     background:hsl(0, 50%, 90%);
 }
+.emptyloading{
+	width: 32px;
+	height: 32px;
+	text-align: right;
+	margin-right: 0;
+	float: right;
+}
+.loading{
+	width: 32px;
+	height: 32px;
+	background-image: url('/static/img/indicator.gif');
+	background-size: cover;
+	background-repeat: no-repeat;
+	text-align: right;
+	margin-right: 0;
+	float: right;
+}

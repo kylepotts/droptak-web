@@ -17,6 +17,7 @@ function Metadata(){
 	self.value = ko.observable().extend({
 		required: true
 	});
+	self.loading = ko.observable(false);
 }
 function Tak () {
 	var self = this;
@@ -38,19 +39,20 @@ function Tak () {
 		return data;
 	};
 	self.removeMetadata = function(data){
-		/**
-		*	also send delete to server
-		*/
-		console.log(encodeURIComponent(data.key()));
 		var key = encodeURIComponent(data.key());
+		data.loading(true);
 		$.ajax({
 		    url: '/api/v1/tak/' + currentTakID + '/metadata/' + key + '/',
 		    type: 'DELETE',
 		    success: function(response) {
 		        self.metadata.remove(data);
 		    },
+		    error: function(response){
+		    	alert("Error submitting: " + response.responseJSON.message);
+		    },
 		    complete: function(response){
 		    	console.log(response.responseJSON);
+		    	data.loading(false);
 		    }
 		});
 	}
@@ -69,13 +71,13 @@ function EditTakModel(){
 		*/
 		console.log("Button press");
 		if(self.createMetadata.isValid()){
+			self.createMetadata().loading(true);
 			var array = new Array();
 			var obj = {
 				"key": self.createMetadata().key(),
 				"value": self.createMetadata().value()
 			}
 			array.push(obj);
-			console.log(array);
 			console.log(JSON.stringify(array));
 
 			$.ajax({
@@ -86,22 +88,26 @@ function EditTakModel(){
 		        async: true,
 		        data: JSON.stringify(array),
 		        success: function (response) {
-		        	 var obj = response; // reponse is an object so no need to parse reponse
-                        console.log(obj)
+		        	var obj = response; // reponse is an object so no need to parse reponse
+                    console.log(obj)
+
+					var data = self.tak().addMetadata();
+					data.key(self.createMetadata().key());
+					data.value(self.createMetadata().value());
+					self.createMetadata().key(undefined);
+					self.createMetadata().value(undefined);
+					self.createMetadata().value.isModified(false);
+					self.createMetadata().key.isModified(false);
 		        	},
 		        error: function(response){
 		        	console.log(response.responseJSON);
-                        alert("Error submitting: " + response.responseJSON.message);
+                    alert("Error submitting: " + response.responseJSON.message);
+		        },
+		        complete: function(response){
+		        	self.createMetadata().loading(false);
 		        }
 		    });
-			console.log("--valid");
-			var data = self.tak().addMetadata();
-			data.key(self.createMetadata().key());
-			data.value(self.createMetadata().value());
-			self.createMetadata().key(undefined);
-			self.createMetadata().value(undefined);
-			self.createMetadata().value.isModified(false);
-			self.createMetadata().key.isModified(false);
+			
 		}
 
 	}
