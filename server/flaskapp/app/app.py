@@ -624,6 +624,9 @@ def mapAdmin(mapid=-1,email=""):
 		if mapid not in adminAccount.adminMaps:
 			return json_response(code=400)
 
+		if adminAccount.key.integer_id() == map.creatorId:
+			return json_response(code=400)
+
 		map.adminIds.remove(userid)
 		adminAccount.adminMaps.remove(mapid)
 		map.put()
