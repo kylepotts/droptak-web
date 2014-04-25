@@ -5,6 +5,7 @@ from google.appengine.ext.db.metadata import Kind
 import logging
 import random
 import string
+import urllib
 import httplib2
 import uuid
 from oauth2client.client import AccessTokenRefreshError
@@ -782,7 +783,28 @@ def postMetadata(takid = -1):
 		logging.info(e)
 		return json_response(code=400)
 	
-
+@app.route('/api/v1/tak/<int:takid>/metadata/<key>/',methods=['DELETE'])
+def postNewMetadata(takid = -1, key = ''):
+	if not key or takid <= 0:
+		return json_response(code=400)
+	tak = Tak.get_by_id(takid)
+	if tak is None:
+		logging.info("tak is None")
+		return json_response(code=400)
+	try:
+		logging.info(key)
+		found = bool(0)
+		for mdata in tak.metadata:
+			if mdata.key == key:
+				tak.metadata.remove(mdata)
+				found = bool(1)
+				break
+		tak.put()
+		return json_response(code=200)
+	except Exception as e:
+		logging.info(e)
+		return json_response(code=400)
+	
 
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 #

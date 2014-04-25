@@ -41,8 +41,19 @@ function Tak () {
 		/**
 		*	also send delete to server
 		*/
-		 self.metadata.remove(data);
-	};
+		console.log(encodeURIComponent(data.key()));
+		var key = encodeURIComponent(data.key());
+		$.ajax({
+		    url: '/api/v1/tak/' + currentTakID + '/metadata/' + key + '/',
+		    type: 'DELETE',
+		    success: function(response) {
+		        self.metadata.remove(data);
+		    },
+		    complete: function(response){
+		    	console.log(response.responseJSON);
+		    }
+		});
+	}
 
 }
 function EditTakModel(){
