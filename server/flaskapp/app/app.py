@@ -751,7 +751,8 @@ def _decode_dict(data):
             value = _decode_dict(value)
         rv[key] = value
     return rv
-@app.route('/api/v1/tak/<int:takid>/metadata/',methods=['POST'])
+
+@app.route('/api/v1/tak/<int:takid>/metadata/',methods=['POST', 'PUT'])
 def postMetadata(takid = -1):
 	if takid <= 0:
 		return json_response(code=400)
@@ -759,28 +760,43 @@ def postMetadata(takid = -1):
 	if tak is None:
 		logging.info("tak is None")
 		return json_response(code=400)
-	try:
-		logging.info("json")
-		data = json.loads(request.data, object_hook=_decode_dict)
-		logging.info(data)
-		for datum in data:
-			# datum is a metadata object 
-			logging.info(datum['key'])
-			logging.info(datum['value'])
-			found = bool(0)
-			for mdata in tak.metadata:
-				if datum['key'] == mdata.key:
-					mdata.value = datum['value']
-					found = bool(1)
-					break
-			if not found:
-				metadata = Metadata(key=datum['key'],value=datum['value'])
-				tak.metadata.append(metadata)
+	key = getValue(request, "key", "")
+	value = getValue(request, "value", "")
+	if key != '' and value != '':
+		for mdata in tak.metadata:
+			if mdata.key == key:
+				mdata.value = value
+				tak.put()
+				return json_response(code = 200)
+		metadata = Metadata(key=key,value=value)
+		tak.metadata.append(metadata)
 		tak.put()
+		return json_response(code = 200)
+	else:
+		if request.method == 'POST':
+			try:
+				logging.info("json")
+				data = json.loads(request.data, object_hook=_decode_dict)
+				logging.info(data)
+				for datum in data:
+					# datum is a metadata object 
+					logging.info(datum['key'])
+					logging.info(datum['value'])
+					found = bool(0)
+					for mdata in tak.metadata:
+						if datum['key'] == mdata.key:
+							mdata.value = datum['value']
+							found = bool(1)
+							break
+					if not found:
+						metadata = Metadata(key=datum['key'],value=datum['value'])
+						tak.metadata.append(metadata)
+				tak.put()
 
-		return json_success(data)
-	except Exception as e:
-		logging.info(e)
+				return json_success(data)
+			except Exception as e:
+				logging.info(e)
+				return json_response(code=400)
 		return json_response(code=400)
 	
 @app.route('/api/v1/tak/<int:takid>/metadata/<key>/',methods=['DELETE'])
