@@ -243,11 +243,16 @@ def taks(mapId=-1, str=''):
 	
 @app.route('/taks/<int:id>', methods = ['GET', 'POST'])
 def show_taks(id=-1):
+	uid = -1
+	try:
+		uid = session['userId']
+	except Exception as e:
+		logging.info('no session id on /tak/<id>')
 	if request.method == 'GET':
 		if id >= 0:
 			tak = Tak.get_by_id(id)
 			if tak is not None:
-				return tak.view()
+				return tak.view(uid = uid)
 	return redirect('/app')
 
 @app.route('/maps/new', methods=['GET','POST'])

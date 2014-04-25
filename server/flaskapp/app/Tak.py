@@ -71,6 +71,6 @@ class Tak(ndb.Model):
 		self.name = name
 		return
 
-	def view(self):
-		return render_template('edit_tak.html',id=self.key.id())
+	def view(self, uid = -1):
+		return render_template('edit_tak.html',id=uid, takid=self.key.id())
 
