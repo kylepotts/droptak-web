@@ -6,3 +6,11 @@ td {
 	text-align: left;
 	font-weight: none;
 }
+input.invalid{
+    border-color:hsl(0, 50%, 50%);
+    background:hsl(0, 50%, 90%);
+}
+textarea.invalid{
+    border-color:hsl(0, 50%, 50%);
+    background:hsl(0, 50%, 90%);
+}

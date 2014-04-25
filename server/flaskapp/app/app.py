@@ -749,7 +749,6 @@ def _decode_dict(data):
     return rv
 @app.route('/api/v1/tak/<int:takid>/metadata/',methods=['POST'])
 def postMetadata(takid = -1):
-	mList = []
 	if takid <= 0:
 		return json_response(code=400)
 	tak = Tak.get_by_id(takid)
@@ -764,10 +763,15 @@ def postMetadata(takid = -1):
 			# datum is a metadata object 
 			logging.info(datum['key'])
 			logging.info(datum['value'])
-			metadata = Metadata(key=datum['key'],value=datum['value'])
-			mList.append(metadata)
-		logging.info(mList)
-		tak.metadata = mList
+			found = bool(0)
+			for mdata in tak.metadata:
+				if datum['key'] == mdata.key:
+					mdata.value = datum['value']
+					found = bool(1)
+					break
+			if not found:
+				metadata = Metadata(key=datum['key'],value=datum['value'])
+				tak.metadata.append(metadata)
 		tak.put()
 
 		return json_success(data)

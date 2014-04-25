@@ -3,7 +3,7 @@ ko.validation.registerExtenders();
 ko.validation.init({
     decorateInputElement: true,
     errorElementClass: 'invalid',
-    insertMessages: true
+    insertMessages: false
 
 });
 /*
@@ -31,12 +31,17 @@ function Tak () {
 	});
 	self.metadata = ko.observableArray();
 	self.creator = ko.observable();
-	self.createMetadata = ko.observable(new Metadata());
 	
 	self.addMetadata = function(){
 		var data = new Metadata();
 		self.metadata.push(data);
 		return data;
+	};
+	self.removeMetadata = function(data){
+		/**
+		*	also send delete to server
+		*/
+		 self.metadata.remove(data);
 	};
 
 }
@@ -45,6 +50,51 @@ function EditTakModel(){
 	self.tak =  ko.observable(new Tak());
 	self.oldname;
 	self.edit = ko.observable(false);
+	self.createMetadata = ko.validatedObservable(new Metadata());
+
+	self.pushMetadata = function(){
+		/**
+		* adds metadata by sending to server
+		*/
+		console.log("Button press");
+		if(self.createMetadata.isValid()){
+			var array = new Array();
+			var obj = {
+				"key": self.createMetadata().key(),
+				"value": self.createMetadata().value()
+			}
+			array.push(obj);
+			console.log(array);
+			console.log(JSON.stringify(array));
+
+			$.ajax({
+		        type: "POST",
+		        url: '/api/v1/tak/' + currentTakID + '/metadata/',
+		        dataType: 'json',
+		        contentType : 'application/json',
+		        async: true,
+		        data: JSON.stringify(array),
+		        success: function (response) {
+		        	 var obj = response; // reponse is an object so no need to parse reponse
+                        console.log(obj)
+		        	},
+		        error: function(response){
+		        	console.log(response.responseJSON);
+                        alert("Error submitting: " + response.responseJSON.message);
+		        }
+		    });
+			console.log("--valid");
+			var data = self.tak().addMetadata();
+			data.key(self.createMetadata().key());
+			data.value(self.createMetadata().value());
+			self.createMetadata().key(undefined);
+			self.createMetadata().value(undefined);
+			self.createMetadata().value.isModified(false);
+			self.createMetadata().key.isModified(false);
+		}
+
+	}
+
 	self.cancel = function(){
 		self.tak().name(self.oldname);
 		self.edit(!self.edit());
