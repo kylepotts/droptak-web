@@ -113,6 +113,7 @@ function MapTakModel() {
     var self = this;
     self.maps = ko.observableArray();
     self.selected = ko.observable();
+    self.loading = ko.observable(true);
     self.form = new FormMap();
     self.modalSubmit = ko.observable(false);
     self.adminForm = new addAdminForm();
@@ -190,11 +191,13 @@ function MapTakModel() {
         // check if form is valid
         console.log("addAdmin mapId=" + self.selected().id())
         if (self.adminForm.email.isValid()) {
+            self.loading(true);
             console.log("valid");
             // if it is, then submit it to server
             $.post('/map/admin/' + self.selected().id() + '/' + self.adminForm.email(), {})
                 .done(function (response) {
                     console.log(response);
+                     self.loading(false);
                     var obj = jQuery.parseJSON(response)
                     if(obj.hasOwnProperty("error")){
                         alert(obj['error']);
@@ -213,6 +216,7 @@ function MapTakModel() {
                 })
                 .fail(function () {
                     alert("Error submitting");
+                     self.loading(false);
                 });
 
         }
@@ -224,6 +228,7 @@ function MapTakModel() {
     self.removeMap = function (map) {
         //send delete to server
         if (!confirm("Are you sure you want to permanently delete this map?")) return;
+        self.loading(true);
         $.ajax({
             url: '/api/maps/' + map.id(),
             type: 'DELETE',
@@ -231,6 +236,9 @@ function MapTakModel() {
                 self.maps.remove(map);
                 self.selected(null);
                 console.log(result);
+            },
+            complete: function(result){
+                self.loading(false);
             }
         });
     };
@@ -252,6 +260,7 @@ function MapTakModel() {
                     tak.lng(taks[j].lng);
                 }
         }
+        self.loading(false);
     });
 }
 /**
