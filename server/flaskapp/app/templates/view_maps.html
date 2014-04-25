@@ -54,6 +54,11 @@
 				</h4>
 			</div>
 		</div>
+
+				<div data-bind="visible: loading()">
+					<div class="loading" style="float:none;"></div>
+				</div>
+
 		<!-- ko foreach: maps -->
 		<div title="Select this map" class="panel panel-info" data-bind="click: function () {$root.select($data,'#map-canvas')}" >
 			<div class="panel-heading">
