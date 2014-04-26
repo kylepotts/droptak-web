@@ -21,6 +21,10 @@ class Tak(ndb.Model):
 	metadata = ndb.StructuredProperty(Metadata.Metadata,repeated=True)
 
 	def to_dict(self):
+		mapName = ''
+		map = Map.Map.get_by_id(self.mapId)
+		if map is not None:
+			mapName = map.name
 		data = []
 		for md in self.metadata:
 			data.append(md.to_dict())
@@ -33,7 +37,10 @@ class Tak(ndb.Model):
 				'name': self.creator,
 				'id': self.creatorId,
 			},
-			'mapid': self.mapId,
+			'map': {
+				'id': self.mapId,
+				'name': mapName
+			},
 			'metadata' : data,
 			}
 

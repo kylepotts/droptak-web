@@ -19,6 +19,11 @@ function Metadata(){
 	});
 	self.loading = ko.observable(false);
 }
+function Map(){
+	var self = this;
+	self.name = ko.observable();
+	self.id = ko.observable();
+}
 function Tak () {
 	var self = this;
 	self.name = ko.observable().extend({
@@ -30,6 +35,7 @@ function Tak () {
 	self.lng = ko.observable().extend({
 		required: true
 	});
+	self.map = ko.observable(new Map());
 	self.metadata = ko.observableArray();
 	self.creator = ko.observable();
 	
@@ -62,9 +68,23 @@ function EditTakModel(){
 	var self = this;
 	self.tak =  ko.observable(new Tak());
 	self.oldname;
+	self.selectedMap = ko.observable();
 	self.edit = ko.observable(false);
+	self.maps = ko.observableArray();
 	self.createMetadata = ko.validatedObservable(new Metadata());
-
+	self.addMap = function () {
+		var map = new Map();
+		self.maps.push(map);
+		return map;
+	};
+	$.getJSON("/maps", function (data) {
+		console.log(data);
+		for (var i = 0; i < data.length; i++) {
+			var local = self.addMap();
+			local.name(data[i].name);
+			local.id(data[i].id)
+		}
+	});
 	self.pushMetadata = function(){
 		/**
 		* adds metadata by sending to server
@@ -136,6 +156,8 @@ function EditTakModel(){
 	    tak.lat(data.lat);
 	    tak.lng(data.lng);
 	    tak.creator(data.creator.name);
+	    tak.map().id(data.map.id);
+	    tak.map().name(data.map.name);
 	    for(var i = 0; i < data.metadata.length; i++){
 	    	console.log(data.metadata[i]);
 	    	var meta = tak.addMetadata();
