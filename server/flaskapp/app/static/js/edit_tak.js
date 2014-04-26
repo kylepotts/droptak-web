@@ -26,6 +26,19 @@ function Map(){
 	self.moveTo = function(cmapid){
 		if(self.id() == cmapid) return;
 		console.log("move to " + self.name());
+		$.ajax({
+		    url: '/api/v1/tak/' + currentTakID + '/?mapid=' + self.id(),
+		    type: 'PUT',
+		    success: function(response) {
+		        window.location.reload();
+		    },
+		    error: function(response){
+		    	alert("Error submitting: " + response.responseJSON.message);
+		    },
+		    complete: function(response){
+		    	console.log(response.responseJSON);
+		    }
+		});
 	}
 	self.copyTo = function(cmapid){
 		if(self.id() == cmapid) return;
