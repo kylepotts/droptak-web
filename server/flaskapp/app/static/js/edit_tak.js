@@ -43,6 +43,19 @@ function Map(){
 	self.copyTo = function(cmapid){
 		if(self.id() == cmapid) return;
 		console.log("copy to " + self.name());
+		$.ajax({
+		    url: '/api/v1/tak/' + currentTakID + '/copy/?mapid=' + self.id(),
+		    type: 'POST',
+		    success: function(response) {
+		       	alert("Copied successfully");
+		    },
+		    error: function(response){
+		    	alert("Error submitting: " + response.responseJSON.message);
+		    },
+		    complete: function(response){
+		    	console.log(response.responseJSON);
+		    }
+		});
 	}
 }
 function Tak () {

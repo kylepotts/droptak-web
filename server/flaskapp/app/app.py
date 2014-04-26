@@ -701,6 +701,26 @@ def takData(takid = -1):
 		tak.Put(newName=newName,newLat=newLat,newLng=newLng, newMap = newMap)
 		return json_response(code=200)
 
+#/api/v1/tak/<tak id>
+@app.route('/api/v1/tak/<int:takid>/copy/',methods=['POST'])
+def copytak(takid = -1):
+	if takid <= 0:
+		return json_response(code=400)
+	tak = Tak.get_by_id(takid)
+	if tak is None:
+		return json_response(code=400)
+	mapid = getValue(request, "mapid", "")
+	if mapid == '':
+		return json_response(code=400)
+	newmap = Map.get_by_id(int(mapid))
+	if newmap is None:
+		return json_response(code=400)
+	newtak  = Tak(lng=tak.lng,lat=tak.lat, creator=tak.creator, name=tak.name,mapId=newmap.key.integer_id(),creatorId=tak.creatorId)
+	newtak.metadata = tak.metadata
+	key = newtak.put()
+	newmap.takIds.append(key.integer_id())
+	newmap.put();
+	return json_success(newtak.Get())
 
 # ********************************************************
 #					Search
