@@ -49,7 +49,7 @@ class Tak(ndb.Model):
 		return self.to_dict()
 
 	# api class controller for PUT method
-	def Put(self,newName="", newLat="", newLng=""):
+	def Put(self,newName="", newLat="", newLng="", newMap=""):
 		if newName != "":
 			self.name = newName
 		if newLat != "":
@@ -57,6 +57,18 @@ class Tak(ndb.Model):
 
 		if newLng != "":
 			self.lng = newLng
+
+		if newMap != "":
+			map = Map.Map.get_by_id(int(newMap))
+			if map is not None:
+				oldmapid = self.mapId
+				oldMap = Map.Map.get_by_id(oldmapid)
+				if oldMap is not None:
+					oldMap.takIds.remove(self.key.integer_id())
+					oldMap.put()
+				map.takIds.append(self.key.integer_id())
+				map.put()
+				self.mapId = map.key.integer_id()
 
 		self.put()
 		return

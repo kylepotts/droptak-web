@@ -31,3 +31,23 @@ textarea.invalid{
 	margin-right: 0;
 	float: right;
 }
+
+.dropdown-menu { 
+	background-color: #FFF6F0;
+}
+.dropdown-menu>li>a:hover,
+.dropdown-menu>li>a:focus { 
+	background-color: #027537;
+}
+.dropdown-menu>li>a {
+	color: #000000 !important;
+}
+.dropdown-menu>li.disabled>a,
+.dropdown-menu>li.disabled>a:hover, 
+.dropdown-menu>li.disabled>a:focus {
+	color: #999999 !important;
+}
+.dropdown-menu>li>a:hover,
+.dropdown-menu>li>a:focus {
+	color: #FFFFFF !important;
+}

@@ -23,6 +23,14 @@ function Map(){
 	var self = this;
 	self.name = ko.observable();
 	self.id = ko.observable();
+	self.moveTo = function(cmapid){
+		if(self.id() == cmapid) return;
+		console.log("move to " + self.name());
+	}
+	self.copyTo = function(cmapid){
+		if(self.id() == cmapid) return;
+		console.log("copy to " + self.name());
+	}
 }
 function Tak () {
 	var self = this;

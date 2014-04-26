@@ -57,12 +57,8 @@
             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
               Move to <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu" role="menu">
-              <li><a href="#">Action</a></li>
-              <li><a href="#">Another action</a></li>
-              <li><a href="#">Something else here</a></li>
-              <li class="divider"></li>
-              <li><a href="#">Separated link</a></li>
+            <ul class="dropdown-menu" role="menu" data-bind="foreach: maps">
+              <li data-bind="css: {'disabled': id() == $root.tak().map().id() }"><a href="#" data-bind="text: name, click: function(){$data.moveTo($root.tak().map().id());}"></a></li>
             </ul>
           </div>
           <!-- copyT0 -->
@@ -71,7 +67,7 @@
               Copy to <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" data-bind="foreach: maps">
-              <li data-bind="css: {'disabled': id() == $root.tak().map().id() }"><a href="#" data-bind="text: name"></a></li>
+              <li data-bind="css: {'disabled': id() == $root.tak().map().id() }"><a href="#" data-target"#" data-bind="text: name, click: function(){$data.copyTo($root.tak().map().id());}"></a></li>
             </ul>
           </div>
 

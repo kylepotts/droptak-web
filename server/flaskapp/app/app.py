@@ -696,8 +696,9 @@ def takData(takid = -1):
 		newName = request.args.get("name","")
 		newLat = request.args.get("lat","")
 		newLng = request.args.get("lng","")
-		logging.info(newLat)
-		tak.Put(newName=newName,newLat=newLat,newLng=newLng)
+		newMap = request.args.get("mapid","")
+		logging.info(newMap)
+		tak.Put(newName=newName,newLat=newLat,newLng=newLng, newMap = newMap)
 		return json_response(code=200)
 
 
