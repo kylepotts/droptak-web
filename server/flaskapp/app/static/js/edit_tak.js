@@ -6,6 +6,7 @@ ko.validation.init({
     insertMessages: false
 
 });
+var tmarker;
 /*
 TODO: combine all these models later on
 */
@@ -98,12 +99,16 @@ function Tak () {
 	}
 
 }
+var editMode = false;
+var cTak;
 function EditTakModel(){
 	var self = this;
-	self.tak =  ko.observable(new Tak());
-	self.oldname;
+	self.tak =  ko.validatedObservable(new Tak());
+	cTak = self.tak;
+	self.oldTak = new Tak();
 	self.selectedMap = ko.observable();
 	self.edit = ko.observable(false);
+	editMode = self.edit;
 	self.maps = ko.observableArray();
 	self.createMetadata = ko.validatedObservable(new Metadata());
 	self.addMap = function () {
@@ -167,22 +172,46 @@ function EditTakModel(){
 	}
 
 	self.cancel = function(){
-		self.tak().name(self.oldname);
+		self.tak().name(self.oldTak.name());
+		self.tak().lat(self.oldTak.lat());
+		self.tak().lng(self.oldTak.lng());
 		self.edit(!self.edit());
+		if(tmarker !== undefined ) tmarker.setMap(null);
 	}
 	self.toggleEdit = function(){
 		if(self.edit()){
-			$.ajax({
-		    url: '/api/tak/' + currentTakID,
-		    data: { 'name': self.tak().name()},
-		    type: 'PUT',
-		    success: function(result) {
-		        console.log(result);
-		    }
-			});
+			if(self.tak().name.isValid() && self.tak().lng.isValid() && self.tak().lat.isValid()){
+				console.log("Valid")
+				var query = '?name=' + encodeURIComponent(self.tak().name())
+				query += '&lat=' + encodeURIComponent(self.tak().lat())
+				query += '&lng=' + encodeURIComponent(self.tak().lng())
+				$.ajax({
+			    url: '/api/v1/tak/' + currentTakID + '/' + query,
+			    type: 'PUT',
+			    success: function(result) {
+			        console.log(result);
+			        window.location.reload();
+			        self.edit(!self.edit());
+			    },
+			    error: function(result){
+			    	console.log(result);
+			    	alert("Error submitting.");
+			    }
+				});
+			}
+			else{
+				alert("Invalid Data");
+			}
 		}
-		self.oldname = self.tak().name();
-		self.edit(!self.edit());
+		else{
+			self.oldTak.name(self.tak().name());
+			self.oldTak.lng(self.tak().lng());
+			self.oldTak.lat(self.tak().lat());
+			if(tmarker !== undefined ) tmarker.setMap(null);
+			self.edit(!self.edit());
+		}
+		
+		
 	}
 	$.getJSON("/api/tak/" + currentTakID, function(data) { 
 	    var tak = new Tak();
