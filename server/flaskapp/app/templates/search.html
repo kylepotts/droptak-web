@@ -9,7 +9,7 @@
 {% for map in maps %}
 {% set url = '/maps/'+map.key.integer_id()|string %}
 <div class="list-group-item">
-<a href={{url}}>{{map.name}}</a>
+<a href={{url}}>{{map.name}} - Created By {{map.creator}}</a>
 </div>
 {% endfor %}
 </ul>
