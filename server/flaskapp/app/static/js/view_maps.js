@@ -72,6 +72,14 @@ function Tak() {
     self.lng = ko.observable();
 
 }
+function MapNameForm() {
+    var self = this;
+    self.currentMap = ko.observable();
+    self.name = ko.observable().extend({
+        required: true,
+        minLength: 1
+    });
+}
 
 function FormMap() {
     var self = this;
@@ -114,13 +122,54 @@ function MapTakModel() {
     self.maps = ko.observableArray();
     self.selected = ko.observable();
     self.loading = ko.observable(true);
+
+    self.mapNameForm = new MapNameForm();
+    self.mapNameFormLoading = ko.observable(false);
+
     self.form = new FormMap();
     self.modalSubmit = ko.observable(false);
     self.adminForm = new addAdminForm();
 
 
+    self.mapNameFormSubmit = function(modal){
+        
+        if(self.mapNameForm.name() == self.mapNameForm.currentMap().name()) return ;
+        console.log(self.mapNameForm.name());
+        if(!self.mapNameFormLoading()){
+            if(self.mapNameForm.name.isValid()){
+                self.mapNameFormLoading(true);
+                var query = '?name=' + encodeURIComponent(self.mapNameForm.name())
+                $.ajax({
+                url: '/api/v1/map/' + self.mapNameForm.currentMap().id() + '/' + query,
+                type: 'PUT',
+                success: function(result) {
+                    console.log(result);
+                    self.mapNameForm.currentMap().name(self.mapNameForm.name());
+                    $(modal).modal("hide");
+
+                },
+                error: function(result){
+                    console.log(result);
+                    alert("Error submitting.");
+                },
+                complete: function(result){
+                    self.mapNameFormLoading(false);
+                }
+                });
+
+
+                
+
+            }
+            else console.log("Invalid");
+        }
+        else console.log("loading");
+    }
+
     self.select = function (element, mapid) {
         self.selected(element);
+        self.mapNameForm.currentMap(element);
+        self.mapNameForm.name(element.name());
         console.log(element.id());
         setCookie("mapId", element.id(), 10)
         console.log(element.taks());
