@@ -166,7 +166,6 @@ def login():
 	    		key = account.put()
 	    		session['userId'] = key.integer_id()
 	    		session['loggedIn'] = True
-
 	    	return '200'
 
 		if request.method == 'GET':

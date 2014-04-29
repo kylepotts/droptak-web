@@ -45,11 +45,6 @@ function loginFinishedCallBack(authResult){
     $('#signinButton').attr('style', 'display: none');
     gapi.client.load('plus','v1', getInfo);  // Trigger request to get the email address.
 
-    // Send the code to the server
-
- // xmlhttp = new XMLHttpRequest();
- // xmlhttp.open("POST","http://localhost:8080/login?storeToken="+authResult['code'],true);
- // xmlhttp.send();
   } else if (authResult['error']) {
       console.log("error")
 
@@ -127,6 +122,6 @@ function getProfileCallBack(obj){
   xmlhttp.open("POST","/login?storeToken="+storeToken+"&name="+name+"&email="+email,true);
   xmlhttp.send();
   $('#myModal').modal('hide');
-  //window.location.href='/dash';
+  window.location.href='/dash';
   }
 
