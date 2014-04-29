@@ -313,8 +313,11 @@ def admin_add(mapId,email):
 def search():
 	if request.method == 'GET':
 		maps = []
+		mapIds = []
 		queryType=request.args.get("queryType","")
 		query = request.args.get("query","")
+		uid = session['userId']
+		account = Account.get_by_id(uid) 
 		logging.info("searching for " + queryType + " " + query)
 		mapQuery = Map.query(Map.public == True)
 		for map in mapQuery:
@@ -322,6 +325,12 @@ def search():
 				if(query.lower() == map.name.lower()):
 					logging.info("match!")
 					maps.append(map)
+					mapIds.append(map.key.integer_id())
+		for mapId in account.adminMaps:
+			m = Map.get_by_id(mapId)
+			if (query.lower() == m.name.lower()):
+				if mapId not in mapIds:
+					maps.append(m)
 		logging.info(len(maps))
 		return render_template('search.html',maps=maps)
 
