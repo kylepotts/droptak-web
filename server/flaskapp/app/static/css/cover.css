@@ -59,3 +59,9 @@ body {
 
   background-color: #606060;
 }
+
+
+iframe[src^="https://apis.google.com"] {
+  display: none;
+}
+

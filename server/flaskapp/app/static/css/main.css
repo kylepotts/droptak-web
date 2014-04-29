@@ -1,49 +1,63 @@
+/*
+ * Globals
+ */
+
+/* Links */
+a,
+a:focus,
+a:hover {
+  color: #FFFFFF !important;
+}
+
+/* Custom default button */
+.btn-default,
+.btn-default:hover,
+.btn-default:focus {
+  color: #000000;
+  text-shadow: none; /* Prevent inheritence from `body` */
+  background-color: #fff;
+  border: 1px solid #fff;
+}
+html{
+  height: 100%;
+}
 body {
-  padding-top: 0px;
-  padding-bottom: 40px;
-}
 
-/* Custom container */
-.container-narrow {
-  margin: 0 auto;
-  max-width: 700px;
+  height: 100%;
+  background-color: #333;
+  color: #000000;
+  font-family: georgia;
 }
-.container-narrow > hr {
-  margin: 30px 0;
+.navbar-custom{
+  background-color: #027537;
+  color: #FFFFFF;
 }
-
-/* Main marketing message and sign up button */
-.jumbotron {
-  margin: 60px 0;
+.jumbotron{
+  margin: auto;
   text-align: center;
 }
-.jumbotron h1 {
-  font-size: 72px;
-  line-height: 1;
-}
-.jumbotron .btn {
-  font-size: 21px;
-  padding: 14px 24px;
+/* Padding for spacing */
+.inner {
+  padding: 30px;
 }
 
-/* Supporting marketing content */
-.marketing {
-  margin: 60px 0;
-}
-.marketing p + h4 {
-  margin-top: 28px;
+  .dropdown-menu {
+
+  background-color:#666E6C;
 }
 
- #map_canvas {
-        .box-sizing:context-box;
-        marin:0;
-        padding:0;
-        width: 100px;
-        height: 200px;
-      }
+.list-group-item{
+
+       background-color: #666E6C
+}
+
+.list-group > a.disabled {
+  color: #999999;
+}
+
+.dropdown-menu li > a:hover, .dropdown-menu li > a:focus, .dropdown-submenu:hover > a {
+
+  background-color: #606060;
+}
 
 
-
-
-
-iframe[src^="https://support.google.com"] {display: none;}

@@ -2,16 +2,22 @@
 
 <head>
   {% block head %}
-
+  <link rel="shortcut icon" href="/static/img/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/static/img/favicon.ico" type="image/x-icon">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
   <title>MapTak</title>
   <link href="/static/css/vendor/bootstrap.min.css" rel="stylesheet">
-  <link href="/static/css/cover.css" rel="stylesheet">
+  <link href="/static/css/vendor/bootstrap-switch.css" rel="stylesheet">
+  <link href="/static/css/main.css" rel="stylesheet">
   <script src="/static/js/vendor/jquery.min.js"></script>
+  <script src="https://apis.google.com/js/client:plusone.js" type="text/javascript">
+  isSignedOut: true
+  </script>
   <script src="/static/js/login.js"></script>
+
   <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -21,6 +27,7 @@
   <style id="holderjs-style" type="text/css"></style>
   {% endblock %}
 </head>
+
 <body>
   <div class="jumbotron">
     <div id="staticNavBar" class="navbar navbar-default navbar-fixed-top navbar-custom" role="navigation">
@@ -34,9 +41,7 @@
           </button>
           <a class="navbar-brand" href="/">MapTak</a>
         </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-          </ul>
+
         </div>
         <!--/.nav-collapse -->
       </div>
@@ -65,11 +70,16 @@
         </div>
       </div>
     </div>
+
     {% block content %} {% endblock %}
+
   </div>
   <!-- /container -->
+
   {% block javascript %}
+
   <script src="/static/js/vendor/bootstrap.min.js"></script>
+
   <script>
     // in mobile view, collapses menu
     function hideMenu() {
@@ -77,14 +87,11 @@
         .collapse("hide");
     }
   </script>
-  <!-- Place this asynchronous JavaScript just before your </body> tag -->
-    <script type="text/javascript">
-      (function() {
-       var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-       po.src = 'https://apis.google.com/js/client:plusone.js';
-       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-     })();
-    </script>
   {% endblock javascript %}
+
+
+
+
 </body>
+
 </html>
