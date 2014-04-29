@@ -120,9 +120,11 @@ function Map() {
 function MapTakModel() {
     var self = this;
     self.maps = ko.observableArray();
+    self.favorites = ko.observableArray();
     self.selected = ko.observable();
     self.loading = ko.observable(true);
-
+    self.loadingFavorites = ko.observable(true);
+    self.selectedIsAdmin = ko.observable(false);
     self.mapNameForm = new MapNameForm();
     self.mapNameFormLoading = ko.observable(false);
 
@@ -166,8 +168,9 @@ function MapTakModel() {
         else console.log("loading");
     }
 
-    self.select = function (element, mapid) {
+    self.select = function (element, mapid, isAdmin) {
         self.selected(element);
+        self.selectedIsAdmin(isAdmin);
         self.mapNameForm.currentMap(element);
         self.mapNameForm.name(element.name());
         console.log(element.id());
@@ -291,6 +294,23 @@ function MapTakModel() {
             }
         });
     };
+    self.unFavoriteMap = function (map) {
+        //send delete to server
+        if (!confirm("Are you sure you want to unfavorite this map?")) return;
+        self.loading(true);
+        $.ajax({
+            url: '/api/v1/user/' + currentUserID + '/favorites/?mapid=' + map.id(),
+            type: 'DELETE',
+            success: function (result) {
+                self.favorites.remove(map);
+                self.selected(null);
+                console.log(result);
+            },
+            complete: function(result){
+                self.loading(false);
+            }
+        });
+    };
 
     $.getJSON("/maps", function (data) {
         // Now use this data to update your view models, 
@@ -310,6 +330,26 @@ function MapTakModel() {
                 }
         }
         self.loading(false);
+    });
+    $.getJSON("/favorites", function (data) {
+        // Now use this data to update your view models, 
+        // and Knockout will update your UI automatically 
+        console.log(data);
+        for (var i = 0; i < data.length; i++) {
+            var local = new Map();
+            self.favorites.push(local);
+            local.name(data[i].name);
+            local.id(data[i].id)
+            local.isPublic(data[i].public);
+            var taks = data[i].taks;
+            for (var j = 0; j < taks.length; j++) {
+                    var tak = local.addTak();
+                    tak.name(taks[j].name);
+                    tak.lat(taks[j].lat);
+                    tak.lng(taks[j].lng);
+                }
+        }
+        self.loadingFavorites(false);
     });
 }
 /**

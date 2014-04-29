@@ -27,6 +27,10 @@ body{
 	bottom:0;
 	overflow: auto;
 }
+.vertical-divide{
+	padding:6px;
+
+}
 .panel-add-outer{
 	background-color: #eee;
 	-webkit-box-shadow: 0 0px 0px rgba(0,0,0,.05);
