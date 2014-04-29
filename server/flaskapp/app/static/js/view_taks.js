@@ -10,3 +10,17 @@ function removeTak(id){
             }
         });
 }
+function favoriteMap(id, mapid){
+        $.ajax({
+            url: '/api/v1/user/' + id + '/favorites/?mapid=' + mapid,
+            type: 'POST',
+            success: function (result) {
+                console.log(result);
+                alert("Map Favorited!");
+            },
+            error: function(result){
+                console.log(result);
+                alert("Unable to favorite map.");
+            }
+        });
+}

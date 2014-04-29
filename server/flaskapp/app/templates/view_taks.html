@@ -13,6 +13,9 @@
 <div class="jumbotron">
 	<div class="container">
 		<h2>{{mapName}}</h2>
+		<button type="button" class="btn btn-primary"  onClick="favoriteMap({{id}},{{mapid}})">
+		  <span class="glyphicon glyphicon-star"></span> Favorite Map
+		</button>
 		<div id="map-canvas" style="height:500px; width:100%"></div>     
 
 		<div class="table-responsive">

@@ -237,7 +237,7 @@ def taks(mapId=-1, str=''):
 	if map is None:
 		return redirect('/app')
 	taks = map.to_dict()['taks']
-	return render_template('view_taks.html',taks = taks, mapName=map.name)
+	return render_template('view_taks.html',taks = taks, mapName=map.name, mapid=map.key.integer_id(), id=int(session['userId']))
 	
 @app.route('/taks/<int:id>', methods = ['GET', 'POST'])
 def show_taks(id=-1):
