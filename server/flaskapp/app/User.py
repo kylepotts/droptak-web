@@ -12,6 +12,7 @@ class Account(ndb.Model):
 	loggedIn = ndb.BooleanProperty()
 	mapIds = ndb.IntegerProperty(repeated=True)
 	adminMaps = ndb.IntegerProperty(repeated=True)
+	favoriteMaps = ndb.IntegerProperty(repeated=True)
 
 	def to_dict(self):
 		return {
@@ -26,6 +27,14 @@ class Account(ndb.Model):
 	def getMaps(self):
 		maps = []
 		for mapid in self.adminMaps:
+			map = Map.Map.get_by_id(mapid)
+			if map is not None:
+				maps.append(map.to_dict())
+		return maps
+
+	def getFavorites(self):
+		maps = []
+		for mapid in self.favoriteMaps:
 			map = Map.Map.get_by_id(mapid)
 			if map is not None:
 				maps.append(map.to_dict())

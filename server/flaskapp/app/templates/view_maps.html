@@ -6,6 +6,10 @@
 <script src="/static/js/vendor/knockout-3.1.0.js"></script>
 <script src="/static/js/vendor/knockout.validation.min.js"></script>
 <script src="/static/js/maptak.js"></script>
+<script>
+    // used to load data via javascript
+    var currentUserID = {{id}};
+    </script>
 <script src="/static/js/view_maps.js"></script>
 {% endblock %}
 
@@ -74,18 +78,21 @@
 		<!-- add map -->
 		<div class="panel panel-add-outer">
 			<div class="panel-heading panel-add-heading" data-toggle="modal" data-target="#map-name-modal">
-				<h4 class="panel-title panel-add">
+				<h4 class="panel-title panel-add" style="margin-left:0;">
 					<span>Add Map</span>
 				</h4>
 			</div>
 		</div>
-
-				<div data-bind="visible: loading()">
+		<div class="vertical-divide">
+			<div data-bind="visible: loading()">
 					<div class="loading" style="float:none;"></div>
 				</div>
+		</div>
+
+				
 
 		<!-- ko foreach: maps -->
-		<div title="Select this map" class="panel panel-info" data-bind="click: function () {$root.select($data,'#map-canvas')}" >
+		<div title="Select this map" class="panel panel-info" data-bind="click: function () {$root.select($data,'#map-canvas', true)}" >
 			<div class="panel-heading">
 				<div class="pull-left">
 					<!-- link to single map list -->
@@ -106,11 +113,45 @@
 			</div>
 		</div>
 		<!-- /ko -->
+		<div class="vertical-divide"></div>
+
+
+		<!-- FAVORITES -->
+		<div class="vertical-divide">
+			<div data-bind="visible: loadingFavorites()">
+					<div class="loading" style="float:none;"></div>
+				</div>
+		</div>
+
+		<!-- ko foreach: favorites -->
+		<div title="Select this map" class="panel panel-info" data-bind="click: function () {$root.select($data,'#map-canvas', false)}" >
+			<div class="panel-heading panel-favorite">
+				<div class="pull-left">
+					<!-- link to single map list -->
+					<span  class="glyphicon glyphicon-star" style="color:#000000;font-size: 1.2em;"></span>
+				</div>
+				<div class="pull-right">
+					<button type="button" class="close" title="Unfavorite this map" data-bind="click: $root.unFavoriteMap" aria-hidden="true"> &times; </button>
+					<span class="badge " data-bind="text: $data.taks().length != 0 ? $data.taks().length + '  ': ''"></span>
+					
+				</div>
+
+				
+				<div>
+					<h4 class="panel-title">
+						<span data-bind="text: name()? name : 'No Name', style: { fontStyle: $data.isPublic() == 'True' ? '': 'italic' }"></span>
+					</h4>
+				</div>
+			</div>
+		</div>
+		<!-- /ko -->
+		<!-- FAVORITES END -->
 	</div>
 </div>
 <div class="main-content">
 	<!-- ko if: selected -->
 	<h2 data-bind="text: selected().name()"></h2>
+	<!-- ko if: selectedIsAdmin -->
 	<div class="input-group">
 		<div class="input-group-btn">
 			<button type="button" class="btn btn-primary btn-sm" title="Edit name" data-toggle="modal" data-target="#edit-map-name-modal">
@@ -123,6 +164,7 @@
 
 		</div>
 	</div>
+	<!-- /ko -->
 
 	
 

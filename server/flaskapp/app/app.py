@@ -53,14 +53,6 @@ def json_response(code, message = '', headers=None):
 	resp.headers.extend(headers or {})
 	return resp
 
-#the following appends headers to every request to tell the client not to cache contents
-#TODO: remove for final demo and submission
-@app.after_request
-def after_request(response):
-	response.headers.add('Cache-Control', 'no-cache, no-store') # http-1.1
-	response.headers.add('Pragma', 'no-cache') # http-1
-	return response
-
 @app.route('/dash')
 def logoutIndex():
 		return render_template('dashboard.html')
@@ -82,6 +74,13 @@ def index():
 		return render_template('dashboard.html')
 	else:
 		return render_template('index.html')
+
+@app.route('/favorites/',methods=['GET','POST'])
+def favorites():
+	user = Account.get_by_id(int( session['userId'] ))
+	if user is None:
+		return json_response(code=400)
+	return json_success(user.getFavorites())
 
 @app.route('/maps/',methods=['GET','POST'])
 def maps():
@@ -173,7 +172,7 @@ def login():
 
 @app.route('/app/')
 def route_view_app():
-	return render_template('view_maps.html');
+	return render_template('view_maps.html', id=int(session['userId']));
 
 
 @app.route('/create/',methods=['GET','POST'])
@@ -756,6 +755,39 @@ def apiSearch():
 		resp.append(result)
 		return json_success(resp)
 
+# ********************************************************
+#					Favorites
+# ********************************************************
+
+@app.route('/api/v1/user/<int:userid>/favorites/',methods=['GET', 'POST', 'DELETE'])
+def favorite_mapsForUser(userid = -1):
+	if userid <= 0:
+		return json_response(code=400)
+	user = Account.get_by_id(userid)
+	if user is None:
+		return json_response(code=400)
+
+	if request.method == 'GET': # done
+		#	GET: returns json array of information about user's map objects
+		return json_success(user.getFavorites())
+
+	mapid = getValue(request, "mapid", "")
+	if not mapid:
+		return json_response(code=400)
+	map = Map.get_by_id(int(mapid))
+	if map is None:
+		return json_response(code=400)
+	if request.method == 'POST':
+		if not map.key.integer_id() in user.favoriteMaps:
+			user.favoriteMaps.append(map.key.integer_id())
+			user.put()
+		return json_response(code=200)
+	
+	if request.method == 'DELETE':
+		if map.key.integer_id() in user.favoriteMaps:
+			user.favoriteMaps.remove(map.key.integer_id())
+			user.put()
+		return json_response(code=200)
 
 # ********************************************************
 #					Metadata
