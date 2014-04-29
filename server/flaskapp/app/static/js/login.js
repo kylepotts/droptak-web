@@ -113,15 +113,25 @@ function getProfileCallBack(obj){
   console.log(profile)
   email = obj['emails'].filter(function(v) {
         return v.type === 'account'; // Filter out the primary email
-    })[0].value;
+      })[0].value;
   name = obj['displayName'];
   console.log("Email: " + email);
   console.log("Name: "+ name);
   storeToken = authRes['code']
-  xmlhttp = new XMLHttpRequest();
-  xmlhttp.open("POST","/login?storeToken="+storeToken+"&name="+name+"&email="+email,true);
-  xmlhttp.send();
+  $.ajax(
+  {
+    url: "/login?storeToken="+storeToken+"&name="+name+"&email="+email,
+    type: 'POST',
+    success: function (result) {
+      window.location.href='/dash';
+    },
+    complete: function(result){
+      console.log(result);
+    },
+    error: function(result){
+      alert("Error completing login.");
+    }
+  });
   $('#myModal').modal('hide');
-  window.location.href='/dash';
-  }
+}
 
