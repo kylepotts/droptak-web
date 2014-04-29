@@ -91,7 +91,6 @@ def maps():
 		aMap = Map.get_by_id(mapId)
 		listOfMaps.append(aMap.to_dict())
 	return json_success(listOfMaps)
-	#return render_template('map.html', maps=getUserMaps(session['userId']))
 
 @app.route('/logout',methods=['GET','POST'])
 def logout():
