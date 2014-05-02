@@ -2,6 +2,7 @@ from utils.path import fix_path
 import os, json
 from google.appengine.api.logservice import logservice
 from google.appengine.ext.db.metadata import Kind
+from flask import Flask
 import logging
 import random
 import string

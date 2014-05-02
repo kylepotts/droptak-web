@@ -1,0 +1,13 @@
+MANIFEST.in
+README
+setup.cfg
+setup.py
+Flask_Autodoc.egg-info/PKG-INFO
+Flask_Autodoc.egg-info/SOURCES.txt
+Flask_Autodoc.egg-info/dependency_links.txt
+Flask_Autodoc.egg-info/not-zip-safe
+Flask_Autodoc.egg-info/requires.txt
+Flask_Autodoc.egg-info/top_level.txt
+flask_autodoc/__init__.py
+flask_autodoc/autodoc.py
+flask_autodoc/templates/autodoc_default.html
